@@ -1,5 +1,1422 @@
-{
-  "returncode" : 0,
-  "stdout" : "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, viewport-fit=cover\">\n<meta name=\"apple-mobile-web-app-capable\" content=\"yes\">\n<meta name=\"apple-mobile-web-app-status-bar-style\" content=\"black-translucent\">\n<meta name=\"apple-mobile-web-app-title\" content=\"Discipline OS\">\n<link rel=\"apple-touch-icon\" href=\"data:image\/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjE4MCIgaGVpZ2h0PSIxODAiIHJ4PSIzNiIgZmlsbD0iIzBhMGEwZiIvPjx0ZXh0IHg9IjkwIiB5PSIxMTUiIGZvbnQtZmFtaWx5PSJBcmlhbCBCbGFjayxzYW5zLXNlcmlmIiBmb250LXNpemU9Ijg0IiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjZThmZjQ3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5EPC90ZXh0Pjwvc3ZnPg==\">\n<title>Discipline OS<\/title>\n<link href=\"https:\/\/fonts.googleapis.com\/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap\" rel=\"stylesheet\">\n<style>\n  :root {\n    --bg: #0a0a0f;\n    --surface: #13131a;\n    --surface2: #1c1c26;\n    --border: #2a2a3a;\n    --accent: #e8ff47;\n    --accent2: #47b8ff;\n    --accent3: #ff6b47;\n    --text: #f0f0f5;\n    --text2: #8888a0;\n    --text3: #55556a;\n    --success: #47ffb8;\n    --danger: #ff4747;\n    --warning: #ffb847;\n    --radius: 16px;\n    --radius-sm: 10px;\n  }\n  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }\n  html, body { height:100%; background:var(--bg); color:var(--text); font-family:'DM Sans', sans-serif; overflow:hidden; }\n\n  \/* LAYOUT *\/\n  #app { display:flex; flex-direction:column; height:100vh; height:100dvh; }\n  #topbar { display:flex; align-items:center; justify-content:space-between; padding:16px 24px 8px; flex-shrink:0; }\n  #nav { display:flex; gap:4px; background:var(--surface); border-radius:50px; padding:4px; flex-shrink:0; margin:0 24px 12px; }\n  #nav button { flex:1; padding:10px; border:none; background:transparent; color:var(--text2); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; border-radius:50px; cursor:pointer; transition:all .2s; white-space:nowrap; }\n  #nav button.active { background:var(--accent); color:#0a0a0f; font-weight:600; }\n  #content { flex:1; overflow-y:auto; padding:0 24px 100px; scroll-behavior:smooth; }\n  #content::-webkit-scrollbar { display:none; }\n\n  \/* CARDS *\/\n  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:14px; }\n  .card-sm { padding:14px 16px; }\n  .label { font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--text2); margin-bottom:8px; }\n  .big-num { font-family:'Bebas Neue', sans-serif; font-size:72px; line-height:1; color:var(--accent); }\n  .title { font-family:'Bebas Neue', sans-serif; font-size:28px; letter-spacing:.03em; }\n  .subtitle { font-size:13px; color:var(--text2); margin-top:4px; }\n\n  \/* CURRENT TASK HERO *\/\n  #hero { background:linear-gradient(135deg, #13131a 0%, #1c1c26 100%); border:1px solid var(--border); border-radius:var(--radius); padding:24px; margin-bottom:14px; position:relative; overflow:hidden; }\n  #hero::before { content:''; position:absolute; top:-40px; right:-40px; width:160px; height:160px; background:var(--accent); opacity:.06; border-radius:50%; }\n  #hero-status { font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; }\n  #hero-task { font-family:'Bebas Neue',sans-serif; font-size:36px; line-height:1.1; margin-bottom:6px; }\n  #hero-sub { font-size:13px; color:var(--text2); margin-bottom:16px; }\n  #hero-countdown { font-family:'DM Mono',monospace; font-size:22px; color:var(--accent2); font-weight:500; }\n  #hero-missed { background:rgba(255,71,71,.1); border:1px solid rgba(255,71,71,.3); border-radius:var(--radius-sm); padding:12px 16px; margin-bottom:12px; }\n  #hero-missed .missed-label { font-size:11px; color:var(--danger); font-weight:600; letter-spacing:.1em; text-transform:uppercase; margin-bottom:6px; }\n  #hero-missed .missed-item { font-size:13px; color:var(--text); padding:3px 0; }\n\n  \/* SCORE RING *\/\n  .score-wrap { display:flex; align-items:center; gap:20px; }\n  .score-ring-wrap { position:relative; width:90px; height:90px; flex-shrink:0; }\n  .score-ring-wrap svg { transform:rotate(-90deg); }\n  .score-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }\n  .score-num { font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--accent); line-height:1; }\n  .score-denom { font-size:10px; color:var(--text3); }\n  .score-breakdown { flex:1; }\n  .score-item { display:flex; align-items:center; gap:8px; padding:4px 0; font-size:12px; color:var(--text2); }\n  .score-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }\n  .score-dot.done { background:var(--success); }\n  .score-dot.miss { background:var(--danger); }\n  .score-dot.pending { background:var(--text3); }\n\n  \/* CHECKLIST *\/\n  .check-item { display:flex; align-items:center; gap:14px; padding:13px 0; border-bottom:1px solid var(--border); cursor:pointer; }\n  .check-item:last-child { border-bottom:none; }\n  .check-box { width:22px; height:22px; border-radius:6px; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .2s; }\n  .check-box.done { background:var(--accent); border-color:var(--accent); }\n  .check-box.done::after { content:'✓'; font-size:13px; color:#0a0a0f; font-weight:700; }\n  .check-box.missed { border-color:var(--danger); background:rgba(255,71,71,.15); }\n  .check-box.missed::after { content:'✕'; font-size:12px; color:var(--danger); font-weight:700; }\n  .check-text { flex:1; font-size:14px; }\n  .check-text.done { text-decoration:line-through; color:var(--text2); }\n  .check-time { font-family:'DM Mono',monospace; font-size:11px; color:var(--text3); }\n\n  \/* WORKOUT *\/\n  #workout-screen { display:none; }\n  .exercise-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px; margin-bottom:10px; cursor:pointer; transition:border-color .2s; }\n  .exercise-card.active { border-color:var(--accent); }\n  .exercise-card.completed { border-color:var(--success); opacity:.6; }\n  .ex-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }\n  .ex-name { font-family:'Bebas Neue',sans-serif; font-size:22px; }\n  .ex-badge { font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:4px 10px; border-radius:50px; }\n  .ex-badge.reps { background:rgba(232,255,71,.15); color:var(--accent); }\n  .ex-badge.time { background:rgba(71,184,255,.15); color:var(--accent2); }\n  .ex-badge.pull { background:rgba(71,255,184,.15); color:var(--success); }\n  .ex-detail { font-size:12px; color:var(--text2); }\n  .ex-sets { display:flex; gap:6px; margin-top:10px; }\n  .ex-set-dot { width:10px; height:10px; border-radius:50%; background:var(--border); transition:background .3s; }\n  .ex-set-dot.done { background:var(--success); }\n  .ex-set-dot.active { background:var(--accent); }\n\n  \/* TIMER *\/\n  #timer-modal { display:none; position:fixed; inset:0; background:rgba(10,10,15,.97); z-index:100; flex-direction:column; align-items:center; justify-content:center; padding:40px; }\n  #timer-modal.show { display:flex; }\n  #timer-exercise-name { font-family:'Bebas Neue',sans-serif; font-size:42px; text-align:center; margin-bottom:4px; }\n  #timer-detail { font-size:14px; color:var(--text2); text-align:center; margin-bottom:40px; }\n  #timer-ring { position:relative; margin-bottom:30px; }\n  #timer-ring svg { transform:rotate(-90deg); }\n  #timer-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }\n  #timer-num { font-family:'Bebas Neue',sans-serif; font-size:80px; line-height:1; }\n  #timer-phase { font-size:13px; font-weight:600; letter-spacing:.15em; text-transform:uppercase; color:var(--text2); margin-top:4px; }\n  #timer-set-info { font-size:14px; color:var(--text2); margin-bottom:20px; font-family:'DM Mono',monospace; }\n  #timer-quote { font-size:15px; color:var(--text2); text-align:center; font-style:italic; max-width:300px; margin-bottom:30px; min-height:44px; }\n  #timer-controls { display:flex; gap:16px; }\n  .timer-btn { padding:14px 28px; border-radius:50px; border:none; font-family:'DM Sans',sans-serif; font-size:15px; font-weight:600; cursor:pointer; transition:all .2s; }\n  .timer-btn.primary { background:var(--accent); color:#0a0a0f; }\n  .timer-btn.secondary { background:var(--surface2); color:var(--text); }\n  .timer-btn.danger { background:rgba(255,71,71,.2); color:var(--danger); border:1px solid rgba(255,71,71,.3); }\n\n  \/* FOOD *\/\n  .meal-section { margin-bottom:20px; }\n  .meal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }\n  .meal-title { font-family:'Bebas Neue',sans-serif; font-size:22px; }\n  .meal-time { font-family:'DM Mono',monospace; font-size:12px; color:var(--text3); }\n  .food-tag { display:inline-block; background:var(--surface2); border:1px solid var(--border); border-radius:50px; padding:5px 12px; font-size:12px; color:var(--text2); margin:3px; }\n  .protein-bar { height:4px; background:var(--border); border-radius:2px; margin-top:10px; }\n  .protein-fill { height:100%; background:var(--accent); border-radius:2px; transition:width .6s; }\n\n  \/* HISTORY *\/\n  .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:12px; }\n  .cal-day-label { font-size:10px; color:var(--text3); text-align:center; font-weight:600; letter-spacing:.08em; }\n  .cal-day { aspect-ratio:1; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; cursor:pointer; transition:all .2s; position:relative; }\n  .cal-day.empty { background:transparent; }\n  .cal-day.future { background:var(--surface); color:var(--text3); }\n  .cal-day.score-high { background:rgba(71,255,184,.2); color:var(--success); border:1px solid rgba(71,255,184,.3); }\n  .cal-day.score-mid { background:rgba(232,255,71,.15); color:var(--accent); border:1px solid rgba(232,255,71,.2); }\n  .cal-day.score-low { background:rgba(255,71,71,.15); color:var(--danger); border:1px solid rgba(255,71,71,.2); }\n  .cal-day.today { outline:2px solid var(--accent2); outline-offset:2px; }\n  .streak-badge { background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#0a0a0f; border-radius:50px; padding:8px 18px; font-weight:700; font-size:15px; display:inline-flex; align-items:center; gap:8px; }\n\n  \/* OFFICE PROMPT *\/\n  #office-modal { display:none; position:fixed; inset:0; background:rgba(10,10,15,.95); z-index:100; flex-direction:column; align-items:center; justify-content:center; padding:40px; }\n  #office-modal.show { display:flex; }\n  .office-modal-inner { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:32px; max-width:400px; width:100%; text-align:center; }\n  .office-q { font-family:'Bebas Neue',sans-serif; font-size:32px; margin-bottom:8px; }\n  .office-sub { font-size:14px; color:var(--text2); margin-bottom:28px; }\n  .office-btns { display:flex; gap:12px; }\n  .office-btn { flex:1; padding:16px; border-radius:var(--radius-sm); border:none; font-family:'DM Sans',sans-serif; font-size:16px; font-weight:600; cursor:pointer; transition:all .2s; }\n  .office-btn.yes { background:var(--accent); color:#0a0a0f; }\n  .office-btn.no { background:var(--surface2); color:var(--text); border:1px solid var(--border); }\n\n  \/* WEEK BARS *\/\n  .week-bars { display:flex; align-items:flex-end; gap:8px; height:80px; margin-top:12px; }\n  .week-bar-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; }\n  .week-bar-col { flex:1; display:flex; align-items:flex-end; width:100%; }\n  .week-bar { width:100%; border-radius:4px 4px 0 0; background:var(--border); transition:height .4s; min-height:4px; }\n  .week-bar.filled { background:var(--accent); }\n  .week-day-label { font-size:10px; color:var(--text3); font-weight:600; }\n\n  \/* PILL TAGS *\/\n  .pill { display:inline-flex; align-items:center; gap:4px; background:var(--surface2); border:1px solid var(--border); border-radius:50px; padding:6px 14px; font-size:12px; color:var(--text2); margin:3px; }\n  .pill .dot { width:6px; height:6px; border-radius:50%; }\n\n  \/* SNACK REMINDER *\/\n  #snack-banner { background:linear-gradient(135deg,rgba(255,184,71,.15),rgba(255,107,71,.1)); border:1px solid rgba(255,184,71,.3); border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:14px; display:none; }\n  #snack-banner .snack-label { font-size:11px; color:var(--warning); font-weight:600; letter-spacing:.1em; text-transform:uppercase; margin-bottom:4px; }\n  #snack-banner .snack-text { font-size:14px; }\n\n  \/* DAY TYPE BADGE *\/\n  #day-type-badge { display:flex; align-items:center; gap:8px; }\n  .type-pill { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:5px 12px; border-radius:50px; }\n  .type-pill.office { background:rgba(71,184,255,.15); color:var(--accent2); border:1px solid rgba(71,184,255,.2); }\n  .type-pill.home { background:rgba(71,255,184,.15); color:var(--success); border:1px solid rgba(71,255,184,.2); }\n\n  \/* NIGHT PREP *\/\n  .prep-item { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); cursor:pointer; }\n  .prep-item:last-child { border-bottom:none; }\n  .prep-check { width:20px; height:20px; border-radius:5px; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .2s; }\n  .prep-check.done { background:var(--accent); border-color:var(--accent); }\n  .prep-check.done::after { content:'✓'; font-size:11px; color:#0a0a0f; font-weight:700; }\n  .prep-text { font-size:14px; }\n\n  \/* TOPBAR CLOCK *\/\n  #topbar-time { font-family:'DM Mono',monospace; font-size:13px; color:var(--text2); }\n  #topbar-title { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:.05em; }\n\n  \/* SECTION TITLE *\/\n  .section-title { font-family:'Bebas Neue',sans-serif; font-size:20px; margin:20px 0 10px; color:var(--text2); letter-spacing:.05em; }\n\n  \/* WORKOUT DAY HEADER *\/\n  #workout-day-header { background:linear-gradient(135deg,var(--surface),var(--surface2)); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:14px; }\n  #wd-day { font-family:'Bebas Neue',sans-serif; font-size:42px; color:var(--accent); line-height:1; }\n  #wd-focus { font-size:13px; color:var(--text2); margin-top:4px; }\n  #wd-tags { margin-top:12px; display:flex; flex-wrap:wrap; gap:6px; }\n  .wd-tag { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:5px 12px; border-radius:50px; border:1px solid var(--border); color:var(--text2); }\n\n  \/* START WORKOUT BTN *\/\n  #start-workout-btn { width:100%; padding:18px; background:var(--accent); color:#0a0a0f; border:none; border-radius:var(--radius-sm); font-family:'DM Sans',sans-serif; font-size:16px; font-weight:700; cursor:pointer; margin-bottom:20px; letter-spacing:.03em; transition:all .2s; }\n  #start-workout-btn:active { transform:scale(.98); }\n\n  \/* RESPONSIVE TWEAKS *\/\n  @media (max-width: 600px) { .big-num { font-size:56px; } }\n\n  \/* ANIMATIONS *\/\n  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }\n  .pulse { animation:pulse 2s infinite; }\n  @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }\n  .slide-up { animation:slideUp .3s ease; }\n\n  \/* TABS *\/\n  .tab-content { display:none; }\n  .tab-content.active { display:block; animation:slideUp .3s ease; }\n\n  \/* EMPTY STATE *\/\n  .empty-state { text-align:center; padding:40px 20px; color:var(--text3); }\n  .empty-state .es-icon { font-size:40px; margin-bottom:12px; }\n  .empty-state .es-text { font-size:14px; }\n<\/style>\n<\/head>\n<body>\n<div id=\"app\">\n  <div id=\"topbar\">\n    <div id=\"topbar-title\">DISCIPLINE OS<\/div>\n    <div style=\"display:flex;align-items:center;gap:10px;\">\n      <div id=\"day-type-badge\"><\/div>\n      <div id=\"topbar-time\"><\/div>\n    <\/div>\n  <\/div>\n  <div id=\"nav\">\n    <button class=\"active\" onclick=\"switchTab('home')\">Today<\/button>\n    <button onclick=\"switchTab('workout')\">Workout<\/button>\n    <button onclick=\"switchTab('food')\">Food<\/button>\n    <button onclick=\"switchTab('history')\">History<\/button>\n  <\/div>\n  <div id=\"content\">\n\n    <!-- HOME TAB -->\n    <div id=\"tab-home\" class=\"tab-content active\">\n      <div id=\"snack-banner\">\n        <div class=\"snack-label\">🎒 Pack for bus<\/div>\n        <div class=\"snack-text\">Mixed nuts (cashews, almonds, raisins) — evening shuttle snack<\/div>\n      <\/div>\n      <div id=\"hero\"><\/div>\n      <div id=\"missed-section\"><\/div>\n\n      <!-- SCORE -->\n      <div class=\"card\">\n        <div class=\"label\">Today's Score<\/div>\n        <div class=\"score-wrap\">\n          <div class=\"score-ring-wrap\">\n            <svg width=\"90\" height=\"90\" viewBox=\"0 0 90 90\">\n              <circle cx=\"45\" cy=\"45\" r=\"38\" fill=\"none\" stroke=\"#2a2a3a\" stroke-width=\"7\"\/>\n              <circle id=\"score-circle\" cx=\"45\" cy=\"45\" r=\"38\" fill=\"none\" stroke=\"#e8ff47\" stroke-width=\"7\" stroke-linecap=\"round\" stroke-dasharray=\"239\" stroke-dashoffset=\"239\"\/>\n            <\/svg>\n            <div class=\"score-center\">\n              <div class=\"score-num\" id=\"score-display\">0<\/div>\n              <div class=\"score-denom\">\/10<\/div>\n            <\/div>\n          <\/div>\n          <div class=\"score-breakdown\" id=\"score-breakdown\"><\/div>\n        <\/div>\n      <\/div>\n\n      <!-- TODAY CHECKLIST -->\n      <div class=\"card\">\n        <div class=\"label\">Today's Tasks<\/div>\n        <div id=\"checklist\"><\/div>\n      <\/div>\n\n      <!-- NIGHT PREP -->\n      <div class=\"card\" id=\"night-prep-card\" style=\"display:none;\">\n        <div class=\"label\">Night Prep — For Tomorrow<\/div>\n        <div id=\"night-prep-list\"><\/div>\n      <\/div>\n    <\/div>\n\n    <!-- WORKOUT TAB -->\n    <div id=\"tab-workout\" class=\"tab-content\">\n      <div id=\"workout-day-header\">\n        <div class=\"label\">Today's Session<\/div>\n        <div id=\"wd-day\"><\/div>\n        <div id=\"wd-focus\"><\/div>\n        <div id=\"wd-tags\"><\/div>\n      <\/div>\n      <button id=\"start-workout-btn\" onclick=\"startWorkoutSession()\">▶ START SESSION<\/button>\n      <div id=\"exercise-list\"><\/div>\n    <\/div>\n\n    <!-- FOOD TAB -->\n    <div id=\"tab-food\" class=\"tab-content\">\n      <div class=\"card\">\n        <div class=\"label\">Daily Protein Target<\/div>\n        <div style=\"display:flex;align-items:baseline;gap:6px;\">\n          <span class=\"big-num\" style=\"font-size:48px;\" id=\"protein-display\">0<\/span>\n          <span style=\"color:var(--text2);font-size:16px;\">\/ 100g<\/span>\n        <\/div>\n        <div class=\"protein-bar\"><div class=\"protein-fill\" id=\"protein-fill\" style=\"width:0%\"><\/div><\/div>\n      <\/div>\n\n      <div class=\"meal-section\">\n        <div class=\"meal-header\">\n          <div class=\"meal-title\">BREAKFAST<\/div>\n          <div class=\"meal-time\">7:30 AM<\/div>\n        <\/div>\n        <div class=\"card card-sm\">\n          <div style=\"margin-bottom:10px;\">\n            <span class=\"food-tag\">3 Eggs + Toast<\/span>\n            <span class=\"food-tag\">Ragi + Whey<\/span>\n            <span class=\"food-tag\">Smoothie<\/span>\n          <\/div>\n          <div class=\"check-item\" onclick=\"toggleProtein('breakfast')\">\n            <div class=\"check-box\" id=\"pcheck-breakfast\"><\/div>\n            <div class=\"check-text\">Protein done (+25g)<\/div>\n          <\/div>\n        <\/div>\n      <\/div>\n\n      <div class=\"meal-section\">\n        <div class=\"meal-header\">\n          <div class=\"meal-title\">LUNCH<\/div>\n          <div class=\"meal-time\">2:00 PM<\/div>\n        <\/div>\n        <div class=\"card card-sm\">\n          <div style=\"margin-bottom:10px;\">\n            <span class=\"food-tag\">1.5 katori rice<\/span>\n            <span class=\"food-tag\">1.5 katori dal<\/span>\n            <span class=\"food-tag\">Sabzi<\/span>\n            <span class=\"food-tag\">Curd<\/span>\n            <span class=\"food-tag\">Paneer 50g<\/span>\n          <\/div>\n          <div class=\"check-item\" onclick=\"toggleProtein('lunch')\">\n            <div class=\"check-box\" id=\"pcheck-lunch\"><\/div>\n            <div class=\"check-text\">Protein done (+35g)<\/div>\n          <\/div>\n        <\/div>\n      <\/div>\n\n      <div class=\"meal-section\" id=\"bus-snack-meal\" style=\"display:none;\">\n        <div class=\"meal-header\">\n          <div class=\"meal-title\">BUS SNACK<\/div>\n          <div class=\"meal-time\">Evening shuttle<\/div>\n        <\/div>\n        <div class=\"card card-sm\">\n          <div style=\"margin-bottom:10px;\">\n            <span class=\"food-tag\">Mixed nuts<\/span>\n            <span class=\"food-tag\">Cashews · Almonds · Raisins<\/span>\n          <\/div>\n          <div class=\"check-item\" onclick=\"toggleProtein('snack')\">\n            <div class=\"check-box\" id=\"pcheck-snack\"><\/div>\n            <div class=\"check-text\">Snack done (+5g)<\/div>\n          <\/div>\n        <\/div>\n      <\/div>\n\n      <div class=\"meal-section\">\n        <div class=\"meal-header\">\n          <div class=\"meal-title\">DINNER<\/div>\n          <div class=\"meal-time\" id=\"dinner-time-label\">8:30 PM<\/div>\n        <\/div>\n        <div class=\"card card-sm\">\n          <div style=\"margin-bottom:10px;\">\n            <span class=\"food-tag\">2–3 Rotis<\/span>\n            <span class=\"food-tag\">Sabzi<\/span>\n            <span class=\"food-tag\">Paneer bhurji<\/span>\n            <span class=\"food-tag\">Egg bhurji<\/span>\n          <\/div>\n          <div class=\"check-item\" onclick=\"toggleProtein('dinner')\">\n            <div class=\"check-box\" id=\"pcheck-dinner\"><\/div>\n            <div class=\"check-text\">Protein done (+35g)<\/div>\n          <\/div>\n        <\/div>\n      <\/div>\n\n      <div class=\"meal-section\">\n        <div class=\"meal-header\">\n          <div class=\"meal-title\">PRE-SLEEP<\/div>\n          <div class=\"meal-time\">11:30 PM<\/div>\n        <\/div>\n        <div class=\"card card-sm\">\n          <div style=\"margin-bottom:10px;\">\n            <span class=\"food-tag\">Milk<\/span>\n            <span class=\"food-tag\">Curd<\/span>\n          <\/div>\n          <div class=\"check-item\" onclick=\"toggleProtein('presleep')\">\n            <div class=\"check-box\" id=\"pcheck-presleep\"><\/div>\n            <div class=\"check-text\">Done (+8g)<\/div>\n          <\/div>\n        <\/div>\n      <\/div>\n    <\/div>\n\n    <!-- HISTORY TAB -->\n    <div id=\"tab-history\" class=\"tab-content\">\n      <div class=\"card\">\n        <div class=\"label\">Current Streak<\/div>\n        <div id=\"streak-display\" style=\"margin-top:6px;\"><\/div>\n      <\/div>\n\n      <div class=\"card\">\n        <div class=\"label\">This Week<\/div>\n        <div class=\"week-bars\" id=\"week-bars\"><\/div>\n      <\/div>\n\n      <div class=\"card\">\n        <div class=\"label\" id=\"month-label\">This Month<\/div>\n        <div class=\"cal-grid\" id=\"cal-header\"><\/div>\n        <div class=\"cal-grid\" id=\"cal-grid\"><\/div>\n      <\/div>\n\n      <div class=\"card\" id=\"history-detail-card\" style=\"display:none;\">\n        <div class=\"label\" id=\"history-detail-date\"><\/div>\n        <div id=\"history-detail-content\"><\/div>\n      <\/div>\n    <\/div>\n\n  <\/div>\n<\/div>\n\n<!-- TIMER MODAL -->\n<div id=\"timer-modal\">\n  <div id=\"timer-exercise-name\"><\/div>\n  <div id=\"timer-detail\"><\/div>\n  <div id=\"timer-ring\">\n    <svg width=\"200\" height=\"200\" viewBox=\"0 0 200 200\">\n      <circle cx=\"100\" cy=\"100\" r=\"88\" fill=\"none\" stroke=\"#2a2a3a\" stroke-width=\"10\"\/>\n      <circle id=\"timer-circle\" cx=\"100\" cy=\"100\" r=\"88\" fill=\"none\" stroke=\"#e8ff47\" stroke-width=\"10\" stroke-linecap=\"round\" stroke-dasharray=\"553\" stroke-dashoffset=\"0\"\/>\n    <\/svg>\n    <div id=\"timer-center\">\n      <div id=\"timer-num\">0<\/div>\n      <div id=\"timer-phase\">GET READY<\/div>\n    <\/div>\n  <\/div>\n  <div id=\"timer-set-info\"><\/div>\n  <div id=\"timer-quote\"><\/div>\n  <div id=\"timer-controls\">\n    <button class=\"timer-btn secondary\" onclick=\"pauseTimer()\">⏸ Pause<\/button>\n    <button class=\"timer-btn danger\" onclick=\"stopTimer()\">✕ End<\/button>\n  <\/div>\n<\/div>\n\n<!-- OFFICE MODAL -->\n<div id=\"office-modal\">\n  <div class=\"office-modal-inner\">\n    <div class=\"office-q\">Office Tomorrow?<\/div>\n    <div class=\"office-sub\">This sets your morning workout and meal plan for tomorrow<\/div>\n    <div class=\"office-btns\">\n      <button class=\"office-btn yes\" onclick=\"setTomorrow(true)\">Yes, Office<\/button>\n      <button class=\"office-btn no\" onclick=\"setTomorrow(false)\">No, WFH<\/button>\n    <\/div>\n  <\/div>\n<\/div>\n\n<script>\n\/\/ ===================== DATA =====================\nconst SCORE_ITEMS = [\n  { key:'workout', label:'Workout done', icon:'🏋️' },\n  { key:'protein_breakfast', label:'Breakfast protein', icon:'🥚' },\n  { key:'protein_lunch', label:'Lunch protein', icon:'🍛' },\n  { key:'protein_dinner', label:'Dinner protein', icon:'🍽️' },\n  { key:'sleep', label:'Sleep before midnight', icon:'🌙' },\n  { key:'water', label:'Water intake', icon:'💧' },\n  { key:'morning_stretch', label:'Morning stretch', icon:'🧘' },\n  { key:'book', label:'Read a book', icon:'📖' },\n  { key:'focus', label:'No distractions', icon:'🧠' },\n  { key:'learned', label:'Learnt something new', icon:'💡' },\n];\n\nconst MOTIVATIONAL_QUOTES = [\n  \"Every rep counts. Don't stop now.\",\n  \"Pain is temporary. Strength is permanent.\",\n  \"You're building the version of yourself people will notice.\",\n  \"This set. Right now. That's all that matters.\",\n  \"Posture is power. Own the room.\",\n  \"Your future self is watching. Make them proud.\",\n  \"One more. Always one more.\",\n  \"You showed up. Now finish.\",\n  \"Grip tight. Stay locked in.\",\n  \"The discomfort is the point.\",\n];\n\n\/\/ WORKOUT PLANS\nconst WORKOUT_PLANS = {\n  home: [\n    {\n      day: 'PUSH + CORE',\n      focus: 'Chest · Shoulders · Triceps · Core activation',\n      tags: ['Push','Core','APT Fix'],\n      exercises: [\n        { name:'Dead Bug', type:'time', duration:40, sets:3, target:'Core \/ APT correction', muscle:'Core' },\n        { name:'Decline Push-Ups', type:'reps', reps:12, sets:4, target:'Chest + Shoulders', muscle:'Chest' },\n        { name:'Dumbbell Shoulder Press', type:'reps', reps:12, sets:4, target:'5kg each hand', muscle:'Shoulders' },\n        { name:'Lateral Raises', type:'reps', reps:15, sets:3, target:'5kg each hand', muscle:'Shoulders' },\n        { name:'Chair Dips', type:'reps', reps:12, sets:3, target:'Bodyweight', muscle:'Triceps' },\n        { name:'Glute Bridge', type:'reps', reps:15, sets:3, target:'Pause 2s at top — APT fix', muscle:'Glutes' },\n        { name:'Plank', type:'time', duration:60, sets:3, target:'Keep hips neutral', muscle:'Core' },\n        { name:'Hip Flexor Stretch', type:'time', duration:30, sets:2, target:'Each side — APT fix', muscle:'Hip Flexors' },\n      ]\n    },\n    {\n      day: 'PULL + GRIP',\n      focus: 'Back · Biceps · Grip · Finger strength',\n      tags: ['Pull','Biceps','Grip'],\n      exercises: [\n        { name:'Dead Hang \/ Pull-Up Hold', type:'time', duration:30, sets:3, target:'Pull-up bar — grip builder', muscle:'Grip' },\n        { name:'Negative Pull-Ups', type:'reps', reps:5, sets:4, target:'Slow 5s descent — pull-up bar', muscle:'Back' },\n        { name:'One-Arm Dumbbell Row', type:'reps', reps:12, sets:4, target:'5kg — each side', muscle:'Back' },\n        { name:'Bicep Curls', type:'reps', reps:12, sets:4, target:'5kg each', muscle:'Biceps' },\n        { name:'Hammer Curls', type:'reps', reps:12, sets:3, target:'5kg each', muscle:'Biceps' },\n        { name:'Band Pull-Aparts', type:'reps', reps:20, sets:3, target:'Maroon band — posture fix', muscle:'Rear Delts' },\n        { name:'Towel Grip Curls', type:'reps', reps:10, sets:3, target:'Wrap towel on dumbbell — finger strength', muscle:'Grip' },\n        { name:'Wrist Curls', type:'reps', reps:15, sets:3, target:'5kg — forearm strength', muscle:'Forearms' },\n        { name:'Bird Dog', type:'reps', reps:12, sets:3, target:'Each side — APT + core', muscle:'Core' },\n      ]\n    },\n    {\n      day: 'LEGS + GLUTES',\n      focus: 'Quads · Glutes · Hamstrings · APT correction',\n      tags: ['Legs','Glutes','APT Fix','Kettlebell'],\n      exercises: [\n        { name:'Glute Bridge', type:'reps', reps:20, sets:3, target:'Pause at top — bodyweight warmup', muscle:'Glutes' },\n        { name:'Goblet Squat', type:'reps', reps:15, sets:4, target:'16kg kettlebell', muscle:'Quads' },\n        { name:'KB Swing', type:'reps', reps:15, sets:4, target:'16kg kettlebell — APT fixer', muscle:'Glutes' },\n        { name:'Reverse Lunges', type:'reps', reps:12, sets:3, target:'Each leg — bodyweight', muscle:'Quads' },\n        { name:'Hip Thrusts', type:'reps', reps:12, sets:4, target:'Use couch\/bed edge', muscle:'Glutes' },\n        { name:'Wall Sit', type:'time', duration:60, sets:3, target:'Quad endurance', muscle:'Quads' },\n        { name:'Leg Raises', type:'reps', reps:15, sets:3, target:'Core + hip flexor control', muscle:'Core' },\n        { name:'Hip Flexor Stretch', type:'time', duration:40, sets:3, target:'Each side — key APT fix', muscle:'Hip Flexors' },\n      ]\n    },\n    {\n      day: 'FULL BODY + STRENGTH',\n      focus: 'Compound movements · Power · Athleticism',\n      tags: ['Full Body','Power','Compound'],\n      exercises: [\n        { name:'KB Swing', type:'reps', reps:20, sets:4, target:'16kg — explosiveness', muscle:'Full Body' },\n        { name:'Push-Up Ladder', type:'reps', reps:20, sets:3, target:'Max reps — progress weekly', muscle:'Chest' },\n        { name:'Dumbbell Thruster', type:'reps', reps:12, sets:4, target:'5kg each — squat to press', muscle:'Full Body' },\n        { name:'Pull-Up (or Negative)', type:'reps', reps:5, sets:4, target:'Pull-up bar', muscle:'Back' },\n        { name:'Farmer Carry', type:'time', duration:40, sets:3, target:'5kg each hand — grip + posture', muscle:'Grip' },\n        { name:'Mountain Climbers', type:'time', duration:40, sets:3, target:'Core + cardio', muscle:'Core' },\n        { name:'Burpees', type:'reps', reps:10, sets:3, target:'Explosive', muscle:'Full Body' },\n        { name:'Dead Bug', type:'time', duration:40, sets:3, target:'Core — APT fix', muscle:'Core' },\n      ]\n    },\n    {\n      day: 'CORE + POSTURE',\n      focus: 'Deep core · APT correction · Posture · Grip',\n      tags: ['Core','Posture','APT Fix','Grip'],\n      exercises: [\n        { name:'Dead Bug', type:'time', duration:45, sets:4, target:'Slow controlled — spine neutral', muscle:'Core' },\n        { name:'Bird Dog', type:'reps', reps:15, sets:3, target:'Each side', muscle:'Core' },\n        { name:'Plank', type:'time', duration:75, sets:3, target:'Posterior pelvic tuck', muscle:'Core' },\n        { name:'Leg Raises', type:'reps', reps:15, sets:4, target:'No arch in lower back', muscle:'Core' },\n        { name:'Glute Bridge Hold', type:'time', duration:45, sets:3, target:'Sustained contraction — APT', muscle:'Glutes' },\n        { name:'Dead Hang', type:'time', duration:30, sets:4, target:'Pull-up bar — grip + spine decompression', muscle:'Grip' },\n        { name:'Band Pull-Aparts', type:'reps', reps:25, sets:3, target:'Maroon band', muscle:'Rear Delts' },\n        { name:'Hip Flexor Stretch', type:'time', duration:45, sets:3, target:'Each side — the most important stretch you do', muscle:'Hip Flexors' },\n      ]\n    },\n    {\n      day: 'PUSH + ARMS',\n      focus: 'Chest · Arms · Shoulders · Grip',\n      tags: ['Push','Arms','Biceps','Grip'],\n      exercises: [\n        { name:'Decline Push-Ups', type:'reps', reps:15, sets:4, target:'Slow 3s down', muscle:'Chest' },\n        { name:'Pike Push-Ups', type:'reps', reps:12, sets:3, target:'Shoulder focus', muscle:'Shoulders' },\n        { name:'Dumbbell Shoulder Press', type:'reps', reps:12, sets:4, target:'5kg each', muscle:'Shoulders' },\n        { name:'Bicep Curls', type:'reps', reps:15, sets:4, target:'5kg — full range', muscle:'Biceps' },\n        { name:'Hammer Curls', type:'reps', reps:12, sets:3, target:'5kg', muscle:'Biceps' },\n        { name:'Chair Dips', type:'reps', reps:15, sets:4, target:'Tricep focus', muscle:'Triceps' },\n        { name:'Wrist Curls', type:'reps', reps:20, sets:3, target:'5kg — forearm pump', muscle:'Forearms' },\n        { name:'Dead Hang', type:'time', duration:25, sets:3, target:'Grip endurance', muscle:'Grip' },\n      ]\n    },\n    {\n      day: 'ACTIVE RECOVERY',\n      focus: 'Mobility · Flexibility · Light movement',\n      tags: ['Recovery','Mobility','Stretch'],\n      exercises: [\n        { name:'Full Body Stretch', type:'time', duration:60, sets:2, target:'Hamstrings, hip flexors, chest', muscle:'Full Body' },\n        { name:'Hip Flexor Stretch', type:'time', duration:60, sets:3, target:'Each side — hold and breathe', muscle:'Hip Flexors' },\n        { name:'Cat-Cow', type:'reps', reps:15, sets:2, target:'Spinal mobility', muscle:'Spine' },\n        { name:'Dead Hang', type:'time', duration:20, sets:3, target:'Light grip work', muscle:'Grip' },\n        { name:'Light Walk', type:'time', duration:600, sets:1, target:'10 min easy walk', muscle:'Full Body' },\n      ]\n    },\n  ],\n  office_morning: {\n    day: 'OFFICE MORNING',\n    focus: 'Mobility · APT · Light activation · 20 min',\n    tags: ['Morning','Light','Mobility','APT'],\n    exercises: [\n      { name:'Hip Flexor Stretch', type:'time', duration:40, sets:2, target:'Each side — wake up your hips', muscle:'Hip Flexors' },\n      { name:'Cat-Cow', type:'reps', reps:10, sets:2, target:'Spinal wake-up', muscle:'Spine' },\n      { name:'Bird Dog', type:'reps', reps:10, sets:2, target:'Each side', muscle:'Core' },\n      { name:'Glute Bridge', type:'reps', reps:15, sets:2, target:'Activate glutes before sitting all day', muscle:'Glutes' },\n      { name:'Push-Ups', type:'reps', reps:15, sets:2, target:'Bodyweight — wake up chest and shoulders', muscle:'Chest' },\n      { name:'Leg Raises', type:'reps', reps:12, sets:2, target:'Core activation', muscle:'Core' },\n      { name:'Dead Hang', type:'time', duration:20, sets:2, target:'If bar is up — spinal decompression', muscle:'Grip' },\n    ]\n  }\n};\n\n\/\/ TASKS BY DAY TYPE\nfunction getTasksForDay(isOffice) {\n  const tasks = [];\n  if (isOffice) {\n    tasks.push({ key:'wake', time:'07:00', label:'Wake up + water', icon:'🌅', completable:false });\n    tasks.push({ key:'morning_workout', time:'07:10', label:'Morning mobility session', icon:'🧘', completable:true });\n    tasks.push({ key:'breakfast', time:'07:30', label:'Breakfast — Ragi porridge', icon:'🥣', completable:true });\n    tasks.push({ key:'shuttle', time:'08:30', label:'Leave for shuttle', icon:'🚌', completable:false });\n    tasks.push({ key:'lunch', time:'14:00', label:'Lunch — Rice · Dal · Sabzi · Curd', icon:'🍛', completable:true });\n    tasks.push({ key:'snack_bus', time:'18:45', label:'Bus snack — mixed nuts', icon:'🌰', completable:true });\n    tasks.push({ key:'home', time:'21:00', label:'Home from office', icon:'🏠', completable:false });\n    tasks.push({ key:'dinner', time:'21:30', label:'Dinner — Roti + Sabzi + Protein', icon:'🍽️', completable:true });\n    tasks.push({ key:'presleep', time:'23:30', label:'Pre-sleep — Milk \/ Curd', icon:'🥛', completable:true });\n    tasks.push({ key:'sleep', time:'00:00', label:'Sleep', icon:'😴', completable:false });\n  } else {\n    tasks.push({ key:'wake', time:'07:00', label:'Wake up + water', icon:'🌅', completable:false });\n    tasks.push({ key:'breakfast', time:'07:30', label:'Breakfast — Eggs \/ Ragi \/ Smoothie', icon:'🍳', completable:true });\n    tasks.push({ key:'lunch', time:'14:00', label:'Lunch — Rice · Dal · Sabzi · Curd', icon:'🍛', completable:true });\n    tasks.push({ key:'pre_workout', time:'18:45', label:'Pre-workout — Banana (optional)', icon:'🍌', completable:true });\n    tasks.push({ key:'workout', time:'19:30', label:'Workout session', icon:'🏋️', completable:true });\n    tasks.push({ key:'dinner', time:'20:30', label:'Dinner — Roti + Sabzi + Protein', icon:'🍽️', completable:true });\n    tasks.push({ key:'presleep', time:'23:30', label:'Pre-sleep — Milk \/ Curd', icon:'🥛', completable:true });\n    tasks.push({ key:'sleep', time:'00:00', label:'Sleep', icon:'😴', completable:false });\n  }\n  return tasks;\n}\n\n\/\/ ===================== STATE =====================\nlet state = loadState();\n\nfunction loadState() {\n  const today = getDateKey();\n  const saved = JSON.parse(localStorage.getItem('disciplineOS') || '{}');\n  if (!saved.days) saved.days = {};\n  if (!saved.days[today]) {\n    saved.days[today] = {\n      isOffice: saved.tomorrowIsOffice || false,\n      completedTasks: {},\n      score: 0,\n      proteinChecks: {},\n      prepChecks: {},\n      workoutDay: getWorkoutDayIndex(today),\n    };\n  }\n  if (saved.tomorrowIsOffice === undefined) saved.tomorrowIsOffice = false;\n  return saved;\n}\n\nfunction saveState() {\n  localStorage.setItem('disciplineOS', JSON.stringify(state));\n}\n\nfunction getDateKey(d) {\n  const date = d || new Date();\n  return date.toISOString().split('T')[0];\n}\n\nfunction getTodayData() {\n  return state.days[getDateKey()];\n}\n\nfunction getWorkoutDayIndex(dateKey) {\n  \/\/ Cycle through 7 workout days\n  const start = new Date('2025-01-06'); \/\/ Monday reference\n  const current = new Date(dateKey);\n  const diff = Math.floor((current - start) \/ (1000*60*60*24));\n  return ((diff % 7) + 7) % 7;\n}\n\n\/\/ ===================== TIME UTILS =====================\nfunction getTimeMinutes() {\n  const now = new Date();\n  return now.getHours() * 60 + now.getMinutes();\n}\n\nfunction parseTime(timeStr) {\n  const [h, m] = timeStr.split(':').map(Number);\n  \/\/ 00:00 used as \"midnight\/end of day\" — treat as 24:00 = 1440 mins\n  if (h === 0 && m === 0) return 24 * 60;\n  return h * 60 + m;\n}\n\nfunction formatTime(mins) {\n  const h = Math.floor(mins \/ 60) % 24;\n  const m = mins % 60;\n  const ampm = h >= 12 ? 'PM' : 'AM';\n  const hh = h % 12 || 12;\n  return `${hh}:${m.toString().padStart(2,'0')} ${ampm}`;\n}\n\nfunction formatCountdown(diffMins) {\n  if (diffMins <= 0) return 'Now';\n  const h = Math.floor(diffMins \/ 60);\n  const m = diffMins % 60;\n  if (h > 0) return `${h}h ${m}m`;\n  return `${m}m`;\n}\n\n\/\/ ===================== TOPBAR CLOCK =====================\nfunction updateClock() {\n  const now = new Date();\n  const h = now.getHours().toString().padStart(2,'0');\n  const m = now.getMinutes().toString().padStart(2,'0');\n  document.getElementById('topbar-time').textContent = `${h}:${m}`;\n}\nsetInterval(updateClock, 1000);\nupdateClock();\n\n\/\/ ===================== DAY TYPE BADGE =====================\nfunction renderDayBadge() {\n  const td = getTodayData();\n  const badge = document.getElementById('day-type-badge');\n  badge.innerHTML = `<span class=\"type-pill ${td.isOffice ? 'office' : 'home'}\">${td.isOffice ? '🏢 Office' : '🏠 Home'}<\/span>`;\n}\n\n\/\/ ===================== HERO =====================\nfunction renderHero() {\n  const td = getTodayData();\n  const tasks = getTasksForDay(td.isOffice);\n  const now = getTimeMinutes();\n\n  \/\/ Find missed tasks (past, completable, not done)\n  const missed = tasks.filter(t => {\n    if (!t.completable) return false;\n    const taskTime = parseTime(t.time);\n    const isDone = td.completedTasks[t.key];\n    return taskTime < now - 30 && !isDone;\n  });\n\n  \/\/ Find current\/next task\n  let currentTask = null;\n  let nextTask = null;\n  for (let i = 0; i < tasks.length; i++) {\n    const t = tasks[i];\n    const taskTime = parseTime(t.time);\n    const nextTime = i < tasks.length - 1 ? parseTime(tasks[i+1].time) : taskTime + 120;\n    if (now >= taskTime && now < nextTime) {\n      currentTask = t;\n      nextTask = tasks[i+1] || null;\n    }\n  }\n  if (!currentTask) {\n    \/\/ Find next upcoming task\n    for (const t of tasks) {\n      const taskTime = parseTime(t.time);\n      if (taskTime > now) { nextTask = t; break; }\n    }\n  }\n\n  const hero = document.getElementById('hero');\n  let html = '';\n\n  \/\/ Missed section\n  const missedSection = document.getElementById('missed-section');\n  if (missed.length > 0) {\n    let mhtml = '<div id=\"hero-missed\"><div class=\"missed-label\">⚠️ Missed Tasks<\/div>';\n    missed.forEach(t => {\n      mhtml += `<div class=\"missed-item\" style=\"color:var(--danger);\">✕ ${t.icon} ${t.label} <span style=\"color:var(--text3);font-size:11px;\">${t.time}<\/span><\/div>`;\n    });\n    mhtml += '<\/div>';\n    missedSection.innerHTML = mhtml;\n  } else {\n    missedSection.innerHTML = '';\n  }\n\n  if (currentTask) {\n    const isDone = td.completedTasks[currentTask.key];\n    html += `<div id=\"hero-status\" class=\"${isDone ? '' : 'pulse'}\">● ${isDone ? 'DONE' : 'HAPPENING NOW'}<\/div>`;\n    html += `<div id=\"hero-task\">${currentTask.icon} ${currentTask.label}<\/div>`;\n    if (nextTask) {\n      const diff = parseTime(nextTask.time) - now;\n      html += `<div id=\"hero-sub\">Next: ${nextTask.icon} ${nextTask.label}<\/div>`;\n      html += `<div id=\"hero-countdown\">${formatCountdown(diff)} → ${nextTask.label.split(' ')[0]}<\/div>`;\n    }\n  } else if (nextTask) {\n    const diff = parseTime(nextTask.time) - now;\n    html += `<div id=\"hero-status\">UPCOMING<\/div>`;\n    html += `<div id=\"hero-task\">${nextTask.icon} ${nextTask.label}<\/div>`;\n    html += `<div id=\"hero-sub\">Starts in<\/div>`;\n    html += `<div id=\"hero-countdown\">${formatCountdown(diff)}<\/div>`;\n  } else {\n    html += `<div id=\"hero-status\">✓ ALL DONE<\/div>`;\n    html += `<div id=\"hero-task\">Day Complete<\/div>`;\n    html += `<div id=\"hero-sub\">Rest up. Tomorrow we go again.<\/div>`;\n  }\n  hero.innerHTML = html;\n\n  \/\/ Snack banner for office days near evening\n  const snackBanner = document.getElementById('snack-banner');\n  if (td.isOffice && now >= 14*60 && now < 18*60) {\n    snackBanner.style.display = 'block';\n  } else {\n    snackBanner.style.display = 'none';\n  }\n}\n\n\/\/ ===================== CHECKLIST =====================\nfunction renderChecklist() {\n  const td = getTodayData();\n  const tasks = getTasksForDay(td.isOffice).filter(t => t.completable);\n  const now = getTimeMinutes();\n  let html = '';\n  tasks.forEach(t => {\n    const taskTime = parseTime(t.time);\n    const isDone = td.completedTasks[t.key];\n    const isPast = taskTime < now - 30;\n    const isMissed = isPast && !isDone;\n    let cls = isDone ? 'done' : isMissed ? 'missed' : '';\n    html += `<div class=\"check-item\" onclick=\"toggleTask('${t.key}')\">\n      <div class=\"check-box ${cls}\" id=\"cb-${t.key}\"><\/div>\n      <div class=\"check-text ${isDone ? 'done' : ''}\">${t.icon} ${t.label}<\/div>\n      <div class=\"check-time\">${formatTime(taskTime)}<\/div>\n    <\/div>`;\n  });\n  document.getElementById('checklist').innerHTML = html;\n}\n\nfunction toggleTask(key) {\n  const td = getTodayData();\n  td.completedTasks[key] = !td.completedTasks[key];\n  saveState();\n  renderHome();\n  updateScore();\n}\n\n\/\/ ===================== SCORE =====================\nfunction updateScore() {\n  const td = getTodayData();\n  const now = getTimeMinutes();\n  let score = 0;\n  const breakdown = [];\n\n  SCORE_ITEMS.forEach(item => {\n    let done = false;\n    if (item.key === 'workout') done = !!(td.completedTasks['workout'] || td.completedTasks['morning_workout']);\n    else if (item.key === 'protein_breakfast') done = !!(td.proteinChecks && td.proteinChecks['breakfast']);\n    else if (item.key === 'protein_lunch') done = !!(td.proteinChecks && td.proteinChecks['lunch']);\n    else if (item.key === 'protein_dinner') done = !!(td.proteinChecks && td.proteinChecks['dinner']);\n    else if (item.key === 'sleep') done = !!(td.completedTasks['sleep_before_midnight']);\n    else if (item.key === 'water') done = !!(td.completedTasks['water']);\n    else if (item.key === 'morning_stretch') done = !!(td.completedTasks['morning_workout'] || td.completedTasks['stretch']);\n    else if (item.key === 'book') done = !!(td.completedTasks['book']);\n    else if (item.key === 'focus') done = !!(td.completedTasks['focus']);\n    else if (item.key === 'learned') done = !!(td.completedTasks['learned']);\n\n    if (done) score++;\n    const isPast = false; \/\/ simplified\n    breakdown.push({ ...item, done, pending: !done });\n  });\n\n  td.score = score;\n  saveState();\n\n  \/\/ Ring\n  const circumference = 239;\n  const offset = circumference - (score \/ 10) * circumference;\n  document.getElementById('score-circle').style.strokeDashoffset = offset;\n  document.getElementById('score-display').textContent = score;\n\n  \/\/ Breakdown - show all 10 items in 2 columns\n  let bhtml = '<div style=\"display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;\">';\n  breakdown.forEach(item => {\n    const cls = item.done ? 'done' : 'pending';\n    bhtml += `<div class=\"score-item\"><div class=\"score-dot ${cls}\"><\/div><span style=\"font-size:11px;\">${item.icon} ${item.label}<\/span><\/div>`;\n  });\n  bhtml += '<\/div>';\n  document.getElementById('score-breakdown').innerHTML = bhtml;\n}\n\n\/\/ ===================== EXTRA SCORE TASKS =====================\n\/\/ Water, book, focus, learned — tap in checklist\nfunction renderExtraChecks() {\n  const td = getTodayData();\n  const extras = [\n    { key:'water', label:'💧 Water intake', icon:'💧' },\n    { key:'book', label:'📖 Read a book', icon:'📖' },\n    { key:'focus', label:'🧠 No distractions block', icon:'🧠' },\n    { key:'learned', label:'💡 Learnt something new', icon:'💡' },\n    { key:'sleep_before_midnight', label:'🌙 Slept before midnight', icon:'🌙' },\n    { key:'stretch', label:'🧘 Morning stretch (home days)', icon:'🧘' },\n  ];\n  let html = document.getElementById('checklist').innerHTML;\n  html += '<div class=\"label\" style=\"margin:14px 0 6px;\">LIFESTYLE<\/div>';\n  extras.forEach(e => {\n    const done = td.completedTasks[e.key];\n    html += `<div class=\"check-item\" onclick=\"toggleTask('${e.key}')\">\n      <div class=\"check-box ${done ? 'done' : ''}\" id=\"cb-${e.key}\"><\/div>\n      <div class=\"check-text ${done ? 'done' : ''}\">${e.icon} ${e.label}<\/div>\n      <div class=\"check-time\">Any time<\/div>\n    <\/div>`;\n  });\n  document.getElementById('checklist').innerHTML = html;\n}\n\n\/\/ ===================== NIGHT PREP =====================\nfunction renderNightPrep() {\n  const now = getTimeMinutes();\n  const prepCard = document.getElementById('night-prep-card');\n  if (now < 20*60) { prepCard.style.display = 'none'; return; }\n  prepCard.style.display = 'block';\n\n  const td = getTodayData();\n  const officeAnswered = state.lastOfficePromptDate === getDateKey();\n  \/\/ null = not yet answered tonight, true\/false = answered\n  const tomorrow = officeAnswered ? state.tomorrowIsOffice : null;\n\n  let prepItems;\n  if (tomorrow === true) {\n    prepItems = [\n      { key:'prep_ragi', label:'Ragi ready to cook quickly' },\n      { key:'prep_nuts', label:'Pack mixed nuts for bus 🌰' },\n      { key:'prep_clothes', label:'Workout clothes laid out (morning session)' },\n      { key:'prep_whey', label:'Whey + shaker ready' },\n    ];\n  } else if (tomorrow === false) {\n    prepItems = [\n      { key:'prep_eggs', label:'Eggs boiled \/ in fridge' },\n      { key:'prep_whey', label:'Whey + shaker ready' },\n      { key:'prep_almonds', label:'Almonds soaked' },\n      { key:'prep_clothes', label:'Workout clothes laid out' },\n    ];\n  } else {\n    \/\/ Office question not yet answered tonight (before 10:30pm) — show generic\n    prepItems = [\n      { key:'prep_whey', label:'Whey + shaker ready' },\n      { key:'prep_clothes', label:'Workout clothes laid out' },\n      { key:'prep_water', label:'Water bottle filled' },\n    ];\n  }\n\n  let html = '';\n  prepItems.forEach(p => {\n    const done = td.prepChecks && td.prepChecks[p.key];\n    html += `<div class=\"prep-item\" onclick=\"togglePrep('${p.key}')\">\n      <div class=\"prep-check ${done ? 'done' : ''}\"><\/div>\n      <div class=\"prep-text\">${p.label}<\/div>\n    <\/div>`;\n  });\n  document.getElementById('night-prep-list').innerHTML = html;\n}\n\nfunction togglePrep(key) {\n  const td = getTodayData();\n  if (!td.prepChecks) td.prepChecks = {};\n  td.prepChecks[key] = !td.prepChecks[key];\n  saveState();\n  renderNightPrep();\n}\n\n\/\/ ===================== PROTEIN =====================\nfunction toggleProtein(meal) {\n  const td = getTodayData();\n  if (!td.proteinChecks) td.proteinChecks = {};\n  td.proteinChecks[meal] = !td.proteinChecks[meal];\n  saveState();\n  renderFood();\n  updateScore();\n}\n\nfunction renderFood() {\n  const td = getTodayData();\n  const checks = td.proteinChecks || {};\n  const proteins = { breakfast:25, lunch:35, snack:5, dinner:35, presleep:8 };\n  let total = 0;\n  Object.keys(proteins).forEach(k => { if (checks[k]) total += proteins[k]; });\n\n  document.getElementById('protein-display').textContent = total;\n  document.getElementById('protein-fill').style.width = Math.min(100, (total\/100)*100) + '%';\n\n  ['breakfast','lunch','snack','dinner','presleep'].forEach(k => {\n    const el = document.getElementById('pcheck-' + k);\n    if (el) {\n      el.className = 'check-box' + (checks[k] ? ' done' : '');\n    }\n  });\n\n  \/\/ Show bus snack on office days\n  const busMeal = document.getElementById('bus-snack-meal');\n  if (busMeal) busMeal.style.display = td.isOffice ? 'block' : 'none';\n\n  \/\/ Dinner time\n  const dinnerLabel = document.getElementById('dinner-time-label');\n  if (dinnerLabel) dinnerLabel.textContent = td.isOffice ? '9:30 PM' : '8:30 PM';\n}\n\n\/\/ ===================== WORKOUT =====================\nlet currentWorkoutDay = null;\nlet currentExerciseIndex = 0;\nlet completedExercises = [];\n\nfunction renderWorkout() {\n  const td = getTodayData();\n  const plan = td.isOffice ? WORKOUT_PLANS.office_morning : WORKOUT_PLANS.home[td.workoutDay % 7];\n  currentWorkoutDay = plan;\n\n  document.getElementById('wd-day').textContent = plan.day;\n  document.getElementById('wd-focus').textContent = plan.focus;\n\n  let tagsHtml = '';\n  plan.tags.forEach(t => tagsHtml += `<span class=\"wd-tag\">${t}<\/span>`);\n  document.getElementById('wd-tags').innerHTML = tagsHtml;\n\n  let html = '';\n  plan.exercises.forEach((ex, i) => {\n    const isDone = completedExercises.includes(i);\n    const detail = ex.type === 'reps'\n      ? `${ex.sets} sets × ${ex.reps} reps`\n      : `${ex.sets} sets × ${ex.duration}s`;\n    const badge = ex.type === 'reps' ? 'reps' : 'time';\n    html += `<div class=\"exercise-card ${isDone ? 'completed' : ''}\" id=\"ex-card-${i}\">\n      <div class=\"ex-header\">\n        <div class=\"ex-name\">${ex.name}<\/div>\n        <div class=\"ex-badge ${badge}\">${ex.type === 'reps' ? 'REPS' : 'TIME'}<\/div>\n      <\/div>\n      <div class=\"ex-detail\">${detail} · ${ex.target}<\/div>\n      <div style=\"font-size:11px;color:var(--text3);margin-top:3px;\">${ex.muscle}<\/div>\n      <div class=\"ex-sets\" id=\"ex-sets-${i}\">\n        ${Array(ex.sets).fill(0).map((_,s) => `<div class=\"ex-set-dot\" id=\"dot-${i}-${s}\"><\/div>`).join('')}\n      <\/div>\n    <\/div>`;\n  });\n  document.getElementById('exercise-list').innerHTML = html;\n}\n\n\/\/ ===================== TIMER =====================\nlet timerInterval = null;\nlet autoAdvanceTimer = null;\nlet timerState = { phase:'work', remaining:0, set:1, totalSets:0, exercise:null, exerciseIndex:0, paused:false };\n\nfunction startWorkoutSession() {\n  completedExercises = [];\n  currentExerciseIndex = 0;\n  startExercise(0);\n}\n\nfunction startExercise(idx) {\n  const ex = currentWorkoutDay.exercises[idx];\n  if (!ex) { endWorkout(); return; }\n  currentExerciseIndex = idx;\n  timerState = {\n    phase: 'prep',\n    remaining: 5,\n    set: 1,\n    totalSets: ex.sets,\n    exercise: ex,\n    exerciseIndex: idx,\n    paused: false,\n    repCount: 0,\n  };\n  showTimerModal(ex);\n  speak(`Next up: ${ex.name}. ${ex.type === 'reps' ? ex.reps + ' reps' : ex.duration + ' seconds'}. Get ready.`);\n  runTimer();\n}\n\nfunction showTimerModal(ex) {\n  document.getElementById('timer-modal').classList.add('show');\n  document.getElementById('timer-exercise-name').textContent = ex.name;\n  const detail = ex.type === 'reps'\n    ? `${ex.sets} sets × ${ex.reps} reps · ${ex.target}`\n    : `${ex.sets} sets × ${ex.duration}s · ${ex.target}`;\n  document.getElementById('timer-detail').textContent = detail;\n  document.getElementById('timer-quote').textContent = '';\n  updateTimerDisplay();\n}\n\nfunction runTimer() {\n  clearInterval(timerInterval);\n  timerInterval = setInterval(() => {\n    if (timerState.paused) return;\n    timerState.remaining--;\n\n    \/\/ Countdown voice cues\n    const ex = timerState.exercise;\n    if (timerState.phase === 'work' && ex.type === 'time') {\n      const total = ex.duration;\n      const r = timerState.remaining;\n      if (r === Math.floor(total \/ 2)) speak('Halfway. Keep going.');\n      if (r === 5) speak('5... 4... 3...');\n      if (r === 0) speak('Rest.');\n    }\n    \/\/ Rep counting for reps exercises — count down from reps to 1 using tempo\n    if (timerState.phase === 'work' && ex.type === 'reps') {\n      const total = 45; \/\/ 45s window\n      const r = timerState.remaining;\n      const elapsed = total - r;\n      const repDuration = Math.floor(total \/ ex.reps);\n      const currentRep = Math.floor(elapsed \/ repDuration) + 1;\n      const repStart = (currentRep - 1) * repDuration;\n      if (elapsed === repStart && currentRep <= ex.reps) speak(String(currentRep));\n      if (r === 5) speak('Last few. Squeeze.');\n    }\n    if (timerState.phase === 'rest' && timerState.remaining === 3) speak('Get ready. Next set.');\n    if (timerState.phase === 'prep' && timerState.remaining === 0) speak('Go!');\n\n    if (timerState.remaining <= 0) {\n      advanceTimer();\n    }\n    updateTimerDisplay();\n  }, 1000);\n}\n\nfunction advanceTimer() {\n  const ex = timerState.exercise;\n  if (timerState.phase === 'prep') {\n    timerState.phase = 'work';\n    timerState.remaining = ex.type === 'reps' ? 45 : ex.duration;\n    if (ex.type === 'reps') speak(`Set ${timerState.set}. ${ex.reps} reps. Start!`);\n    else speak(`Set ${timerState.set}. Go!`);\n  } else if (timerState.phase === 'work') {\n    \/\/ Mark set dot\n    const dot = document.getElementById(`dot-${timerState.exerciseIndex}-${timerState.set - 1}`);\n    if (dot) dot.classList.add('done');\n\n    if (timerState.set >= timerState.totalSets) {\n      \/\/ Exercise done\n      completedExercises.push(timerState.exerciseIndex);\n      const card = document.getElementById(`ex-card-${timerState.exerciseIndex}`);\n      if (card) card.classList.add('completed');\n      clearInterval(timerInterval);\n      timerState.phase = 'done';\n      speak('Exercise complete! Great work.');\n      document.getElementById('timer-quote').textContent = MOTIVATIONAL_QUOTES[Math.floor(Math.random()*MOTIVATIONAL_QUOTES.length)];\n      \/\/ Auto next after 4 seconds\n      autoAdvanceTimer = setTimeout(() => {\n        const next = timerState.exerciseIndex + 1;\n        if (next < currentWorkoutDay.exercises.length) {\n          startExercise(next);\n        } else {\n          endWorkout();\n        }\n      }, 4000);\n    } else {\n      timerState.phase = 'rest';\n      timerState.remaining = 60;\n      timerState.set++;\n      const quote = MOTIVATIONAL_QUOTES[Math.floor(Math.random()*MOTIVATIONAL_QUOTES.length)];\n      document.getElementById('timer-quote').textContent = quote;\n      speak('Rest. ' + quote);\n    }\n  } else if (timerState.phase === 'rest') {\n    timerState.phase = 'work';\n    timerState.remaining = ex.type === 'reps' ? 45 : ex.duration;\n    speak(`Set ${timerState.set}. Go!`);\n    document.getElementById('timer-quote').textContent = '';\n  }\n  updateTimerDisplay();\n}\n\nfunction updateTimerDisplay() {\n  const ex = timerState.exercise;\n  const phase = timerState.phase;\n  const num = document.getElementById('timer-num');\n  const phaseEl = document.getElementById('timer-phase');\n  const circle = document.getElementById('timer-circle');\n  const setInfo = document.getElementById('timer-set-info');\n\n  if (phase === 'prep') {\n    num.textContent = timerState.remaining;\n    num.style.color = 'var(--warning)';\n    circle.style.stroke = 'var(--warning)';\n    phaseEl.textContent = 'GET READY';\n    setInfo.textContent = '';\n  } else if (phase === 'work') {\n    num.textContent = timerState.remaining;\n    num.style.color = 'var(--accent)';\n    circle.style.stroke = 'var(--accent)';\n    phaseEl.textContent = ex.type === 'reps' ? `SET ${timerState.set} — ${ex.reps} REPS` : 'WORKING';\n    setInfo.textContent = `Set ${timerState.set} of ${timerState.totalSets}`;\n\n    \/\/ Ring animation\n    const total = ex.type === 'reps' ? 45 : ex.duration;\n    const progress = timerState.remaining \/ total;\n    const circumference = 553;\n    circle.style.strokeDashoffset = circumference * (1 - progress);\n  } else if (phase === 'rest') {\n    num.textContent = timerState.remaining;\n    num.style.color = 'var(--accent2)';\n    circle.style.stroke = 'var(--accent2)';\n    phaseEl.textContent = 'REST';\n    setInfo.textContent = `Next: Set ${timerState.set} of ${timerState.totalSets}`;\n    const progress = timerState.remaining \/ 60;\n    const circumference = 553;\n    circle.style.strokeDashoffset = circumference * (1 - progress);\n  } else if (phase === 'done') {\n    num.textContent = '✓';\n    num.style.color = 'var(--success)';\n    phaseEl.textContent = 'DONE';\n    setInfo.textContent = '';\n  }\n}\n\nfunction pauseTimer() {\n  timerState.paused = !timerState.paused;\n  document.querySelector('.timer-btn.secondary').textContent = timerState.paused ? '▶ Resume' : '⏸ Pause';\n}\n\nfunction stopTimer() {\n  clearInterval(timerInterval);\n  clearTimeout(autoAdvanceTimer);\n  document.getElementById('timer-modal').classList.remove('show');\n  \/\/ Mark workout done if at least halfway\n  if (completedExercises.length >= Math.floor(currentWorkoutDay.exercises.length \/ 2)) {\n    const td = getTodayData();\n    td.completedTasks['workout'] = true;\n    td.completedTasks['morning_workout'] = true;\n    saveState();\n    updateScore();\n    renderChecklist();\n  }\n  completedExercises = [];\n  renderWorkout();\n}\n\nfunction endWorkout() {\n  clearInterval(timerInterval);\n  document.getElementById('timer-modal').classList.remove('show');\n  const td = getTodayData();\n  td.completedTasks['workout'] = true;\n  td.completedTasks['morning_workout'] = true;\n  saveState();\n  speak('Workout complete. Excellent session. Go eat your protein.');\n  updateScore();\n  renderChecklist();\n  renderWorkout();\n}\n\n\/\/ ===================== SPEECH =====================\nfunction speak(text) {\n  if (!window.speechSynthesis) return;\n  window.speechSynthesis.cancel();\n  const utt = new SpeechSynthesisUtterance(text);\n  utt.rate = 0.95;\n  utt.pitch = 1.0;\n  utt.volume = 1.0;\n  window.speechSynthesis.speak(utt);\n}\n\n\/\/ ===================== HISTORY =====================\nfunction renderHistory() {\n  const now = new Date();\n  const today = getDateKey();\n\n  \/\/ Streak\n  let streak = 0;\n  for (let i = 0; i < 365; i++) {\n    const d = new Date(now);\n    d.setDate(d.getDate() - i);\n    const key = getDateKey(d);\n    const dayData = state.days[key];\n    if (dayData && dayData.score >= 5) streak++;\n    else if (i > 0) break;\n  }\n  document.getElementById('streak-display').innerHTML =\n    `<div class=\"streak-badge\">🔥 ${streak} day${streak !== 1 ? 's' : ''} streak<\/div>`;\n\n  \/\/ Week bars\n  const days = ['Mo','Tu','We','Th','Fr','Sa','Su'];\n  let weekHtml = '';\n  for (let i = 6; i >= 0; i--) {\n    const d = new Date(now);\n    d.setDate(d.getDate() - i);\n    const key = getDateKey(d);\n    const dayData = state.days[key];\n    const score = dayData ? (dayData.score || 0) : 0;\n    const height = score > 0 ? (score \/ 10) * 100 : 0;\n    const filled = score > 0;\n    weekHtml += `<div class=\"week-bar-wrap\">\n      <div class=\"week-bar-col\"><div class=\"week-bar ${filled ? 'filled' : ''}\" style=\"height:${height}%\"><\/div><\/div>\n      <div class=\"week-day-label\">${days[6-i]}<\/div>\n    <\/div>`;\n  }\n  document.getElementById('week-bars').innerHTML = weekHtml;\n\n  \/\/ Month calendar\n  const year = now.getFullYear();\n  const month = now.getMonth();\n  document.getElementById('month-label').textContent = now.toLocaleDateString('en-US', { month:'long', year:'numeric' });\n\n  const firstDay = new Date(year, month, 1).getDay();\n  const daysInMonth = new Date(year, month+1, 0).getDate();\n\n  const dayLabels = ['Su','Mo','Tu','We','Th','Fr','Sa'];\n  let calHtml = dayLabels.map(d => `<div class=\"cal-day-label\">${d}<\/div>`).join('');\n  document.getElementById('cal-header').innerHTML = calHtml;\n\n  let gridHtml = '';\n  for (let i = 0; i < firstDay; i++) gridHtml += '<div class=\"cal-day empty\"><\/div>';\n  for (let d = 1; d <= daysInMonth; d++) {\n    const dateObj = new Date(year, month, d);\n    const key = getDateKey(dateObj);\n    const dayData = state.days[key];\n    const score = dayData ? (dayData.score || 0) : null;\n    const isToday = key === today;\n    const isFuture = dateObj > now;\n    let cls = 'cal-day';\n    if (isToday) cls += ' today';\n    if (isFuture) cls += ' future';\n    else if (score === null) cls += ' future';\n    else if (score >= 8) cls += ' score-high';\n    else if (score >= 5) cls += ' score-mid';\n    else cls += ' score-low';\n    gridHtml += `<div class=\"${cls}\" onclick=\"showDayDetail('${key}')\">${d}<\/div>`;\n  }\n  document.getElementById('cal-grid').innerHTML = gridHtml;\n}\n\nconst TASK_LABELS = {\n  wake: 'Wake up', morning_workout: 'Morning mobility', breakfast: 'Breakfast',\n  shuttle: 'Shuttle to office', lunch: 'Lunch', snack_bus: 'Bus snack',\n  home: 'Home from office', dinner: 'Dinner', presleep: 'Pre-sleep',\n  sleep: 'Sleep', pre_workout: 'Pre-workout snack', workout: 'Workout',\n  water: 'Water intake', book: 'Read a book', focus: 'No distractions',\n  learned: 'Learnt something new', sleep_before_midnight: 'Slept before midnight',\n  stretch: 'Morning stretch',\n};\n\nfunction showDayDetail(key) {\n  const dayData = state.days[key];\n  if (!dayData) return;\n  const card = document.getElementById('history-detail-card');\n  const dateEl = document.getElementById('history-detail-date');\n  const contentEl = document.getElementById('history-detail-content');\n  card.style.display = 'block';\n  dateEl.textContent = key;\n  let html = `<div style=\"margin-bottom:10px;\"><span class=\"streak-badge\" style=\"font-size:13px;\">Score: ${dayData.score || 0}\/10<\/span><\/div>`;\n  const tasks = dayData.completedTasks || {};\n  Object.keys(tasks).forEach(k => {\n    if (tasks[k]) html += `<div class=\"score-item\"><div class=\"score-dot done\"><\/div>${TASK_LABELS[k] || k}<\/div>`;\n  });\n  contentEl.innerHTML = html;\n  card.scrollIntoView({ behavior:'smooth' });\n}\n\n\/\/ ===================== OFFICE MODAL =====================\nfunction checkOfficePrompt() {\n  const now = getTimeMinutes();\n  const lastAsked = state.lastOfficePromptDate;\n  const today = getDateKey();\n  if (now >= 22*60 + 30 && lastAsked !== today) {\n    showOfficeModal();\n  }\n}\n\nfunction showOfficeModal() {\n  document.getElementById('office-modal').classList.add('show');\n}\n\nfunction setTomorrow(isOffice) {\n  state.tomorrowIsOffice = isOffice;\n  state.lastOfficePromptDate = getDateKey();\n  saveState();\n  document.getElementById('office-modal').classList.remove('show');\n  speak(isOffice ? 'Got it. Office day tomorrow. Setting your morning workout.' : 'Home day tomorrow. Full evening session planned.');\n}\n\n\/\/ ===================== NAV =====================\nfunction switchTab(tab) {\n  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));\n  document.querySelectorAll('#nav button').forEach(b => b.classList.remove('active'));\n  document.getElementById('tab-' + tab).classList.add('active');\n  document.querySelector(`#nav button[onclick=\"switchTab('${tab}')\"]`).classList.add('active');\n\n  if (tab === 'workout') renderWorkout();\n  if (tab === 'food') renderFood();\n  if (tab === 'history') renderHistory();\n}\n\n\/\/ ===================== HOME =====================\nfunction renderHome() {\n  renderHero();\n  renderChecklist();\n  renderExtraChecks();\n  renderNightPrep();\n  renderDayBadge();\n}\n\n\/\/ ===================== DAILY RESET =====================\nfunction checkDailyReset() {\n  const today = getDateKey();\n  if (!state.days[today]) {\n    state.days[today] = {\n      isOffice: state.tomorrowIsOffice || false,\n      completedTasks: {},\n      score: 0,\n      proteinChecks: {},\n      prepChecks: {},\n      workoutDay: getWorkoutDayIndex(today),\n    };\n    saveState();\n  }\n}\n\n\/\/ ===================== INIT =====================\nfunction init() {\n  checkDailyReset();\n  renderHome();\n  updateScore();\n  setInterval(() => {\n    renderHero();\n    checkOfficePrompt();\n  }, 60000);\n\n  \/\/ Show office modal at 10:30 PM\n  setInterval(checkOfficePrompt, 60000);\n}\n\ninit();\n<\/script>\n<\/body>\n<\/html>\n",
-  "stderr" : ""
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Discipline OS">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjE4MCIgaGVpZ2h0PSIxODAiIHJ4PSIzNiIgZmlsbD0iIzBhMGEwZiIvPjx0ZXh0IHg9IjkwIiB5PSIxMTUiIGZvbnQtZmFtaWx5PSJBcmlhbCBCbGFjayxzYW5zLXNlcmlmIiBmb250LXNpemU9Ijg0IiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjZThmZjQ3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5EPC90ZXh0Pjwvc3ZnPg==">
+<title>Discipline OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1c1c26;
+    --border: #2a2a3a;
+    --accent: #e8ff47;
+    --accent2: #47b8ff;
+    --accent3: #ff6b47;
+    --text: #f0f0f5;
+    --text2: #8888a0;
+    --text3: #55556a;
+    --success: #47ffb8;
+    --danger: #ff4747;
+    --warning: #ffb847;
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body { height:100%; background:var(--bg); color:var(--text); font-family:'DM Sans', sans-serif; overflow:hidden; }
+
+/* LAYOUT */
+#app { display:flex; flex-direction:column; height:100vh; height:100dvh; }
+#topbar { display:flex; align-items:center; justify-content:space-between; padding:16px 24px 8px; flex-shrink:0; }
+#nav { display:flex; gap:4px; background:var(–surface); border-radius:50px; padding:4px; flex-shrink:0; margin:0 24px 12px; }
+#nav button { flex:1; padding:10px; border:none; background:transparent; color:var(–text2); font-family:‘DM Sans’,sans-serif; font-size:13px; font-weight:500; border-radius:50px; cursor:pointer; transition:all .2s; white-space:nowrap; }
+#nav button.active { background:var(–accent); color:#0a0a0f; font-weight:600; }
+#content { flex:1; overflow-y:auto; padding:0 24px 100px; scroll-behavior:smooth; }
+#content::-webkit-scrollbar { display:none; }
+
+/* CARDS */
+.card { background:var(–surface); border:1px solid var(–border); border-radius:var(–radius); padding:20px; margin-bottom:14px; }
+.card-sm { padding:14px 16px; }
+.label { font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(–text2); margin-bottom:8px; }
+.big-num { font-family:‘Bebas Neue’, sans-serif; font-size:72px; line-height:1; color:var(–accent); }
+.title { font-family:‘Bebas Neue’, sans-serif; font-size:28px; letter-spacing:.03em; }
+.subtitle { font-size:13px; color:var(–text2); margin-top:4px; }
+
+/* CURRENT TASK HERO */
+#hero { background:linear-gradient(135deg, #13131a 0%, #1c1c26 100%); border:1px solid var(–border); border-radius:var(–radius); padding:24px; margin-bottom:14px; position:relative; overflow:hidden; }
+#hero::before { content:’’; position:absolute; top:-40px; right:-40px; width:160px; height:160px; background:var(–accent); opacity:.06; border-radius:50%; }
+#hero-status { font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(–accent); margin-bottom:10px; }
+#hero-task { font-family:‘Bebas Neue’,sans-serif; font-size:36px; line-height:1.1; margin-bottom:6px; }
+#hero-sub { font-size:13px; color:var(–text2); margin-bottom:16px; }
+#hero-countdown { font-family:‘DM Mono’,monospace; font-size:22px; color:var(–accent2); font-weight:500; }
+#hero-missed { background:rgba(255,71,71,.1); border:1px solid rgba(255,71,71,.3); border-radius:var(–radius-sm); padding:12px 16px; margin-bottom:12px; }
+#hero-missed .missed-label { font-size:11px; color:var(–danger); font-weight:600; letter-spacing:.1em; text-transform:uppercase; margin-bottom:6px; }
+#hero-missed .missed-item { font-size:13px; color:var(–text); padding:3px 0; }
+
+/* SCORE RING */
+.score-wrap { display:flex; align-items:center; gap:20px; }
+.score-ring-wrap { position:relative; width:90px; height:90px; flex-shrink:0; }
+.score-ring-wrap svg { transform:rotate(-90deg); }
+.score-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.score-num { font-family:‘Bebas Neue’,sans-serif; font-size:28px; color:var(–accent); line-height:1; }
+.score-denom { font-size:10px; color:var(–text3); }
+.score-breakdown { flex:1; }
+.score-item { display:flex; align-items:center; gap:8px; padding:4px 0; font-size:12px; color:var(–text2); }
+.score-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.score-dot.done { background:var(–success); }
+.score-dot.miss { background:var(–danger); }
+.score-dot.pending { background:var(–text3); }
+
+/* CHECKLIST */
+.check-item { display:flex; align-items:center; gap:14px; padding:13px 0; border-bottom:1px solid var(–border); cursor:pointer; }
+.check-item:last-child { border-bottom:none; }
+.check-box { width:22px; height:22px; border-radius:6px; border:2px solid var(–border); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .2s; }
+.check-box.done { background:var(–accent); border-color:var(–accent); }
+.check-box.done::after { content:‘✓’; font-size:13px; color:#0a0a0f; font-weight:700; }
+.check-box.missed { border-color:var(–danger); background:rgba(255,71,71,.15); }
+.check-box.missed::after { content:‘✕’; font-size:12px; color:var(–danger); font-weight:700; }
+.check-text { flex:1; font-size:14px; }
+.check-text.done { text-decoration:line-through; color:var(–text2); }
+.check-time { font-family:‘DM Mono’,monospace; font-size:11px; color:var(–text3); }
+
+/* WORKOUT */
+#workout-screen { display:none; }
+.exercise-card { background:var(–surface); border:1px solid var(–border); border-radius:var(–radius); padding:18px; margin-bottom:10px; cursor:pointer; transition:border-color .2s; }
+.exercise-card.active { border-color:var(–accent); }
+.exercise-card.completed { border-color:var(–success); opacity:.6; }
+.ex-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+.ex-name { font-family:‘Bebas Neue’,sans-serif; font-size:22px; }
+.ex-badge { font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:4px 10px; border-radius:50px; }
+.ex-badge.reps { background:rgba(232,255,71,.15); color:var(–accent); }
+.ex-badge.time { background:rgba(71,184,255,.15); color:var(–accent2); }
+.ex-badge.pull { background:rgba(71,255,184,.15); color:var(–success); }
+.ex-detail { font-size:12px; color:var(–text2); }
+.ex-sets { display:flex; gap:6px; margin-top:10px; }
+.ex-set-dot { width:10px; height:10px; border-radius:50%; background:var(–border); transition:background .3s; }
+.ex-set-dot.done { background:var(–success); }
+.ex-set-dot.active { background:var(–accent); }
+
+/* TIMER */
+#timer-modal { display:none; position:fixed; inset:0; background:rgba(10,10,15,.97); z-index:100; flex-direction:column; align-items:center; justify-content:center; padding:40px; }
+#timer-modal.show { display:flex; }
+#timer-exercise-name { font-family:‘Bebas Neue’,sans-serif; font-size:42px; text-align:center; margin-bottom:4px; }
+#timer-detail { font-size:14px; color:var(–text2); text-align:center; margin-bottom:40px; }
+#timer-ring { position:relative; margin-bottom:30px; }
+#timer-ring svg { transform:rotate(-90deg); }
+#timer-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+#timer-num { font-family:‘Bebas Neue’,sans-serif; font-size:80px; line-height:1; }
+#timer-phase { font-size:13px; font-weight:600; letter-spacing:.15em; text-transform:uppercase; color:var(–text2); margin-top:4px; }
+#timer-set-info { font-size:14px; color:var(–text2); margin-bottom:20px; font-family:‘DM Mono’,monospace; }
+#timer-quote { font-size:15px; color:var(–text2); text-align:center; font-style:italic; max-width:300px; margin-bottom:30px; min-height:44px; }
+#timer-controls { display:flex; gap:16px; }
+.timer-btn { padding:14px 28px; border-radius:50px; border:none; font-family:‘DM Sans’,sans-serif; font-size:15px; font-weight:600; cursor:pointer; transition:all .2s; }
+.timer-btn.primary { background:var(–accent); color:#0a0a0f; }
+.timer-btn.secondary { background:var(–surface2); color:var(–text); }
+.timer-btn.danger { background:rgba(255,71,71,.2); color:var(–danger); border:1px solid rgba(255,71,71,.3); }
+
+/* FOOD */
+.meal-section { margin-bottom:20px; }
+.meal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.meal-title { font-family:‘Bebas Neue’,sans-serif; font-size:22px; }
+.meal-time { font-family:‘DM Mono’,monospace; font-size:12px; color:var(–text3); }
+.food-tag { display:inline-block; background:var(–surface2); border:1px solid var(–border); border-radius:50px; padding:5px 12px; font-size:12px; color:var(–text2); margin:3px; }
+.protein-bar { height:4px; background:var(–border); border-radius:2px; margin-top:10px; }
+.protein-fill { height:100%; background:var(–accent); border-radius:2px; transition:width .6s; }
+
+/* HISTORY */
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:12px; }
+.cal-day-label { font-size:10px; color:var(–text3); text-align:center; font-weight:600; letter-spacing:.08em; }
+.cal-day { aspect-ratio:1; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; cursor:pointer; transition:all .2s; position:relative; }
+.cal-day.empty { background:transparent; }
+.cal-day.future { background:var(–surface); color:var(–text3); }
+.cal-day.score-high { background:rgba(71,255,184,.2); color:var(–success); border:1px solid rgba(71,255,184,.3); }
+.cal-day.score-mid { background:rgba(232,255,71,.15); color:var(–accent); border:1px solid rgba(232,255,71,.2); }
+.cal-day.score-low { background:rgba(255,71,71,.15); color:var(–danger); border:1px solid rgba(255,71,71,.2); }
+.cal-day.today { outline:2px solid var(–accent2); outline-offset:2px; }
+.streak-badge { background:linear-gradient(135deg,var(–accent),var(–accent2)); color:#0a0a0f; border-radius:50px; padding:8px 18px; font-weight:700; font-size:15px; display:inline-flex; align-items:center; gap:8px; }
+
+/* OFFICE PROMPT */
+#office-modal { display:none; position:fixed; inset:0; background:rgba(10,10,15,.95); z-index:100; flex-direction:column; align-items:center; justify-content:center; padding:40px; }
+#office-modal.show { display:flex; }
+.office-modal-inner { background:var(–surface); border:1px solid var(–border); border-radius:var(–radius); padding:32px; max-width:400px; width:100%; text-align:center; }
+.office-q { font-family:‘Bebas Neue’,sans-serif; font-size:32px; margin-bottom:8px; }
+.office-sub { font-size:14px; color:var(–text2); margin-bottom:28px; }
+.office-btns { display:flex; gap:12px; }
+.office-btn { flex:1; padding:16px; border-radius:var(–radius-sm); border:none; font-family:‘DM Sans’,sans-serif; font-size:16px; font-weight:600; cursor:pointer; transition:all .2s; }
+.office-btn.yes { background:var(–accent); color:#0a0a0f; }
+.office-btn.no { background:var(–surface2); color:var(–text); border:1px solid var(–border); }
+
+/* WEEK BARS */
+.week-bars { display:flex; align-items:flex-end; gap:8px; height:80px; margin-top:12px; }
+.week-bar-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; }
+.week-bar-col { flex:1; display:flex; align-items:flex-end; width:100%; }
+.week-bar { width:100%; border-radius:4px 4px 0 0; background:var(–border); transition:height .4s; min-height:4px; }
+.week-bar.filled { background:var(–accent); }
+.week-day-label { font-size:10px; color:var(–text3); font-weight:600; }
+
+/* PILL TAGS */
+.pill { display:inline-flex; align-items:center; gap:4px; background:var(–surface2); border:1px solid var(–border); border-radius:50px; padding:6px 14px; font-size:12px; color:var(–text2); margin:3px; }
+.pill .dot { width:6px; height:6px; border-radius:50%; }
+
+/* SNACK REMINDER */
+#snack-banner { background:linear-gradient(135deg,rgba(255,184,71,.15),rgba(255,107,71,.1)); border:1px solid rgba(255,184,71,.3); border-radius:var(–radius-sm); padding:14px 16px; margin-bottom:14px; display:none; }
+#snack-banner .snack-label { font-size:11px; color:var(–warning); font-weight:600; letter-spacing:.1em; text-transform:uppercase; margin-bottom:4px; }
+#snack-banner .snack-text { font-size:14px; }
+
+/* DAY TYPE BADGE */
+#day-type-badge { display:flex; align-items:center; gap:8px; }
+.type-pill { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:5px 12px; border-radius:50px; }
+.type-pill.office { background:rgba(71,184,255,.15); color:var(–accent2); border:1px solid rgba(71,184,255,.2); }
+.type-pill.home { background:rgba(71,255,184,.15); color:var(–success); border:1px solid rgba(71,255,184,.2); }
+
+/* NIGHT PREP */
+.prep-item { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(–border); cursor:pointer; }
+.prep-item:last-child { border-bottom:none; }
+.prep-check { width:20px; height:20px; border-radius:5px; border:2px solid var(–border); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .2s; }
+.prep-check.done { background:var(–accent); border-color:var(–accent); }
+.prep-check.done::after { content:‘✓’; font-size:11px; color:#0a0a0f; font-weight:700; }
+.prep-text { font-size:14px; }
+
+/* TOPBAR CLOCK */
+#topbar-time { font-family:‘DM Mono’,monospace; font-size:13px; color:var(–text2); }
+#topbar-title { font-family:‘Bebas Neue’,sans-serif; font-size:22px; letter-spacing:.05em; }
+
+/* SECTION TITLE */
+.section-title { font-family:‘Bebas Neue’,sans-serif; font-size:20px; margin:20px 0 10px; color:var(–text2); letter-spacing:.05em; }
+
+/* WORKOUT DAY HEADER */
+#workout-day-header { background:linear-gradient(135deg,var(–surface),var(–surface2)); border:1px solid var(–border); border-radius:var(–radius); padding:20px; margin-bottom:14px; }
+#wd-day { font-family:‘Bebas Neue’,sans-serif; font-size:42px; color:var(–accent); line-height:1; }
+#wd-focus { font-size:13px; color:var(–text2); margin-top:4px; }
+#wd-tags { margin-top:12px; display:flex; flex-wrap:wrap; gap:6px; }
+.wd-tag { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:5px 12px; border-radius:50px; border:1px solid var(–border); color:var(–text2); }
+
+/* START WORKOUT BTN */
+#start-workout-btn { width:100%; padding:18px; background:var(–accent); color:#0a0a0f; border:none; border-radius:var(–radius-sm); font-family:‘DM Sans’,sans-serif; font-size:16px; font-weight:700; cursor:pointer; margin-bottom:20px; letter-spacing:.03em; transition:all .2s; }
+#start-workout-btn:active { transform:scale(.98); }
+
+/* RESPONSIVE TWEAKS */
+@media (max-width: 600px) { .big-num { font-size:56px; } }
+
+/* ANIMATIONS */
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+.pulse { animation:pulse 2s infinite; }
+@keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+.slide-up { animation:slideUp .3s ease; }
+
+/* TABS */
+.tab-content { display:none; }
+.tab-content.active { display:block; animation:slideUp .3s ease; }
+
+/* EMPTY STATE */
+.empty-state { text-align:center; padding:40px 20px; color:var(–text3); }
+.empty-state .es-icon { font-size:40px; margin-bottom:12px; }
+.empty-state .es-text { font-size:14px; }
+</style>
+
+</head>
+<body>
+<div id="app">
+  <div id="topbar">
+    <div id="topbar-title">DISCIPLINE OS</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div id="day-type-badge"></div>
+      <div id="topbar-time"></div>
+    </div>
+  </div>
+  <div id="nav">
+    <button class="active" onclick="switchTab('home')">Today</button>
+    <button onclick="switchTab('workout')">Workout</button>
+    <button onclick="switchTab('food')">Food</button>
+    <button onclick="switchTab('history')">History</button>
+  </div>
+  <div id="content">
+
+```
+<!-- HOME TAB -->
+<div id="tab-home" class="tab-content active">
+  <div id="snack-banner">
+    <div class="snack-label">🎒 Pack for bus</div>
+    <div class="snack-text">Mixed nuts (cashews, almonds, raisins) — evening shuttle snack</div>
+  </div>
+  <div id="hero"></div>
+  <div id="missed-section"></div>
+
+  <!-- SCORE -->
+  <div class="card">
+    <div class="label">Today's Score</div>
+    <div class="score-wrap">
+      <div class="score-ring-wrap">
+        <svg width="90" height="90" viewBox="0 0 90 90">
+          <circle cx="45" cy="45" r="38" fill="none" stroke="#2a2a3a" stroke-width="7"/>
+          <circle id="score-circle" cx="45" cy="45" r="38" fill="none" stroke="#e8ff47" stroke-width="7" stroke-linecap="round" stroke-dasharray="239" stroke-dashoffset="239"/>
+        </svg>
+        <div class="score-center">
+          <div class="score-num" id="score-display">0</div>
+          <div class="score-denom">/10</div>
+        </div>
+      </div>
+      <div class="score-breakdown" id="score-breakdown"></div>
+    </div>
+  </div>
+
+  <!-- TODAY CHECKLIST -->
+  <div class="card">
+    <div class="label">Today's Tasks</div>
+    <div id="checklist"></div>
+  </div>
+
+  <!-- NIGHT PREP -->
+  <div class="card" id="night-prep-card" style="display:none;">
+    <div class="label">Night Prep — For Tomorrow</div>
+    <div id="night-prep-list"></div>
+  </div>
+</div>
+
+<!-- WORKOUT TAB -->
+<div id="tab-workout" class="tab-content">
+  <div id="workout-day-header">
+    <div class="label">Today's Session</div>
+    <div id="wd-day"></div>
+    <div id="wd-focus"></div>
+    <div id="wd-tags"></div>
+  </div>
+  <button id="start-workout-btn" onclick="startWorkoutSession()">▶ START SESSION</button>
+  <div id="exercise-list"></div>
+</div>
+
+<!-- FOOD TAB -->
+<div id="tab-food" class="tab-content">
+  <div class="card">
+    <div class="label">Daily Protein Target</div>
+    <div style="display:flex;align-items:baseline;gap:6px;">
+      <span class="big-num" style="font-size:48px;" id="protein-display">0</span>
+      <span style="color:var(--text2);font-size:16px;">/ 100g</span>
+    </div>
+    <div class="protein-bar"><div class="protein-fill" id="protein-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="meal-section">
+    <div class="meal-header">
+      <div class="meal-title">BREAKFAST</div>
+      <div class="meal-time">7:30 AM</div>
+    </div>
+    <div class="card card-sm">
+      <div style="margin-bottom:10px;">
+        <span class="food-tag">3 Eggs + Toast</span>
+        <span class="food-tag">Ragi + Whey</span>
+        <span class="food-tag">Smoothie</span>
+      </div>
+      <div class="check-item" onclick="toggleProtein('breakfast')">
+        <div class="check-box" id="pcheck-breakfast"></div>
+        <div class="check-text">Protein done (+25g)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="meal-section">
+    <div class="meal-header">
+      <div class="meal-title">LUNCH</div>
+      <div class="meal-time">2:00 PM</div>
+    </div>
+    <div class="card card-sm">
+      <div style="margin-bottom:10px;">
+        <span class="food-tag">1.5 katori rice</span>
+        <span class="food-tag">1.5 katori dal</span>
+        <span class="food-tag">Sabzi</span>
+        <span class="food-tag">Curd</span>
+        <span class="food-tag">Paneer 50g</span>
+      </div>
+      <div class="check-item" onclick="toggleProtein('lunch')">
+        <div class="check-box" id="pcheck-lunch"></div>
+        <div class="check-text">Protein done (+35g)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="meal-section" id="bus-snack-meal" style="display:none;">
+    <div class="meal-header">
+      <div class="meal-title">BUS SNACK</div>
+      <div class="meal-time">Evening shuttle</div>
+    </div>
+    <div class="card card-sm">
+      <div style="margin-bottom:10px;">
+        <span class="food-tag">Mixed nuts</span>
+        <span class="food-tag">Cashews · Almonds · Raisins</span>
+      </div>
+      <div class="check-item" onclick="toggleProtein('snack')">
+        <div class="check-box" id="pcheck-snack"></div>
+        <div class="check-text">Snack done (+5g)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="meal-section">
+    <div class="meal-header">
+      <div class="meal-title">DINNER</div>
+      <div class="meal-time" id="dinner-time-label">8:30 PM</div>
+    </div>
+    <div class="card card-sm">
+      <div style="margin-bottom:10px;">
+        <span class="food-tag">2–3 Rotis</span>
+        <span class="food-tag">Sabzi</span>
+        <span class="food-tag">Paneer bhurji</span>
+        <span class="food-tag">Egg bhurji</span>
+      </div>
+      <div class="check-item" onclick="toggleProtein('dinner')">
+        <div class="check-box" id="pcheck-dinner"></div>
+        <div class="check-text">Protein done (+35g)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="meal-section">
+    <div class="meal-header">
+      <div class="meal-title">PRE-SLEEP</div>
+      <div class="meal-time">11:30 PM</div>
+    </div>
+    <div class="card card-sm">
+      <div style="margin-bottom:10px;">
+        <span class="food-tag">Milk</span>
+        <span class="food-tag">Curd</span>
+      </div>
+      <div class="check-item" onclick="toggleProtein('presleep')">
+        <div class="check-box" id="pcheck-presleep"></div>
+        <div class="check-text">Done (+8g)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORY TAB -->
+<div id="tab-history" class="tab-content">
+  <div class="card">
+    <div class="label">Current Streak</div>
+    <div id="streak-display" style="margin-top:6px;"></div>
+  </div>
+
+  <div class="card">
+    <div class="label">This Week</div>
+    <div class="week-bars" id="week-bars"></div>
+  </div>
+
+  <div class="card">
+    <div class="label" id="month-label">This Month</div>
+    <div class="cal-grid" id="cal-header"></div>
+    <div class="cal-grid" id="cal-grid"></div>
+  </div>
+
+  <div class="card" id="history-detail-card" style="display:none;">
+    <div class="label" id="history-detail-date"></div>
+    <div id="history-detail-content"></div>
+  </div>
+</div>
+```
+
+  </div>
+</div>
+
+<!-- TIMER MODAL -->
+
+<div id="timer-modal">
+  <div id="timer-exercise-name"></div>
+  <div id="timer-detail"></div>
+  <div id="timer-ring">
+    <svg width="200" height="200" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="88" fill="none" stroke="#2a2a3a" stroke-width="10"/>
+      <circle id="timer-circle" cx="100" cy="100" r="88" fill="none" stroke="#e8ff47" stroke-width="10" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="0"/>
+    </svg>
+    <div id="timer-center">
+      <div id="timer-num">0</div>
+      <div id="timer-phase">GET READY</div>
+    </div>
+  </div>
+  <div id="timer-set-info"></div>
+  <div id="timer-quote"></div>
+  <div id="timer-controls">
+    <button class="timer-btn secondary" onclick="pauseTimer()">⏸ Pause</button>
+    <button class="timer-btn danger" onclick="stopTimer()">✕ End</button>
+  </div>
+</div>
+
+<!-- OFFICE MODAL -->
+
+<div id="office-modal">
+  <div class="office-modal-inner">
+    <div class="office-q">Office Tomorrow?</div>
+    <div class="office-sub">This sets your morning workout and meal plan for tomorrow</div>
+    <div class="office-btns">
+      <button class="office-btn yes" onclick="setTomorrow(true)">Yes, Office</button>
+      <button class="office-btn no" onclick="setTomorrow(false)">No, WFH</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================== DATA =====================
+const SCORE_ITEMS = [
+  { key:'workout', label:'Workout done', icon:'🏋️' },
+  { key:'protein_breakfast', label:'Breakfast protein', icon:'🥚' },
+  { key:'protein_lunch', label:'Lunch protein', icon:'🍛' },
+  { key:'protein_dinner', label:'Dinner protein', icon:'🍽️' },
+  { key:'sleep', label:'Sleep before midnight', icon:'🌙' },
+  { key:'water', label:'Water intake', icon:'💧' },
+  { key:'morning_stretch', label:'Morning stretch', icon:'🧘' },
+  { key:'book', label:'Read a book', icon:'📖' },
+  { key:'focus', label:'No distractions', icon:'🧠' },
+  { key:'learned', label:'Learnt something new', icon:'💡' },
+];
+
+const MOTIVATIONAL_QUOTES = [
+  "Every rep counts. Don't stop now.",
+  "Pain is temporary. Strength is permanent.",
+  "You're building the version of yourself people will notice.",
+  "This set. Right now. That's all that matters.",
+  "Posture is power. Own the room.",
+  "Your future self is watching. Make them proud.",
+  "One more. Always one more.",
+  "You showed up. Now finish.",
+  "Grip tight. Stay locked in.",
+  "The discomfort is the point.",
+];
+
+// WORKOUT PLANS
+const WORKOUT_PLANS = {
+  home: [
+    {
+      day: 'PUSH + CORE',
+      focus: 'Chest · Shoulders · Triceps · Core activation',
+      tags: ['Push','Core','APT Fix'],
+      exercises: [
+        { name:'Dead Bug', type:'time', duration:40, sets:3, target:'Core / APT correction', muscle:'Core' },
+        { name:'Decline Push-Ups', type:'reps', reps:12, sets:4, target:'Chest + Shoulders', muscle:'Chest' },
+        { name:'Dumbbell Shoulder Press', type:'reps', reps:12, sets:4, target:'5kg each hand', muscle:'Shoulders' },
+        { name:'Lateral Raises', type:'reps', reps:15, sets:3, target:'5kg each hand', muscle:'Shoulders' },
+        { name:'Chair Dips', type:'reps', reps:12, sets:3, target:'Bodyweight', muscle:'Triceps' },
+        { name:'Glute Bridge', type:'reps', reps:15, sets:3, target:'Pause 2s at top — APT fix', muscle:'Glutes' },
+        { name:'Plank', type:'time', duration:60, sets:3, target:'Keep hips neutral', muscle:'Core' },
+        { name:'Hip Flexor Stretch', type:'time', duration:30, sets:2, target:'Each side — APT fix', muscle:'Hip Flexors' },
+      ]
+    },
+    {
+      day: 'PULL + GRIP',
+      focus: 'Back · Biceps · Grip · Finger strength',
+      tags: ['Pull','Biceps','Grip'],
+      exercises: [
+        { name:'Dead Hang / Pull-Up Hold', type:'time', duration:30, sets:3, target:'Pull-up bar — grip builder', muscle:'Grip' },
+        { name:'Negative Pull-Ups', type:'reps', reps:5, sets:4, target:'Slow 5s descent — pull-up bar', muscle:'Back' },
+        { name:'One-Arm Dumbbell Row', type:'reps', reps:12, sets:4, target:'5kg — each side', muscle:'Back' },
+        { name:'Bicep Curls', type:'reps', reps:12, sets:4, target:'5kg each', muscle:'Biceps' },
+        { name:'Hammer Curls', type:'reps', reps:12, sets:3, target:'5kg each', muscle:'Biceps' },
+        { name:'Band Pull-Aparts', type:'reps', reps:20, sets:3, target:'Maroon band — posture fix', muscle:'Rear Delts' },
+        { name:'Towel Grip Curls', type:'reps', reps:10, sets:3, target:'Wrap towel on dumbbell — finger strength', muscle:'Grip' },
+        { name:'Wrist Curls', type:'reps', reps:15, sets:3, target:'5kg — forearm strength', muscle:'Forearms' },
+        { name:'Bird Dog', type:'reps', reps:12, sets:3, target:'Each side — APT + core', muscle:'Core' },
+      ]
+    },
+    {
+      day: 'LEGS + GLUTES',
+      focus: 'Quads · Glutes · Hamstrings · APT correction',
+      tags: ['Legs','Glutes','APT Fix','Kettlebell'],
+      exercises: [
+        { name:'Glute Bridge', type:'reps', reps:20, sets:3, target:'Pause at top — bodyweight warmup', muscle:'Glutes' },
+        { name:'Goblet Squat', type:'reps', reps:15, sets:4, target:'16kg kettlebell', muscle:'Quads' },
+        { name:'KB Swing', type:'reps', reps:15, sets:4, target:'16kg kettlebell — APT fixer', muscle:'Glutes' },
+        { name:'Reverse Lunges', type:'reps', reps:12, sets:3, target:'Each leg — bodyweight', muscle:'Quads' },
+        { name:'Hip Thrusts', type:'reps', reps:12, sets:4, target:'Use couch/bed edge', muscle:'Glutes' },
+        { name:'Wall Sit', type:'time', duration:60, sets:3, target:'Quad endurance', muscle:'Quads' },
+        { name:'Leg Raises', type:'reps', reps:15, sets:3, target:'Core + hip flexor control', muscle:'Core' },
+        { name:'Hip Flexor Stretch', type:'time', duration:40, sets:3, target:'Each side — key APT fix', muscle:'Hip Flexors' },
+      ]
+    },
+    {
+      day: 'FULL BODY + STRENGTH',
+      focus: 'Compound movements · Power · Athleticism',
+      tags: ['Full Body','Power','Compound'],
+      exercises: [
+        { name:'KB Swing', type:'reps', reps:20, sets:4, target:'16kg — explosiveness', muscle:'Full Body' },
+        { name:'Push-Up Ladder', type:'reps', reps:20, sets:3, target:'Max reps — progress weekly', muscle:'Chest' },
+        { name:'Dumbbell Thruster', type:'reps', reps:12, sets:4, target:'5kg each — squat to press', muscle:'Full Body' },
+        { name:'Pull-Up (or Negative)', type:'reps', reps:5, sets:4, target:'Pull-up bar', muscle:'Back' },
+        { name:'Farmer Carry', type:'time', duration:40, sets:3, target:'5kg each hand — grip + posture', muscle:'Grip' },
+        { name:'Mountain Climbers', type:'time', duration:40, sets:3, target:'Core + cardio', muscle:'Core' },
+        { name:'Burpees', type:'reps', reps:10, sets:3, target:'Explosive', muscle:'Full Body' },
+        { name:'Dead Bug', type:'time', duration:40, sets:3, target:'Core — APT fix', muscle:'Core' },
+      ]
+    },
+    {
+      day: 'CORE + POSTURE',
+      focus: 'Deep core · APT correction · Posture · Grip',
+      tags: ['Core','Posture','APT Fix','Grip'],
+      exercises: [
+        { name:'Dead Bug', type:'time', duration:45, sets:4, target:'Slow controlled — spine neutral', muscle:'Core' },
+        { name:'Bird Dog', type:'reps', reps:15, sets:3, target:'Each side', muscle:'Core' },
+        { name:'Plank', type:'time', duration:75, sets:3, target:'Posterior pelvic tuck', muscle:'Core' },
+        { name:'Leg Raises', type:'reps', reps:15, sets:4, target:'No arch in lower back', muscle:'Core' },
+        { name:'Glute Bridge Hold', type:'time', duration:45, sets:3, target:'Sustained contraction — APT', muscle:'Glutes' },
+        { name:'Dead Hang', type:'time', duration:30, sets:4, target:'Pull-up bar — grip + spine decompression', muscle:'Grip' },
+        { name:'Band Pull-Aparts', type:'reps', reps:25, sets:3, target:'Maroon band', muscle:'Rear Delts' },
+        { name:'Hip Flexor Stretch', type:'time', duration:45, sets:3, target:'Each side — the most important stretch you do', muscle:'Hip Flexors' },
+      ]
+    },
+    {
+      day: 'PUSH + ARMS',
+      focus: 'Chest · Arms · Shoulders · Grip',
+      tags: ['Push','Arms','Biceps','Grip'],
+      exercises: [
+        { name:'Decline Push-Ups', type:'reps', reps:15, sets:4, target:'Slow 3s down', muscle:'Chest' },
+        { name:'Pike Push-Ups', type:'reps', reps:12, sets:3, target:'Shoulder focus', muscle:'Shoulders' },
+        { name:'Dumbbell Shoulder Press', type:'reps', reps:12, sets:4, target:'5kg each', muscle:'Shoulders' },
+        { name:'Bicep Curls', type:'reps', reps:15, sets:4, target:'5kg — full range', muscle:'Biceps' },
+        { name:'Hammer Curls', type:'reps', reps:12, sets:3, target:'5kg', muscle:'Biceps' },
+        { name:'Chair Dips', type:'reps', reps:15, sets:4, target:'Tricep focus', muscle:'Triceps' },
+        { name:'Wrist Curls', type:'reps', reps:20, sets:3, target:'5kg — forearm pump', muscle:'Forearms' },
+        { name:'Dead Hang', type:'time', duration:25, sets:3, target:'Grip endurance', muscle:'Grip' },
+      ]
+    },
+    {
+      day: 'ACTIVE RECOVERY',
+      focus: 'Mobility · Flexibility · Light movement',
+      tags: ['Recovery','Mobility','Stretch'],
+      exercises: [
+        { name:'Full Body Stretch', type:'time', duration:60, sets:2, target:'Hamstrings, hip flexors, chest', muscle:'Full Body' },
+        { name:'Hip Flexor Stretch', type:'time', duration:60, sets:3, target:'Each side — hold and breathe', muscle:'Hip Flexors' },
+        { name:'Cat-Cow', type:'reps', reps:15, sets:2, target:'Spinal mobility', muscle:'Spine' },
+        { name:'Dead Hang', type:'time', duration:20, sets:3, target:'Light grip work', muscle:'Grip' },
+        { name:'Light Walk', type:'time', duration:600, sets:1, target:'10 min easy walk', muscle:'Full Body' },
+      ]
+    },
+  ],
+  office_morning: {
+    day: 'OFFICE MORNING',
+    focus: 'Mobility · APT · Light activation · 20 min',
+    tags: ['Morning','Light','Mobility','APT'],
+    exercises: [
+      { name:'Hip Flexor Stretch', type:'time', duration:40, sets:2, target:'Each side — wake up your hips', muscle:'Hip Flexors' },
+      { name:'Cat-Cow', type:'reps', reps:10, sets:2, target:'Spinal wake-up', muscle:'Spine' },
+      { name:'Bird Dog', type:'reps', reps:10, sets:2, target:'Each side', muscle:'Core' },
+      { name:'Glute Bridge', type:'reps', reps:15, sets:2, target:'Activate glutes before sitting all day', muscle:'Glutes' },
+      { name:'Push-Ups', type:'reps', reps:15, sets:2, target:'Bodyweight — wake up chest and shoulders', muscle:'Chest' },
+      { name:'Leg Raises', type:'reps', reps:12, sets:2, target:'Core activation', muscle:'Core' },
+      { name:'Dead Hang', type:'time', duration:20, sets:2, target:'If bar is up — spinal decompression', muscle:'Grip' },
+    ]
+  }
+};
+
+// TASKS BY DAY TYPE
+function getTasksForDay(isOffice) {
+  const tasks = [];
+  if (isOffice) {
+    tasks.push({ key:'wake', time:'07:00', label:'Wake up + water', icon:'🌅', completable:false });
+    tasks.push({ key:'morning_workout', time:'07:10', label:'Morning mobility session', icon:'🧘', completable:true });
+    tasks.push({ key:'breakfast', time:'07:30', label:'Breakfast — Ragi porridge', icon:'🥣', completable:true });
+    tasks.push({ key:'shuttle', time:'08:30', label:'Leave for shuttle', icon:'🚌', completable:false });
+    tasks.push({ key:'lunch', time:'14:00', label:'Lunch — Rice · Dal · Sabzi · Curd', icon:'🍛', completable:true });
+    tasks.push({ key:'snack_bus', time:'18:45', label:'Bus snack — mixed nuts', icon:'🌰', completable:true });
+    tasks.push({ key:'home', time:'21:00', label:'Home from office', icon:'🏠', completable:false });
+    tasks.push({ key:'dinner', time:'21:30', label:'Dinner — Roti + Sabzi + Protein', icon:'🍽️', completable:true });
+    tasks.push({ key:'presleep', time:'23:30', label:'Pre-sleep — Milk / Curd', icon:'🥛', completable:true });
+    tasks.push({ key:'sleep', time:'00:00', label:'Sleep', icon:'😴', completable:false });
+  } else {
+    tasks.push({ key:'wake', time:'07:00', label:'Wake up + water', icon:'🌅', completable:false });
+    tasks.push({ key:'breakfast', time:'07:30', label:'Breakfast — Eggs / Ragi / Smoothie', icon:'🍳', completable:true });
+    tasks.push({ key:'lunch', time:'14:00', label:'Lunch — Rice · Dal · Sabzi · Curd', icon:'🍛', completable:true });
+    tasks.push({ key:'pre_workout', time:'18:45', label:'Pre-workout — Banana (optional)', icon:'🍌', completable:true });
+    tasks.push({ key:'workout', time:'19:30', label:'Workout session', icon:'🏋️', completable:true });
+    tasks.push({ key:'dinner', time:'20:30', label:'Dinner — Roti + Sabzi + Protein', icon:'🍽️', completable:true });
+    tasks.push({ key:'presleep', time:'23:30', label:'Pre-sleep — Milk / Curd', icon:'🥛', completable:true });
+    tasks.push({ key:'sleep', time:'00:00', label:'Sleep', icon:'😴', completable:false });
+  }
+  return tasks;
 }
+
+// ===================== STATE =====================
+let state = loadState();
+
+function loadState() {
+  const today = getDateKey();
+  const saved = JSON.parse(localStorage.getItem('disciplineOS') || '{}');
+  if (!saved.days) saved.days = {};
+  if (!saved.days[today]) {
+    saved.days[today] = {
+      isOffice: saved.tomorrowIsOffice || false,
+      completedTasks: {},
+      score: 0,
+      proteinChecks: {},
+      prepChecks: {},
+      workoutDay: getWorkoutDayIndex(today),
+    };
+  }
+  if (saved.tomorrowIsOffice === undefined) saved.tomorrowIsOffice = false;
+  return saved;
+}
+
+function saveState() {
+  localStorage.setItem('disciplineOS', JSON.stringify(state));
+}
+
+function getDateKey(d) {
+  const date = d || new Date();
+  return date.toISOString().split('T')[0];
+}
+
+function getTodayData() {
+  return state.days[getDateKey()];
+}
+
+function getWorkoutDayIndex(dateKey) {
+  // Cycle through 7 workout days
+  const start = new Date('2025-01-06'); // Monday reference
+  const current = new Date(dateKey);
+  const diff = Math.floor((current - start) / (1000*60*60*24));
+  return ((diff % 7) + 7) % 7;
+}
+
+// ===================== TIME UTILS =====================
+function getTimeMinutes() {
+  const now = new Date();
+  return now.getHours() * 60 + now.getMinutes();
+}
+
+function parseTime(timeStr) {
+  const [h, m] = timeStr.split(':').map(Number);
+  // 00:00 used as "midnight/end of day" — treat as 24:00 = 1440 mins
+  if (h === 0 && m === 0) return 24 * 60;
+  return h * 60 + m;
+}
+
+function formatTime(mins) {
+  const h = Math.floor(mins / 60) % 24;
+  const m = mins % 60;
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const hh = h % 12 || 12;
+  return `${hh}:${m.toString().padStart(2,'0')} ${ampm}`;
+}
+
+function formatCountdown(diffMins) {
+  if (diffMins <= 0) return 'Now';
+  const h = Math.floor(diffMins / 60);
+  const m = diffMins % 60;
+  if (h > 0) return `${h}h ${m}m`;
+  return `${m}m`;
+}
+
+// ===================== TOPBAR CLOCK =====================
+function updateClock() {
+  const now = new Date();
+  const h = now.getHours().toString().padStart(2,'0');
+  const m = now.getMinutes().toString().padStart(2,'0');
+  document.getElementById('topbar-time').textContent = `${h}:${m}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ===================== DAY TYPE BADGE =====================
+function renderDayBadge() {
+  const td = getTodayData();
+  const badge = document.getElementById('day-type-badge');
+  badge.innerHTML = `<span class="type-pill ${td.isOffice ? 'office' : 'home'}">${td.isOffice ? '🏢 Office' : '🏠 Home'}</span>`;
+}
+
+// ===================== HERO =====================
+function renderHero() {
+  const td = getTodayData();
+  const tasks = getTasksForDay(td.isOffice);
+  const now = getTimeMinutes();
+
+  // Find missed tasks (past, completable, not done)
+  const missed = tasks.filter(t => {
+    if (!t.completable) return false;
+    const taskTime = parseTime(t.time);
+    const isDone = td.completedTasks[t.key];
+    return taskTime < now - 30 && !isDone;
+  });
+
+  // Find current/next task
+  let currentTask = null;
+  let nextTask = null;
+  for (let i = 0; i < tasks.length; i++) {
+    const t = tasks[i];
+    const taskTime = parseTime(t.time);
+    const nextTime = i < tasks.length - 1 ? parseTime(tasks[i+1].time) : taskTime + 120;
+    if (now >= taskTime && now < nextTime) {
+      currentTask = t;
+      nextTask = tasks[i+1] || null;
+    }
+  }
+  if (!currentTask) {
+    // Find next upcoming task
+    for (const t of tasks) {
+      const taskTime = parseTime(t.time);
+      if (taskTime > now) { nextTask = t; break; }
+    }
+  }
+
+  const hero = document.getElementById('hero');
+  let html = '';
+
+  // Missed section
+  const missedSection = document.getElementById('missed-section');
+  if (missed.length > 0) {
+    let mhtml = '<div id="hero-missed"><div class="missed-label">⚠️ Missed Tasks</div>';
+    missed.forEach(t => {
+      mhtml += `<div class="missed-item" style="color:var(--danger);">✕ ${t.icon} ${t.label} <span style="color:var(--text3);font-size:11px;">${t.time}</span></div>`;
+    });
+    mhtml += '</div>';
+    missedSection.innerHTML = mhtml;
+  } else {
+    missedSection.innerHTML = '';
+  }
+
+  if (currentTask) {
+    const isDone = td.completedTasks[currentTask.key];
+    html += `<div id="hero-status" class="${isDone ? '' : 'pulse'}">● ${isDone ? 'DONE' : 'HAPPENING NOW'}</div>`;
+    html += `<div id="hero-task">${currentTask.icon} ${currentTask.label}</div>`;
+    if (nextTask) {
+      const diff = parseTime(nextTask.time) - now;
+      html += `<div id="hero-sub">Next: ${nextTask.icon} ${nextTask.label}</div>`;
+      html += `<div id="hero-countdown">${formatCountdown(diff)} → ${nextTask.label.split(' ')[0]}</div>`;
+    }
+  } else if (nextTask) {
+    const diff = parseTime(nextTask.time) - now;
+    html += `<div id="hero-status">UPCOMING</div>`;
+    html += `<div id="hero-task">${nextTask.icon} ${nextTask.label}</div>`;
+    html += `<div id="hero-sub">Starts in</div>`;
+    html += `<div id="hero-countdown">${formatCountdown(diff)}</div>`;
+  } else {
+    html += `<div id="hero-status">✓ ALL DONE</div>`;
+    html += `<div id="hero-task">Day Complete</div>`;
+    html += `<div id="hero-sub">Rest up. Tomorrow we go again.</div>`;
+  }
+  hero.innerHTML = html;
+
+  // Snack banner for office days near evening
+  const snackBanner = document.getElementById('snack-banner');
+  if (td.isOffice && now >= 14*60 && now < 18*60) {
+    snackBanner.style.display = 'block';
+  } else {
+    snackBanner.style.display = 'none';
+  }
+}
+
+// ===================== CHECKLIST =====================
+function renderChecklist() {
+  const td = getTodayData();
+  const tasks = getTasksForDay(td.isOffice).filter(t => t.completable);
+  const now = getTimeMinutes();
+  let html = '';
+  tasks.forEach(t => {
+    const taskTime = parseTime(t.time);
+    const isDone = td.completedTasks[t.key];
+    const isPast = taskTime < now - 30;
+    const isMissed = isPast && !isDone;
+    let cls = isDone ? 'done' : isMissed ? 'missed' : '';
+    html += `<div class="check-item" onclick="toggleTask('${t.key}')">
+      <div class="check-box ${cls}" id="cb-${t.key}"></div>
+      <div class="check-text ${isDone ? 'done' : ''}">${t.icon} ${t.label}</div>
+      <div class="check-time">${formatTime(taskTime)}</div>
+    </div>`;
+  });
+  document.getElementById('checklist').innerHTML = html;
+}
+
+function toggleTask(key) {
+  const td = getTodayData();
+  td.completedTasks[key] = !td.completedTasks[key];
+  saveState();
+  renderHome();
+  updateScore();
+}
+
+// ===================== SCORE =====================
+function updateScore() {
+  const td = getTodayData();
+  const now = getTimeMinutes();
+  let score = 0;
+  const breakdown = [];
+
+  SCORE_ITEMS.forEach(item => {
+    let done = false;
+    if (item.key === 'workout') done = !!(td.completedTasks['workout'] || td.completedTasks['morning_workout']);
+    else if (item.key === 'protein_breakfast') done = !!(td.proteinChecks && td.proteinChecks['breakfast']);
+    else if (item.key === 'protein_lunch') done = !!(td.proteinChecks && td.proteinChecks['lunch']);
+    else if (item.key === 'protein_dinner') done = !!(td.proteinChecks && td.proteinChecks['dinner']);
+    else if (item.key === 'sleep') done = !!(td.completedTasks['sleep_before_midnight']);
+    else if (item.key === 'water') done = !!(td.completedTasks['water']);
+    else if (item.key === 'morning_stretch') done = !!(td.completedTasks['morning_workout'] || td.completedTasks['stretch']);
+    else if (item.key === 'book') done = !!(td.completedTasks['book']);
+    else if (item.key === 'focus') done = !!(td.completedTasks['focus']);
+    else if (item.key === 'learned') done = !!(td.completedTasks['learned']);
+
+    if (done) score++;
+    const isPast = false; // simplified
+    breakdown.push({ ...item, done, pending: !done });
+  });
+
+  td.score = score;
+  saveState();
+
+  // Ring
+  const circumference = 239;
+  const offset = circumference - (score / 10) * circumference;
+  document.getElementById('score-circle').style.strokeDashoffset = offset;
+  document.getElementById('score-display').textContent = score;
+
+  // Breakdown - show all 10 items in 2 columns
+  let bhtml = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;">';
+  breakdown.forEach(item => {
+    const cls = item.done ? 'done' : 'pending';
+    bhtml += `<div class="score-item"><div class="score-dot ${cls}"></div><span style="font-size:11px;">${item.icon} ${item.label}</span></div>`;
+  });
+  bhtml += '</div>';
+  document.getElementById('score-breakdown').innerHTML = bhtml;
+}
+
+// ===================== EXTRA SCORE TASKS =====================
+// Water, book, focus, learned — tap in checklist
+function renderExtraChecks() {
+  const td = getTodayData();
+  const extras = [
+    { key:'water', label:'💧 Water intake', icon:'💧' },
+    { key:'book', label:'📖 Read a book', icon:'📖' },
+    { key:'focus', label:'🧠 No distractions block', icon:'🧠' },
+    { key:'learned', label:'💡 Learnt something new', icon:'💡' },
+    { key:'sleep_before_midnight', label:'🌙 Slept before midnight', icon:'🌙' },
+    { key:'stretch', label:'🧘 Morning stretch (home days)', icon:'🧘' },
+  ];
+  let html = document.getElementById('checklist').innerHTML;
+  html += '<div class="label" style="margin:14px 0 6px;">LIFESTYLE</div>';
+  extras.forEach(e => {
+    const done = td.completedTasks[e.key];
+    html += `<div class="check-item" onclick="toggleTask('${e.key}')">
+      <div class="check-box ${done ? 'done' : ''}" id="cb-${e.key}"></div>
+      <div class="check-text ${done ? 'done' : ''}">${e.icon} ${e.label}</div>
+      <div class="check-time">Any time</div>
+    </div>`;
+  });
+  document.getElementById('checklist').innerHTML = html;
+}
+
+// ===================== NIGHT PREP =====================
+function renderNightPrep() {
+  const now = getTimeMinutes();
+  const prepCard = document.getElementById('night-prep-card');
+  if (now < 20*60) { prepCard.style.display = 'none'; return; }
+  prepCard.style.display = 'block';
+
+  const td = getTodayData();
+  const officeAnswered = state.lastOfficePromptDate === getDateKey();
+  // null = not yet answered tonight, true/false = answered
+  const tomorrow = officeAnswered ? state.tomorrowIsOffice : null;
+
+  let prepItems;
+  if (tomorrow === true) {
+    prepItems = [
+      { key:'prep_ragi', label:'Ragi ready to cook quickly' },
+      { key:'prep_nuts', label:'Pack mixed nuts for bus 🌰' },
+      { key:'prep_clothes', label:'Workout clothes laid out (morning session)' },
+      { key:'prep_whey', label:'Whey + shaker ready' },
+    ];
+  } else if (tomorrow === false) {
+    prepItems = [
+      { key:'prep_eggs', label:'Eggs boiled / in fridge' },
+      { key:'prep_whey', label:'Whey + shaker ready' },
+      { key:'prep_almonds', label:'Almonds soaked' },
+      { key:'prep_clothes', label:'Workout clothes laid out' },
+    ];
+  } else {
+    // Office question not yet answered tonight (before 10:30pm) — show generic
+    prepItems = [
+      { key:'prep_whey', label:'Whey + shaker ready' },
+      { key:'prep_clothes', label:'Workout clothes laid out' },
+      { key:'prep_water', label:'Water bottle filled' },
+    ];
+  }
+
+  let html = '';
+  prepItems.forEach(p => {
+    const done = td.prepChecks && td.prepChecks[p.key];
+    html += `<div class="prep-item" onclick="togglePrep('${p.key}')">
+      <div class="prep-check ${done ? 'done' : ''}"></div>
+      <div class="prep-text">${p.label}</div>
+    </div>`;
+  });
+  document.getElementById('night-prep-list').innerHTML = html;
+}
+
+function togglePrep(key) {
+  const td = getTodayData();
+  if (!td.prepChecks) td.prepChecks = {};
+  td.prepChecks[key] = !td.prepChecks[key];
+  saveState();
+  renderNightPrep();
+}
+
+// ===================== PROTEIN =====================
+function toggleProtein(meal) {
+  const td = getTodayData();
+  if (!td.proteinChecks) td.proteinChecks = {};
+  td.proteinChecks[meal] = !td.proteinChecks[meal];
+  saveState();
+  renderFood();
+  updateScore();
+}
+
+function renderFood() {
+  const td = getTodayData();
+  const checks = td.proteinChecks || {};
+  const proteins = { breakfast:25, lunch:35, snack:5, dinner:35, presleep:8 };
+  let total = 0;
+  Object.keys(proteins).forEach(k => { if (checks[k]) total += proteins[k]; });
+
+  document.getElementById('protein-display').textContent = total;
+  document.getElementById('protein-fill').style.width = Math.min(100, (total/100)*100) + '%';
+
+  ['breakfast','lunch','snack','dinner','presleep'].forEach(k => {
+    const el = document.getElementById('pcheck-' + k);
+    if (el) {
+      el.className = 'check-box' + (checks[k] ? ' done' : '');
+    }
+  });
+
+  // Show bus snack on office days
+  const busMeal = document.getElementById('bus-snack-meal');
+  if (busMeal) busMeal.style.display = td.isOffice ? 'block' : 'none';
+
+  // Dinner time
+  const dinnerLabel = document.getElementById('dinner-time-label');
+  if (dinnerLabel) dinnerLabel.textContent = td.isOffice ? '9:30 PM' : '8:30 PM';
+}
+
+// ===================== WORKOUT =====================
+let currentWorkoutDay = null;
+let currentExerciseIndex = 0;
+let completedExercises = [];
+
+function renderWorkout() {
+  const td = getTodayData();
+  const plan = td.isOffice ? WORKOUT_PLANS.office_morning : WORKOUT_PLANS.home[td.workoutDay % 7];
+  currentWorkoutDay = plan;
+
+  document.getElementById('wd-day').textContent = plan.day;
+  document.getElementById('wd-focus').textContent = plan.focus;
+
+  let tagsHtml = '';
+  plan.tags.forEach(t => tagsHtml += `<span class="wd-tag">${t}</span>`);
+  document.getElementById('wd-tags').innerHTML = tagsHtml;
+
+  let html = '';
+  plan.exercises.forEach((ex, i) => {
+    const isDone = completedExercises.includes(i);
+    const detail = ex.type === 'reps'
+      ? `${ex.sets} sets × ${ex.reps} reps`
+      : `${ex.sets} sets × ${ex.duration}s`;
+    const badge = ex.type === 'reps' ? 'reps' : 'time';
+    html += `<div class="exercise-card ${isDone ? 'completed' : ''}" id="ex-card-${i}">
+      <div class="ex-header">
+        <div class="ex-name">${ex.name}</div>
+        <div class="ex-badge ${badge}">${ex.type === 'reps' ? 'REPS' : 'TIME'}</div>
+      </div>
+      <div class="ex-detail">${detail} · ${ex.target}</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:3px;">${ex.muscle}</div>
+      <div class="ex-sets" id="ex-sets-${i}">
+        ${Array(ex.sets).fill(0).map((_,s) => `<div class="ex-set-dot" id="dot-${i}-${s}"></div>`).join('')}
+      </div>
+    </div>`;
+  });
+  document.getElementById('exercise-list').innerHTML = html;
+}
+
+// ===================== TIMER =====================
+let timerInterval = null;
+let autoAdvanceTimer = null;
+let timerState = { phase:'work', remaining:0, set:1, totalSets:0, exercise:null, exerciseIndex:0, paused:false };
+
+function startWorkoutSession() {
+  completedExercises = [];
+  currentExerciseIndex = 0;
+  startExercise(0);
+}
+
+function startExercise(idx) {
+  const ex = currentWorkoutDay.exercises[idx];
+  if (!ex) { endWorkout(); return; }
+  currentExerciseIndex = idx;
+  timerState = {
+    phase: 'prep',
+    remaining: 5,
+    set: 1,
+    totalSets: ex.sets,
+    exercise: ex,
+    exerciseIndex: idx,
+    paused: false,
+    repCount: 0,
+  };
+  showTimerModal(ex);
+  speak(`Next up: ${ex.name}. ${ex.type === 'reps' ? ex.reps + ' reps' : ex.duration + ' seconds'}. Get ready.`);
+  runTimer();
+}
+
+function showTimerModal(ex) {
+  document.getElementById('timer-modal').classList.add('show');
+  document.getElementById('timer-exercise-name').textContent = ex.name;
+  const detail = ex.type === 'reps'
+    ? `${ex.sets} sets × ${ex.reps} reps · ${ex.target}`
+    : `${ex.sets} sets × ${ex.duration}s · ${ex.target}`;
+  document.getElementById('timer-detail').textContent = detail;
+  document.getElementById('timer-quote').textContent = '';
+  updateTimerDisplay();
+}
+
+function runTimer() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    if (timerState.paused) return;
+    timerState.remaining--;
+
+    // Countdown voice cues
+    const ex = timerState.exercise;
+    if (timerState.phase === 'work' && ex.type === 'time') {
+      const total = ex.duration;
+      const r = timerState.remaining;
+      if (r === Math.floor(total / 2)) speak('Halfway. Keep going.');
+      if (r === 5) speak('5... 4... 3...');
+      if (r === 0) speak('Rest.');
+    }
+    // Rep counting for reps exercises — count down from reps to 1 using tempo
+    if (timerState.phase === 'work' && ex.type === 'reps') {
+      const total = 45; // 45s window
+      const r = timerState.remaining;
+      const elapsed = total - r;
+      const repDuration = Math.floor(total / ex.reps);
+      const currentRep = Math.floor(elapsed / repDuration) + 1;
+      const repStart = (currentRep - 1) * repDuration;
+      if (elapsed === repStart && currentRep <= ex.reps) speak(String(currentRep));
+      if (r === 5) speak('Last few. Squeeze.');
+    }
+    if (timerState.phase === 'rest' && timerState.remaining === 3) speak('Get ready. Next set.');
+    if (timerState.phase === 'prep' && timerState.remaining === 0) speak('Go!');
+
+    if (timerState.remaining <= 0) {
+      advanceTimer();
+    }
+    updateTimerDisplay();
+  }, 1000);
+}
+
+function advanceTimer() {
+  const ex = timerState.exercise;
+  if (timerState.phase === 'prep') {
+    timerState.phase = 'work';
+    timerState.remaining = ex.type === 'reps' ? 45 : ex.duration;
+    if (ex.type === 'reps') speak(`Set ${timerState.set}. ${ex.reps} reps. Start!`);
+    else speak(`Set ${timerState.set}. Go!`);
+  } else if (timerState.phase === 'work') {
+    // Mark set dot
+    const dot = document.getElementById(`dot-${timerState.exerciseIndex}-${timerState.set - 1}`);
+    if (dot) dot.classList.add('done');
+
+    if (timerState.set >= timerState.totalSets) {
+      // Exercise done
+      completedExercises.push(timerState.exerciseIndex);
+      const card = document.getElementById(`ex-card-${timerState.exerciseIndex}`);
+      if (card) card.classList.add('completed');
+      clearInterval(timerInterval);
+      timerState.phase = 'done';
+      speak('Exercise complete! Great work.');
+      document.getElementById('timer-quote').textContent = MOTIVATIONAL_QUOTES[Math.floor(Math.random()*MOTIVATIONAL_QUOTES.length)];
+      // Auto next after 4 seconds
+      autoAdvanceTimer = setTimeout(() => {
+        const next = timerState.exerciseIndex + 1;
+        if (next < currentWorkoutDay.exercises.length) {
+          startExercise(next);
+        } else {
+          endWorkout();
+        }
+      }, 4000);
+    } else {
+      timerState.phase = 'rest';
+      timerState.remaining = 60;
+      timerState.set++;
+      const quote = MOTIVATIONAL_QUOTES[Math.floor(Math.random()*MOTIVATIONAL_QUOTES.length)];
+      document.getElementById('timer-quote').textContent = quote;
+      speak('Rest. ' + quote);
+    }
+  } else if (timerState.phase === 'rest') {
+    timerState.phase = 'work';
+    timerState.remaining = ex.type === 'reps' ? 45 : ex.duration;
+    speak(`Set ${timerState.set}. Go!`);
+    document.getElementById('timer-quote').textContent = '';
+  }
+  updateTimerDisplay();
+}
+
+function updateTimerDisplay() {
+  const ex = timerState.exercise;
+  const phase = timerState.phase;
+  const num = document.getElementById('timer-num');
+  const phaseEl = document.getElementById('timer-phase');
+  const circle = document.getElementById('timer-circle');
+  const setInfo = document.getElementById('timer-set-info');
+
+  if (phase === 'prep') {
+    num.textContent = timerState.remaining;
+    num.style.color = 'var(--warning)';
+    circle.style.stroke = 'var(--warning)';
+    phaseEl.textContent = 'GET READY';
+    setInfo.textContent = '';
+  } else if (phase === 'work') {
+    num.textContent = timerState.remaining;
+    num.style.color = 'var(--accent)';
+    circle.style.stroke = 'var(--accent)';
+    phaseEl.textContent = ex.type === 'reps' ? `SET ${timerState.set} — ${ex.reps} REPS` : 'WORKING';
+    setInfo.textContent = `Set ${timerState.set} of ${timerState.totalSets}`;
+
+    // Ring animation
+    const total = ex.type === 'reps' ? 45 : ex.duration;
+    const progress = timerState.remaining / total;
+    const circumference = 553;
+    circle.style.strokeDashoffset = circumference * (1 - progress);
+  } else if (phase === 'rest') {
+    num.textContent = timerState.remaining;
+    num.style.color = 'var(--accent2)';
+    circle.style.stroke = 'var(--accent2)';
+    phaseEl.textContent = 'REST';
+    setInfo.textContent = `Next: Set ${timerState.set} of ${timerState.totalSets}`;
+    const progress = timerState.remaining / 60;
+    const circumference = 553;
+    circle.style.strokeDashoffset = circumference * (1 - progress);
+  } else if (phase === 'done') {
+    num.textContent = '✓';
+    num.style.color = 'var(--success)';
+    phaseEl.textContent = 'DONE';
+    setInfo.textContent = '';
+  }
+}
+
+function pauseTimer() {
+  timerState.paused = !timerState.paused;
+  document.querySelector('.timer-btn.secondary').textContent = timerState.paused ? '▶ Resume' : '⏸ Pause';
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+  clearTimeout(autoAdvanceTimer);
+  document.getElementById('timer-modal').classList.remove('show');
+  // Mark workout done if at least halfway
+  if (completedExercises.length >= Math.floor(currentWorkoutDay.exercises.length / 2)) {
+    const td = getTodayData();
+    td.completedTasks['workout'] = true;
+    td.completedTasks['morning_workout'] = true;
+    saveState();
+    updateScore();
+    renderChecklist();
+  }
+  completedExercises = [];
+  renderWorkout();
+}
+
+function endWorkout() {
+  clearInterval(timerInterval);
+  document.getElementById('timer-modal').classList.remove('show');
+  const td = getTodayData();
+  td.completedTasks['workout'] = true;
+  td.completedTasks['morning_workout'] = true;
+  saveState();
+  speak('Workout complete. Excellent session. Go eat your protein.');
+  updateScore();
+  renderChecklist();
+  renderWorkout();
+}
+
+// ===================== SPEECH =====================
+function speak(text) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.rate = 0.95;
+  utt.pitch = 1.0;
+  utt.volume = 1.0;
+  window.speechSynthesis.speak(utt);
+}
+
+// ===================== HISTORY =====================
+function renderHistory() {
+  const now = new Date();
+  const today = getDateKey();
+
+  // Streak
+  let streak = 0;
+  for (let i = 0; i < 365; i++) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const key = getDateKey(d);
+    const dayData = state.days[key];
+    if (dayData && dayData.score >= 5) streak++;
+    else if (i > 0) break;
+  }
+  document.getElementById('streak-display').innerHTML =
+    `<div class="streak-badge">🔥 ${streak} day${streak !== 1 ? 's' : ''} streak</div>`;
+
+  // Week bars
+  const days = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+  let weekHtml = '';
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const key = getDateKey(d);
+    const dayData = state.days[key];
+    const score = dayData ? (dayData.score || 0) : 0;
+    const height = score > 0 ? (score / 10) * 100 : 0;
+    const filled = score > 0;
+    weekHtml += `<div class="week-bar-wrap">
+      <div class="week-bar-col"><div class="week-bar ${filled ? 'filled' : ''}" style="height:${height}%"></div></div>
+      <div class="week-day-label">${days[6-i]}</div>
+    </div>`;
+  }
+  document.getElementById('week-bars').innerHTML = weekHtml;
+
+  // Month calendar
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  document.getElementById('month-label').textContent = now.toLocaleDateString('en-US', { month:'long', year:'numeric' });
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+
+  const dayLabels = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+  let calHtml = dayLabels.map(d => `<div class="cal-day-label">${d}</div>`).join('');
+  document.getElementById('cal-header').innerHTML = calHtml;
+
+  let gridHtml = '';
+  for (let i = 0; i < firstDay; i++) gridHtml += '<div class="cal-day empty"></div>';
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateObj = new Date(year, month, d);
+    const key = getDateKey(dateObj);
+    const dayData = state.days[key];
+    const score = dayData ? (dayData.score || 0) : null;
+    const isToday = key === today;
+    const isFuture = dateObj > now;
+    let cls = 'cal-day';
+    if (isToday) cls += ' today';
+    if (isFuture) cls += ' future';
+    else if (score === null) cls += ' future';
+    else if (score >= 8) cls += ' score-high';
+    else if (score >= 5) cls += ' score-mid';
+    else cls += ' score-low';
+    gridHtml += `<div class="${cls}" onclick="showDayDetail('${key}')">${d}</div>`;
+  }
+  document.getElementById('cal-grid').innerHTML = gridHtml;
+}
+
+const TASK_LABELS = {
+  wake: 'Wake up', morning_workout: 'Morning mobility', breakfast: 'Breakfast',
+  shuttle: 'Shuttle to office', lunch: 'Lunch', snack_bus: 'Bus snack',
+  home: 'Home from office', dinner: 'Dinner', presleep: 'Pre-sleep',
+  sleep: 'Sleep', pre_workout: 'Pre-workout snack', workout: 'Workout',
+  water: 'Water intake', book: 'Read a book', focus: 'No distractions',
+  learned: 'Learnt something new', sleep_before_midnight: 'Slept before midnight',
+  stretch: 'Morning stretch',
+};
+
+function showDayDetail(key) {
+  const dayData = state.days[key];
+  if (!dayData) return;
+  const card = document.getElementById('history-detail-card');
+  const dateEl = document.getElementById('history-detail-date');
+  const contentEl = document.getElementById('history-detail-content');
+  card.style.display = 'block';
+  dateEl.textContent = key;
+  let html = `<div style="margin-bottom:10px;"><span class="streak-badge" style="font-size:13px;">Score: ${dayData.score || 0}/10</span></div>`;
+  const tasks = dayData.completedTasks || {};
+  Object.keys(tasks).forEach(k => {
+    if (tasks[k]) html += `<div class="score-item"><div class="score-dot done"></div>${TASK_LABELS[k] || k}</div>`;
+  });
+  contentEl.innerHTML = html;
+  card.scrollIntoView({ behavior:'smooth' });
+}
+
+// ===================== OFFICE MODAL =====================
+function checkOfficePrompt() {
+  const now = getTimeMinutes();
+  const lastAsked = state.lastOfficePromptDate;
+  const today = getDateKey();
+  if (now >= 22*60 + 30 && lastAsked !== today) {
+    showOfficeModal();
+  }
+}
+
+function showOfficeModal() {
+  document.getElementById('office-modal').classList.add('show');
+}
+
+function setTomorrow(isOffice) {
+  state.tomorrowIsOffice = isOffice;
+  state.lastOfficePromptDate = getDateKey();
+  saveState();
+  document.getElementById('office-modal').classList.remove('show');
+  speak(isOffice ? 'Got it. Office day tomorrow. Setting your morning workout.' : 'Home day tomorrow. Full evening session planned.');
+}
+
+// ===================== NAV =====================
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.querySelector(`#nav button[onclick="switchTab('${tab}')"]`).classList.add('active');
+
+  if (tab === 'workout') renderWorkout();
+  if (tab === 'food') renderFood();
+  if (tab === 'history') renderHistory();
+}
+
+// ===================== HOME =====================
+function renderHome() {
+  renderHero();
+  renderChecklist();
+  renderExtraChecks();
+  renderNightPrep();
+  renderDayBadge();
+}
+
+// ===================== DAILY RESET =====================
+function checkDailyReset() {
+  const today = getDateKey();
+  if (!state.days[today]) {
+    state.days[today] = {
+      isOffice: state.tomorrowIsOffice || false,
+      completedTasks: {},
+      score: 0,
+      proteinChecks: {},
+      prepChecks: {},
+      workoutDay: getWorkoutDayIndex(today),
+    };
+    saveState();
+  }
+}
+
+// ===================== INIT =====================
+function init() {
+  checkDailyReset();
+  renderHome();
+  updateScore();
+  setInterval(() => {
+    renderHero();
+    checkOfficePrompt();
+  }, 60000);
+
+  // Show office modal at 10:30 PM
+  setInterval(checkOfficePrompt, 60000);
+}
+
+init();
+</script>
+
+</body>
+</html>
