@@ -7,226 +7,163 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Discipline OS">
-<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjE4MCIgaGVpZ2h0PSIxODAiIHJ4PSIzNiIgZmlsbD0iIzBhMGEwZiIvPjx0ZXh0IHg9IjkwIiB5PSIxMTUiIGZvbnQtZmFtaWx5PSJBcmlhbCBCbGFjayxzYW5zLXNlcmlmIiBmb250LXNpemU9Ijg0IiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjZThmZjQ3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5EPC90ZXh0Pjwvc3ZnPg==">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAApreviously">
 <title>Discipline OS</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0a0f;
-    --surface: #13131a;
-    --surface2: #1c1c26;
-    --border: #2a2a3a;
-    --accent: #e8ff47;
-    --accent2: #47b8ff;
-    --accent3: #ff6b47;
-    --text: #f0f0f5;
-    --text2: #8888a0;
-    --text3: #55556a;
-    --success: #47ffb8;
-    --danger: #ff4747;
-    --warning: #ffb847;
-    --radius: 16px;
-    --radius-sm: 10px;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  html, body { height:100%; background:var(--bg); color:var(--text); font-family:'DM Sans', sans-serif; overflow:hidden; }
-
-/* LAYOUT */
-#app { display:flex; flex-direction:column; height:100vh; height:100dvh; }
-#topbar { display:flex; align-items:center; justify-content:space-between; padding:16px 24px 8px; flex-shrink:0; }
-#nav { display:flex; gap:4px; background:var(–surface); border-radius:50px; padding:4px; flex-shrink:0; margin:0 24px 12px; }
-#nav button { flex:1; padding:10px; border:none; background:transparent; color:var(–text2); font-family:‘DM Sans’,sans-serif; font-size:13px; font-weight:500; border-radius:50px; cursor:pointer; transition:all .2s; white-space:nowrap; }
-#nav button.active { background:var(–accent); color:#0a0a0f; font-weight:600; }
-#content { flex:1; overflow-y:auto; padding:0 24px 100px; scroll-behavior:smooth; }
-#content::-webkit-scrollbar { display:none; }
-
-/* CARDS */
-.card { background:var(–surface); border:1px solid var(–border); border-radius:var(–radius); padding:20px; margin-bottom:14px; }
-.card-sm { padding:14px 16px; }
-.label { font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(–text2); margin-bottom:8px; }
-.big-num { font-family:‘Bebas Neue’, sans-serif; font-size:72px; line-height:1; color:var(–accent); }
-.title { font-family:‘Bebas Neue’, sans-serif; font-size:28px; letter-spacing:.03em; }
-.subtitle { font-size:13px; color:var(–text2); margin-top:4px; }
-
-/* CURRENT TASK HERO */
-#hero { background:linear-gradient(135deg, #13131a 0%, #1c1c26 100%); border:1px solid var(–border); border-radius:var(–radius); padding:24px; margin-bottom:14px; position:relative; overflow:hidden; }
-#hero::before { content:’’; position:absolute; top:-40px; right:-40px; width:160px; height:160px; background:var(–accent); opacity:.06; border-radius:50%; }
-#hero-status { font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(–accent); margin-bottom:10px; }
-#hero-task { font-family:‘Bebas Neue’,sans-serif; font-size:36px; line-height:1.1; margin-bottom:6px; }
-#hero-sub { font-size:13px; color:var(–text2); margin-bottom:16px; }
-#hero-countdown { font-family:‘DM Mono’,monospace; font-size:22px; color:var(–accent2); font-weight:500; }
-#hero-missed { background:rgba(255,71,71,.1); border:1px solid rgba(255,71,71,.3); border-radius:var(–radius-sm); padding:12px 16px; margin-bottom:12px; }
-#hero-missed .missed-label { font-size:11px; color:var(–danger); font-weight:600; letter-spacing:.1em; text-transform:uppercase; margin-bottom:6px; }
-#hero-missed .missed-item { font-size:13px; color:var(–text); padding:3px 0; }
-
-/* SCORE RING */
-.score-wrap { display:flex; align-items:center; gap:20px; }
-.score-ring-wrap { position:relative; width:90px; height:90px; flex-shrink:0; }
-.score-ring-wrap svg { transform:rotate(-90deg); }
-.score-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.score-num { font-family:‘Bebas Neue’,sans-serif; font-size:28px; color:var(–accent); line-height:1; }
-.score-denom { font-size:10px; color:var(–text3); }
-.score-breakdown { flex:1; }
-.score-item { display:flex; align-items:center; gap:8px; padding:4px 0; font-size:12px; color:var(–text2); }
-.score-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
-.score-dot.done { background:var(–success); }
-.score-dot.miss { background:var(–danger); }
-.score-dot.pending { background:var(–text3); }
-
-/* CHECKLIST */
-.check-item { display:flex; align-items:center; gap:14px; padding:13px 0; border-bottom:1px solid var(–border); cursor:pointer; }
-.check-item:last-child { border-bottom:none; }
-.check-box { width:22px; height:22px; border-radius:6px; border:2px solid var(–border); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .2s; }
-.check-box.done { background:var(–accent); border-color:var(–accent); }
-.check-box.done::after { content:‘✓’; font-size:13px; color:#0a0a0f; font-weight:700; }
-.check-box.missed { border-color:var(–danger); background:rgba(255,71,71,.15); }
-.check-box.missed::after { content:‘✕’; font-size:12px; color:var(–danger); font-weight:700; }
-.check-text { flex:1; font-size:14px; }
-.check-text.done { text-decoration:line-through; color:var(–text2); }
-.check-time { font-family:‘DM Mono’,monospace; font-size:11px; color:var(–text3); }
-
-/* WORKOUT */
-#workout-screen { display:none; }
-.exercise-card { background:var(–surface); border:1px solid var(–border); border-radius:var(–radius); padding:18px; margin-bottom:10px; cursor:pointer; transition:border-color .2s; }
-.exercise-card.active { border-color:var(–accent); }
-.exercise-card.completed { border-color:var(–success); opacity:.6; }
-.ex-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
-.ex-name { font-family:‘Bebas Neue’,sans-serif; font-size:22px; }
-.ex-badge { font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:4px 10px; border-radius:50px; }
-.ex-badge.reps { background:rgba(232,255,71,.15); color:var(–accent); }
-.ex-badge.time { background:rgba(71,184,255,.15); color:var(–accent2); }
-.ex-badge.pull { background:rgba(71,255,184,.15); color:var(–success); }
-.ex-detail { font-size:12px; color:var(–text2); }
-.ex-sets { display:flex; gap:6px; margin-top:10px; }
-.ex-set-dot { width:10px; height:10px; border-radius:50%; background:var(–border); transition:background .3s; }
-.ex-set-dot.done { background:var(–success); }
-.ex-set-dot.active { background:var(–accent); }
-
-/* TIMER */
-#timer-modal { display:none; position:fixed; inset:0; background:rgba(10,10,15,.97); z-index:100; flex-direction:column; align-items:center; justify-content:center; padding:40px; }
-#timer-modal.show { display:flex; }
-#timer-exercise-name { font-family:‘Bebas Neue’,sans-serif; font-size:42px; text-align:center; margin-bottom:4px; }
-#timer-detail { font-size:14px; color:var(–text2); text-align:center; margin-bottom:40px; }
-#timer-ring { position:relative; margin-bottom:30px; }
-#timer-ring svg { transform:rotate(-90deg); }
-#timer-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-#timer-num { font-family:‘Bebas Neue’,sans-serif; font-size:80px; line-height:1; }
-#timer-phase { font-size:13px; font-weight:600; letter-spacing:.15em; text-transform:uppercase; color:var(–text2); margin-top:4px; }
-#timer-set-info { font-size:14px; color:var(–text2); margin-bottom:20px; font-family:‘DM Mono’,monospace; }
-#timer-quote { font-size:15px; color:var(–text2); text-align:center; font-style:italic; max-width:300px; margin-bottom:30px; min-height:44px; }
-#timer-controls { display:flex; gap:16px; }
-.timer-btn { padding:14px 28px; border-radius:50px; border:none; font-family:‘DM Sans’,sans-serif; font-size:15px; font-weight:600; cursor:pointer; transition:all .2s; }
-.timer-btn.primary { background:var(–accent); color:#0a0a0f; }
-.timer-btn.secondary { background:var(–surface2); color:var(–text); }
-.timer-btn.danger { background:rgba(255,71,71,.2); color:var(–danger); border:1px solid rgba(255,71,71,.3); }
-
-/* FOOD */
-.meal-section { margin-bottom:20px; }
-.meal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
-.meal-title { font-family:‘Bebas Neue’,sans-serif; font-size:22px; }
-.meal-time { font-family:‘DM Mono’,monospace; font-size:12px; color:var(–text3); }
-.food-tag { display:inline-block; background:var(–surface2); border:1px solid var(–border); border-radius:50px; padding:5px 12px; font-size:12px; color:var(–text2); margin:3px; }
-.protein-bar { height:4px; background:var(–border); border-radius:2px; margin-top:10px; }
-.protein-fill { height:100%; background:var(–accent); border-radius:2px; transition:width .6s; }
-
-/* HISTORY */
-.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:12px; }
-.cal-day-label { font-size:10px; color:var(–text3); text-align:center; font-weight:600; letter-spacing:.08em; }
-.cal-day { aspect-ratio:1; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; cursor:pointer; transition:all .2s; position:relative; }
-.cal-day.empty { background:transparent; }
-.cal-day.future { background:var(–surface); color:var(–text3); }
-.cal-day.score-high { background:rgba(71,255,184,.2); color:var(–success); border:1px solid rgba(71,255,184,.3); }
-.cal-day.score-mid { background:rgba(232,255,71,.15); color:var(–accent); border:1px solid rgba(232,255,71,.2); }
-.cal-day.score-low { background:rgba(255,71,71,.15); color:var(–danger); border:1px solid rgba(255,71,71,.2); }
-.cal-day.today { outline:2px solid var(–accent2); outline-offset:2px; }
-.streak-badge { background:linear-gradient(135deg,var(–accent),var(–accent2)); color:#0a0a0f; border-radius:50px; padding:8px 18px; font-weight:700; font-size:15px; display:inline-flex; align-items:center; gap:8px; }
-
-/* OFFICE PROMPT */
-#office-modal { display:none; position:fixed; inset:0; background:rgba(10,10,15,.95); z-index:100; flex-direction:column; align-items:center; justify-content:center; padding:40px; }
-#office-modal.show { display:flex; }
-.office-modal-inner { background:var(–surface); border:1px solid var(–border); border-radius:var(–radius); padding:32px; max-width:400px; width:100%; text-align:center; }
-.office-q { font-family:‘Bebas Neue’,sans-serif; font-size:32px; margin-bottom:8px; }
-.office-sub { font-size:14px; color:var(–text2); margin-bottom:28px; }
-.office-btns { display:flex; gap:12px; }
-.office-btn { flex:1; padding:16px; border-radius:var(–radius-sm); border:none; font-family:‘DM Sans’,sans-serif; font-size:16px; font-weight:600; cursor:pointer; transition:all .2s; }
-.office-btn.yes { background:var(–accent); color:#0a0a0f; }
-.office-btn.no { background:var(–surface2); color:var(–text); border:1px solid var(–border); }
-
-/* WEEK BARS */
-.week-bars { display:flex; align-items:flex-end; gap:8px; height:80px; margin-top:12px; }
-.week-bar-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; }
-.week-bar-col { flex:1; display:flex; align-items:flex-end; width:100%; }
-.week-bar { width:100%; border-radius:4px 4px 0 0; background:var(–border); transition:height .4s; min-height:4px; }
-.week-bar.filled { background:var(–accent); }
-.week-day-label { font-size:10px; color:var(–text3); font-weight:600; }
-
-/* PILL TAGS */
-.pill { display:inline-flex; align-items:center; gap:4px; background:var(–surface2); border:1px solid var(–border); border-radius:50px; padding:6px 14px; font-size:12px; color:var(–text2); margin:3px; }
-.pill .dot { width:6px; height:6px; border-radius:50%; }
-
-/* SNACK REMINDER */
-#snack-banner { background:linear-gradient(135deg,rgba(255,184,71,.15),rgba(255,107,71,.1)); border:1px solid rgba(255,184,71,.3); border-radius:var(–radius-sm); padding:14px 16px; margin-bottom:14px; display:none; }
-#snack-banner .snack-label { font-size:11px; color:var(–warning); font-weight:600; letter-spacing:.1em; text-transform:uppercase; margin-bottom:4px; }
-#snack-banner .snack-text { font-size:14px; }
-
-/* DAY TYPE BADGE */
-#day-type-badge { display:flex; align-items:center; gap:8px; }
-.type-pill { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:5px 12px; border-radius:50px; }
-.type-pill.office { background:rgba(71,184,255,.15); color:var(–accent2); border:1px solid rgba(71,184,255,.2); }
-.type-pill.home { background:rgba(71,255,184,.15); color:var(–success); border:1px solid rgba(71,255,184,.2); }
-
-/* NIGHT PREP */
-.prep-item { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(–border); cursor:pointer; }
-.prep-item:last-child { border-bottom:none; }
-.prep-check { width:20px; height:20px; border-radius:5px; border:2px solid var(–border); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .2s; }
-.prep-check.done { background:var(–accent); border-color:var(–accent); }
-.prep-check.done::after { content:‘✓’; font-size:11px; color:#0a0a0f; font-weight:700; }
-.prep-text { font-size:14px; }
-
-/* TOPBAR CLOCK */
-#topbar-time { font-family:‘DM Mono’,monospace; font-size:13px; color:var(–text2); }
-#topbar-title { font-family:‘Bebas Neue’,sans-serif; font-size:22px; letter-spacing:.05em; }
-
-/* SECTION TITLE */
-.section-title { font-family:‘Bebas Neue’,sans-serif; font-size:20px; margin:20px 0 10px; color:var(–text2); letter-spacing:.05em; }
-
-/* WORKOUT DAY HEADER */
-#workout-day-header { background:linear-gradient(135deg,var(–surface),var(–surface2)); border:1px solid var(–border); border-radius:var(–radius); padding:20px; margin-bottom:14px; }
-#wd-day { font-family:‘Bebas Neue’,sans-serif; font-size:42px; color:var(–accent); line-height:1; }
-#wd-focus { font-size:13px; color:var(–text2); margin-top:4px; }
-#wd-tags { margin-top:12px; display:flex; flex-wrap:wrap; gap:6px; }
-.wd-tag { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:5px 12px; border-radius:50px; border:1px solid var(–border); color:var(–text2); }
-
-/* START WORKOUT BTN */
-#start-workout-btn { width:100%; padding:18px; background:var(–accent); color:#0a0a0f; border:none; border-radius:var(–radius-sm); font-family:‘DM Sans’,sans-serif; font-size:16px; font-weight:700; cursor:pointer; margin-bottom:20px; letter-spacing:.03em; transition:all .2s; }
-#start-workout-btn:active { transform:scale(.98); }
-
-/* RESPONSIVE TWEAKS */
-@media (max-width: 600px) { .big-num { font-size:56px; } }
-
-/* ANIMATIONS */
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
-.pulse { animation:pulse 2s infinite; }
-@keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
-.slide-up { animation:slideUp .3s ease; }
-
-/* TABS */
-.tab-content { display:none; }
-.tab-content.active { display:block; animation:slideUp .3s ease; }
-
-/* EMPTY STATE */
-.empty-state { text-align:center; padding:40px 20px; color:var(–text3); }
-.empty-state .es-icon { font-size:40px; margin-bottom:12px; }
-.empty-state .es-text { font-size:14px; }
+:root{--bg:#0a0a0f;--surface:#13131a;--surface2:#1c1c26;--border:#2a2a3a;--accent:#e8ff47;--accent2:#47b8ff;--accent3:#ff6b47;--text:#f0f0f5;--text2:#8888a0;--text3:#55556a;--success:#47ffb8;--danger:#ff4747;--warning:#ffb847;--radius:16px;--radius-sm:10px}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow:hidden}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+#topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 24px 8px;flex-shrink:0}
+#topbar-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.05em}
+#topbar-right{display:flex;align-items:center;gap:10px}
+#topbar-time{font-family:'DM Mono',monospace;font-size:13px;color:var(--text2)}
+#nav{display:flex;gap:4px;background:var(--surface);border-radius:50px;padding:4px;flex-shrink:0;margin:0 24px 12px}
+#nav button{flex:1;padding:10px;border:none;background:transparent;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;border-radius:50px;cursor:pointer;transition:all .2s;white-space:nowrap}
+#nav button.active{background:var(--accent);color:#0a0a0f;font-weight:600}
+#content{flex:1;overflow-y:auto;padding:0 24px 100px;scroll-behavior:smooth}
+#content::-webkit-scrollbar{display:none}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px}
+.card-sm{padding:14px 16px}
+.label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text2);margin-bottom:8px}
+#hero{background:linear-gradient(135deg,#13131a 0%,#1c1c26 100%);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:14px;position:relative;overflow:hidden;min-height:120px}
+#hero::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:var(--accent);opacity:.06;border-radius:50%}
+.hero-status{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.hero-task{font-family:'Bebas Neue',sans-serif;font-size:36px;line-height:1.1;margin-bottom:6px}
+.hero-sub{font-size:13px;color:var(--text2);margin-bottom:16px}
+.hero-countdown{font-family:'DM Mono',monospace;font-size:22px;color:var(--accent2);font-weight:500}
+.missed-box{background:rgba(255,71,71,.1);border:1px solid rgba(255,71,71,.3);border-radius:var(--radius-sm);padding:12px 16px;margin-bottom:12px}
+.missed-label{font-size:11px;color:var(--danger);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.missed-item{font-size:13px;color:var(--danger);padding:3px 0}
+#snack-banner{background:linear-gradient(135deg,rgba(255,184,71,.15),rgba(255,107,71,.1));border:1px solid rgba(255,184,71,.3);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;display:none}
+.snack-label{font-size:11px;color:var(--warning);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.snack-text{font-size:14px}
+.type-pill{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:50px}
+.type-pill.office{background:rgba(71,184,255,.15);color:var(--accent2);border:1px solid rgba(71,184,255,.2)}
+.type-pill.home{background:rgba(71,255,184,.15);color:var(--success);border:1px solid rgba(71,255,184,.2)}
+.score-wrap{display:flex;align-items:center;gap:20px}
+.score-ring-wrap{position:relative;width:90px;height:90px;flex-shrink:0}
+.score-ring-wrap svg{transform:rotate(-90deg)}
+.score-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-num{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent);line-height:1}
+.score-denom{font-size:10px;color:var(--text3)}
+.score-breakdown{flex:1}
+.score-item{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:11px;color:var(--text2)}
+.score-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;background:var(--text3)}
+.score-dot.done{background:var(--success)}
+.check-item{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.check-item:last-child{border-bottom:none}
+.check-box{width:22px;height:22px;border-radius:6px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;background:transparent}
+.check-box.done{background:var(--accent);border-color:var(--accent)}
+.check-box.done::after{content:'✓';font-size:13px;color:#0a0a0f;font-weight:700}
+.check-box.missed{border-color:var(--danger);background:rgba(255,71,71,.15)}
+.check-box.missed::after{content:'✕';font-size:12px;color:var(--danger);font-weight:700}
+.check-text{flex:1;font-size:14px}
+.check-text.done{text-decoration:line-through;color:var(--text2)}
+.check-time{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)}
+.section-divider{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin:16px 0 8px}
+.prep-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.prep-item:last-child{border-bottom:none}
+.prep-check{width:20px;height:20px;border-radius:5px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.prep-check.done{background:var(--accent);border-color:var(--accent)}
+.prep-check.done::after{content:'✓';font-size:11px;color:#0a0a0f;font-weight:700}
+.prep-text{font-size:14px}
+#workout-day-header{background:linear-gradient(135deg,var(--surface),var(--surface2));border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px}
+#wd-day{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--accent);line-height:1}
+#wd-focus{font-size:13px;color:var(--text2);margin-top:4px}
+#wd-tags{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px}
+.wd-tag{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:50px;border:1px solid var(--border);color:var(--text2)}
+#start-workout-btn{width:100%;padding:18px;background:var(--accent);color:#0a0a0f;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:20px;letter-spacing:.03em;transition:all .2s}
+#start-workout-btn:active{transform:scale(.98)}
+.exercise-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:10px;cursor:pointer;transition:border-color .2s}
+.exercise-card.completed{border-color:var(--success);opacity:.7}
+.ex-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.ex-name{font-family:'Bebas Neue',sans-serif;font-size:22px}
+.ex-badge{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:50px}
+.ex-badge.reps{background:rgba(232,255,71,.15);color:var(--accent)}
+.ex-badge.time{background:rgba(71,184,255,.15);color:var(--accent2)}
+.ex-detail{font-size:12px;color:var(--text2)}
+.ex-muscle{font-size:11px;color:var(--text3);margin-top:3px}
+.ex-sets{display:flex;gap:6px;margin-top:10px}
+.ex-set-dot{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background .3s}
+.ex-set-dot.done{background:var(--success)}
+#timer-modal{display:none;position:fixed;inset:0;background:rgba(10,10,15,.97);z-index:100;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center}
+#timer-modal.show{display:flex}
+#timer-exercise-name{font-family:'Bebas Neue',sans-serif;font-size:42px;margin-bottom:4px}
+#timer-detail{font-size:14px;color:var(--text2);margin-bottom:40px}
+#timer-ring{position:relative;margin-bottom:30px}
+#timer-ring svg{transform:rotate(-90deg)}
+#timer-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#timer-num{font-family:'Bebas Neue',sans-serif;font-size:80px;line-height:1;color:var(--accent)}
+#timer-phase{font-size:13px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--text2);margin-top:4px}
+#timer-set-info{font-size:14px;color:var(--text2);margin-bottom:20px;font-family:'DM Mono',monospace}
+#timer-quote{font-size:15px;color:var(--text2);font-style:italic;max-width:300px;margin:0 auto 30px;min-height:44px}
+#timer-controls{display:flex;gap:16px}
+.timer-btn{padding:14px 28px;border-radius:50px;border:none;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
+.timer-btn.secondary{background:var(--surface2);color:var(--text)}
+.timer-btn.danger{background:rgba(255,71,71,.2);color:var(--danger);border:1px solid rgba(255,71,71,.3)}
+.meal-section{margin-bottom:20px}
+.meal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.meal-title{font-family:'Bebas Neue',sans-serif;font-size:22px}
+.meal-time{font-family:'DM Mono',monospace;font-size:12px;color:var(--text3)}
+.food-tag{display:inline-block;background:var(--surface2);border:1px solid var(--border);border-radius:50px;padding:5px 12px;font-size:12px;color:var(--text2);margin:3px}
+.protein-bar{height:4px;background:var(--border);border-radius:2px;margin-top:10px}
+.protein-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .6s}
+.protein-display{font-family:'Bebas Neue',sans-serif;font-size:48px;line-height:1;color:var(--accent)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:8px}
+.cal-day-label{font-size:10px;color:var(--text3);text-align:center;font-weight:600;padding:4px 0}
+.cal-day{aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;cursor:pointer;transition:all .2s}
+.cal-day.empty{background:transparent}
+.cal-day.future{background:var(--surface);color:var(--text3)}
+.cal-day.score-high{background:rgba(71,255,184,.2);color:var(--success);border:1px solid rgba(71,255,184,.3)}
+.cal-day.score-mid{background:rgba(232,255,71,.15);color:var(--accent);border:1px solid rgba(232,255,71,.2)}
+.cal-day.score-low{background:rgba(255,71,71,.15);color:var(--danger);border:1px solid rgba(255,71,71,.2)}
+.cal-day.today{outline:2px solid var(--accent2);outline-offset:2px}
+.streak-badge{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0a0a0f;border-radius:50px;padding:8px 18px;font-weight:700;font-size:15px;display:inline-flex;align-items:center;gap:8px}
+.week-bars{display:flex;align-items:flex-end;gap:8px;height:80px;margin-top:12px}
+.week-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%}
+.week-bar-col{flex:1;display:flex;align-items:flex-end;width:100%}
+.week-bar{width:100%;border-radius:4px 4px 0 0;background:var(--border);min-height:4px}
+.week-bar.filled{background:var(--accent)}
+.week-day-label{font-size:10px;color:var(--text3);font-weight:600}
+#office-modal{display:none;position:fixed;inset:0;background:rgba(10,10,15,.95);z-index:100;flex-direction:column;align-items:center;justify-content:center;padding:40px}
+#office-modal.show{display:flex}
+.office-modal-inner{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px;max-width:400px;width:100%;text-align:center}
+.office-q{font-family:'Bebas Neue',sans-serif;font-size:32px;margin-bottom:8px}
+.office-sub{font-size:14px;color:var(--text2);margin-bottom:28px}
+.office-btns{display:flex;gap:12px}
+.office-btn{flex:1;padding:16px;border-radius:var(--radius-sm);border:none;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;cursor:pointer;transition:all .2s}
+.office-btn.yes{background:var(--accent);color:#0a0a0f}
+.office-btn.no{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.pulse{animation:pulse 2s infinite}
+/* Exercise images */
+.ex-images{display:flex;gap:8px;margin-top:12px}
+.ex-img-wrap{flex:1;border-radius:8px;overflow:hidden;background:var(--surface2);border:1px solid var(--border);min-height:80px;display:flex;align-items:center;justify-content:center}
+.ex-img-wrap img{width:100%;height:auto;display:block;border-radius:8px}
+.ex-img-label{font-size:9px;color:var(--text3);text-align:center;padding:4px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+/* Timer images */
+#timer-images{display:flex;gap:10px;width:100%;max-width:500px;margin:0 auto 20px}
+.timer-img-wrap{flex:1;border-radius:10px;overflow:hidden;background:var(--surface2);border:1px solid var(--border);min-height:100px;display:flex;flex-direction:column;align-items:center}
+.timer-img-wrap img{width:100%;height:auto;display:block}
+.timer-img-label{font-size:9px;color:var(--text3);padding:4px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+/* Continue/Skip rest button */
+#skip-rest-btn{display:none;padding:12px 28px;background:var(--surface2);color:var(--accent);border:1px solid var(--accent);border-radius:50px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:16px;transition:all .2s}
+#skip-rest-btn:active{transform:scale(.97)}
+/* Make it harder */
+.harder-btn{background:transparent;border:1px solid var(--border);border-radius:50px;color:var(--text3);font-size:11px;font-weight:600;padding:4px 12px;cursor:pointer;margin-top:8px;transition:all .2s;font-family:'DM Sans',sans-serif}
+.harder-btn:active{border-color:var(--accent);color:var(--accent)}
 </style>
-
 </head>
 <body>
 <div id="app">
   <div id="topbar">
     <div id="topbar-title">DISCIPLINE OS</div>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <div id="day-type-badge"></div>
+    <div id="topbar-right">
+      <div id="day-badge"></div>
       <div id="topbar-time"></div>
     </div>
   </div>
@@ -237,192 +174,114 @@
     <button onclick="switchTab('history')">History</button>
   </div>
   <div id="content">
-
-```
-<!-- HOME TAB -->
-<div id="tab-home" class="tab-content active">
-  <div id="snack-banner">
-    <div class="snack-label">🎒 Pack for bus</div>
-    <div class="snack-text">Mixed nuts (cashews, almonds, raisins) — evening shuttle snack</div>
-  </div>
-  <div id="hero"></div>
-  <div id="missed-section"></div>
-
-  <!-- SCORE -->
-  <div class="card">
-    <div class="label">Today's Score</div>
-    <div class="score-wrap">
-      <div class="score-ring-wrap">
-        <svg width="90" height="90" viewBox="0 0 90 90">
-          <circle cx="45" cy="45" r="38" fill="none" stroke="#2a2a3a" stroke-width="7"/>
-          <circle id="score-circle" cx="45" cy="45" r="38" fill="none" stroke="#e8ff47" stroke-width="7" stroke-linecap="round" stroke-dasharray="239" stroke-dashoffset="239"/>
-        </svg>
-        <div class="score-center">
-          <div class="score-num" id="score-display">0</div>
-          <div class="score-denom">/10</div>
+    <!-- HOME -->
+    <div id="tab-home" class="tab-content active">
+      <div id="snack-banner">
+        <div class="snack-label">🎒 Pack for bus</div>
+        <div class="snack-text">Mixed nuts — cashews, almonds, raisins</div>
+      </div>
+      <div id="hero"></div>
+      <div id="missed-section"></div>
+      <div class="card">
+        <div class="label">Today's Score</div>
+        <div class="score-wrap">
+          <div class="score-ring-wrap">
+            <svg width="90" height="90" viewBox="0 0 90 90">
+              <circle cx="45" cy="45" r="38" fill="none" stroke="#2a2a3a" stroke-width="7"/>
+              <circle id="score-circle" cx="45" cy="45" r="38" fill="none" stroke="#e8ff47" stroke-width="7" stroke-linecap="round" stroke-dasharray="239" stroke-dashoffset="239"/>
+            </svg>
+            <div class="score-center">
+              <div class="score-num" id="score-num">0</div>
+              <div class="score-denom">/10</div>
+            </div>
+          </div>
+          <div id="score-breakdown" class="score-breakdown"></div>
         </div>
       </div>
-      <div class="score-breakdown" id="score-breakdown"></div>
-    </div>
-  </div>
-
-  <!-- TODAY CHECKLIST -->
-  <div class="card">
-    <div class="label">Today's Tasks</div>
-    <div id="checklist"></div>
-  </div>
-
-  <!-- NIGHT PREP -->
-  <div class="card" id="night-prep-card" style="display:none;">
-    <div class="label">Night Prep — For Tomorrow</div>
-    <div id="night-prep-list"></div>
-  </div>
-</div>
-
-<!-- WORKOUT TAB -->
-<div id="tab-workout" class="tab-content">
-  <div id="workout-day-header">
-    <div class="label">Today's Session</div>
-    <div id="wd-day"></div>
-    <div id="wd-focus"></div>
-    <div id="wd-tags"></div>
-  </div>
-  <button id="start-workout-btn" onclick="startWorkoutSession()">▶ START SESSION</button>
-  <div id="exercise-list"></div>
-</div>
-
-<!-- FOOD TAB -->
-<div id="tab-food" class="tab-content">
-  <div class="card">
-    <div class="label">Daily Protein Target</div>
-    <div style="display:flex;align-items:baseline;gap:6px;">
-      <span class="big-num" style="font-size:48px;" id="protein-display">0</span>
-      <span style="color:var(--text2);font-size:16px;">/ 100g</span>
-    </div>
-    <div class="protein-bar"><div class="protein-fill" id="protein-fill" style="width:0%"></div></div>
-  </div>
-
-  <div class="meal-section">
-    <div class="meal-header">
-      <div class="meal-title">BREAKFAST</div>
-      <div class="meal-time">7:30 AM</div>
-    </div>
-    <div class="card card-sm">
-      <div style="margin-bottom:10px;">
-        <span class="food-tag">3 Eggs + Toast</span>
-        <span class="food-tag">Ragi + Whey</span>
-        <span class="food-tag">Smoothie</span>
+      <div class="card">
+        <div class="label">Today's Tasks</div>
+        <div id="checklist"></div>
       </div>
-      <div class="check-item" onclick="toggleProtein('breakfast')">
-        <div class="check-box" id="pcheck-breakfast"></div>
-        <div class="check-text">Protein done (+25g)</div>
+      <div class="card" id="night-prep-card" style="display:none">
+        <div class="label">Night Prep — For Tomorrow</div>
+        <div id="night-prep-list"></div>
       </div>
     </div>
-  </div>
-
-  <div class="meal-section">
-    <div class="meal-header">
-      <div class="meal-title">LUNCH</div>
-      <div class="meal-time">2:00 PM</div>
-    </div>
-    <div class="card card-sm">
-      <div style="margin-bottom:10px;">
-        <span class="food-tag">1.5 katori rice</span>
-        <span class="food-tag">1.5 katori dal</span>
-        <span class="food-tag">Sabzi</span>
-        <span class="food-tag">Curd</span>
-        <span class="food-tag">Paneer 50g</span>
+    <!-- WORKOUT -->
+    <div id="tab-workout" class="tab-content">
+      <div id="workout-day-header">
+        <div class="label">Today's Session</div>
+        <div id="wd-day"></div>
+        <div id="wd-focus"></div>
+        <div id="wd-tags"></div>
       </div>
-      <div class="check-item" onclick="toggleProtein('lunch')">
-        <div class="check-box" id="pcheck-lunch"></div>
-        <div class="check-text">Protein done (+35g)</div>
+      <button id="start-workout-btn" onclick="startWorkoutSession()">▶ START SESSION</button>
+      <div id="exercise-list"></div>
+    </div>
+    <!-- FOOD -->
+    <div id="tab-food" class="tab-content">
+      <div class="card">
+        <div class="label">Daily Protein Target</div>
+        <div style="display:flex;align-items:baseline;gap:6px">
+          <span class="protein-display" id="protein-num">0</span>
+          <span style="color:var(--text2);font-size:16px">/ 100g</span>
+        </div>
+        <div class="protein-bar"><div class="protein-fill" id="protein-fill" style="width:0%"></div></div>
+      </div>
+      <div class="meal-section">
+        <div class="meal-header"><div class="meal-title">BREAKFAST</div><div class="meal-time">7:30 AM</div></div>
+        <div class="card card-sm">
+          <div style="margin-bottom:10px"><span class="food-tag">3 Eggs + Toast</span><span class="food-tag">Ragi + Whey</span><span class="food-tag">Smoothie</span></div>
+          <div class="check-item" onclick="toggleProtein('breakfast')"><div class="check-box" id="pc-breakfast"></div><div class="check-text">Protein done (+25g)</div></div>
+        </div>
+      </div>
+      <div class="meal-section">
+        <div class="meal-header"><div class="meal-title">LUNCH</div><div class="meal-time">2:00 PM</div></div>
+        <div class="card card-sm">
+          <div style="margin-bottom:10px"><span class="food-tag">1.5 katori rice</span><span class="food-tag">1.5 katori dal</span><span class="food-tag">Sabzi</span><span class="food-tag">Curd</span><span class="food-tag">Paneer 50g</span></div>
+          <div class="check-item" onclick="toggleProtein('lunch')"><div class="check-box" id="pc-lunch"></div><div class="check-text">Protein done (+35g)</div></div>
+        </div>
+      </div>
+      <div class="meal-section" id="bus-snack-section" style="display:none">
+        <div class="meal-header"><div class="meal-title">BUS SNACK</div><div class="meal-time">Evening shuttle</div></div>
+        <div class="card card-sm">
+          <div style="margin-bottom:10px"><span class="food-tag">Mixed nuts</span><span class="food-tag">Cashews · Almonds · Raisins</span></div>
+          <div class="check-item" onclick="toggleProtein('snack')"><div class="check-box" id="pc-snack"></div><div class="check-text">Snack done (+5g)</div></div>
+        </div>
+      </div>
+      <div class="meal-section">
+        <div class="meal-header"><div class="meal-title">DINNER</div><div class="meal-time" id="dinner-time">8:30 PM</div></div>
+        <div class="card card-sm">
+          <div style="margin-bottom:10px"><span class="food-tag">2–3 Rotis</span><span class="food-tag">Sabzi</span><span class="food-tag">Paneer bhurji</span><span class="food-tag">Egg bhurji</span></div>
+          <div class="check-item" onclick="toggleProtein('dinner')"><div class="check-box" id="pc-dinner"></div><div class="check-text">Protein done (+35g)</div></div>
+        </div>
+      </div>
+      <div class="meal-section">
+        <div class="meal-header"><div class="meal-title">PRE-SLEEP</div><div class="meal-time">11:30 PM</div></div>
+        <div class="card card-sm">
+          <div style="margin-bottom:10px"><span class="food-tag">Milk</span><span class="food-tag">Curd</span></div>
+          <div class="check-item" onclick="toggleProtein('presleep')"><div class="check-box" id="pc-presleep"></div><div class="check-text">Done (+8g)</div></div>
+        </div>
       </div>
     </div>
-  </div>
-
-  <div class="meal-section" id="bus-snack-meal" style="display:none;">
-    <div class="meal-header">
-      <div class="meal-title">BUS SNACK</div>
-      <div class="meal-time">Evening shuttle</div>
-    </div>
-    <div class="card card-sm">
-      <div style="margin-bottom:10px;">
-        <span class="food-tag">Mixed nuts</span>
-        <span class="food-tag">Cashews · Almonds · Raisins</span>
+    <!-- HISTORY -->
+    <div id="tab-history" class="tab-content">
+      <div class="card"><div class="label">Current Streak</div><div id="streak-display" style="margin-top:6px"></div></div>
+      <div class="card"><div class="label">This Week</div><div class="week-bars" id="week-bars"></div></div>
+      <div class="card">
+        <div class="label" id="month-label">This Month</div>
+        <div class="cal-grid" id="cal-header"></div>
+        <div class="cal-grid" id="cal-grid"></div>
       </div>
-      <div class="check-item" onclick="toggleProtein('snack')">
-        <div class="check-box" id="pcheck-snack"></div>
-        <div class="check-text">Snack done (+5g)</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="meal-section">
-    <div class="meal-header">
-      <div class="meal-title">DINNER</div>
-      <div class="meal-time" id="dinner-time-label">8:30 PM</div>
-    </div>
-    <div class="card card-sm">
-      <div style="margin-bottom:10px;">
-        <span class="food-tag">2–3 Rotis</span>
-        <span class="food-tag">Sabzi</span>
-        <span class="food-tag">Paneer bhurji</span>
-        <span class="food-tag">Egg bhurji</span>
-      </div>
-      <div class="check-item" onclick="toggleProtein('dinner')">
-        <div class="check-box" id="pcheck-dinner"></div>
-        <div class="check-text">Protein done (+35g)</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="meal-section">
-    <div class="meal-header">
-      <div class="meal-title">PRE-SLEEP</div>
-      <div class="meal-time">11:30 PM</div>
-    </div>
-    <div class="card card-sm">
-      <div style="margin-bottom:10px;">
-        <span class="food-tag">Milk</span>
-        <span class="food-tag">Curd</span>
-      </div>
-      <div class="check-item" onclick="toggleProtein('presleep')">
-        <div class="check-box" id="pcheck-presleep"></div>
-        <div class="check-text">Done (+8g)</div>
+      <div class="card" id="day-detail-card" style="display:none">
+        <div class="label" id="day-detail-date"></div>
+        <div id="day-detail-content"></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- HISTORY TAB -->
-<div id="tab-history" class="tab-content">
-  <div class="card">
-    <div class="label">Current Streak</div>
-    <div id="streak-display" style="margin-top:6px;"></div>
-  </div>
-
-  <div class="card">
-    <div class="label">This Week</div>
-    <div class="week-bars" id="week-bars"></div>
-  </div>
-
-  <div class="card">
-    <div class="label" id="month-label">This Month</div>
-    <div class="cal-grid" id="cal-header"></div>
-    <div class="cal-grid" id="cal-grid"></div>
-  </div>
-
-  <div class="card" id="history-detail-card" style="display:none;">
-    <div class="label" id="history-detail-date"></div>
-    <div id="history-detail-content"></div>
-  </div>
-</div>
-```
-
-  </div>
-</div>
-
-<!-- TIMER MODAL -->
+<!-- TIMER -->
 
 <div id="timer-modal">
   <div id="timer-exercise-name"></div>
@@ -433,14 +292,16 @@
       <circle id="timer-circle" cx="100" cy="100" r="88" fill="none" stroke="#e8ff47" stroke-width="10" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="0"/>
     </svg>
     <div id="timer-center">
-      <div id="timer-num">0</div>
+      <div id="timer-num">5</div>
       <div id="timer-phase">GET READY</div>
     </div>
   </div>
   <div id="timer-set-info"></div>
+  <div id="timer-images"></div>
+  <button id="skip-rest-btn" onclick="skipRest()">Continue →</button>
   <div id="timer-quote"></div>
   <div id="timer-controls">
-    <button class="timer-btn secondary" onclick="pauseTimer()">⏸ Pause</button>
+    <button class="timer-btn secondary" id="pause-btn" onclick="pauseTimer()">⏸ Pause</button>
     <button class="timer-btn danger" onclick="stopTimer()">✕ End</button>
   </div>
 </div>
@@ -450,7 +311,7 @@
 <div id="office-modal">
   <div class="office-modal-inner">
     <div class="office-q">Office Tomorrow?</div>
-    <div class="office-sub">This sets your morning workout and meal plan for tomorrow</div>
+    <div class="office-sub">Sets your morning workout and meal plan</div>
     <div class="office-btns">
       <button class="office-btn yes" onclick="setTomorrow(true)">Yes, Office</button>
       <button class="office-btn no" onclick="setTomorrow(false)">No, WFH</button>
@@ -459,6 +320,103 @@
 </div>
 
 <script>
+// ===================== UTILITIES FIRST =====================
+function getDateKey(d) {
+  try {
+    const date = d || new Date();
+    return date.toISOString().split('T')[0];
+  } catch(e) { return '2026-01-01'; }
+}
+
+function getWorkoutDayIndex(dateKey) {
+  try {
+    const start = new Date('2025-01-06');
+    const current = new Date(dateKey);
+    const diff = Math.floor((current - start) / (1000*60*60*24));
+    return ((diff % 7) + 7) % 7;
+  } catch(e) { return 0; }
+}
+
+function parseTime(timeStr) {
+  try {
+    const parts = timeStr.split(':');
+    const h = parseInt(parts[0], 10);
+    const m = parseInt(parts[1], 10);
+    if (h === 0 && m === 0) return 24 * 60;
+    return h * 60 + m;
+  } catch(e) { return 0; }
+}
+
+function formatTime(mins) {
+  try {
+    const h = Math.floor(mins / 60) % 24;
+    const m = mins % 60;
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const hh = h % 12 || 12;
+    return hh + ':' + String(m).padStart(2,'0') + ' ' + ampm;
+  } catch(e) { return ''; }
+}
+
+function formatCountdown(diffMins) {
+  if (diffMins <= 0) return 'Now';
+  const h = Math.floor(diffMins / 60);
+  const m = diffMins % 60;
+  if (h > 0) return h + 'h ' + m + 'm';
+  return m + 'm';
+}
+
+function getTimeMinutes() {
+  const now = new Date();
+  return now.getHours() * 60 + now.getMinutes();
+}
+
+function $(id) { return document.getElementById(id); }
+
+// ===================== STATE =====================
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('disciplineOS') || '{}');
+    if (!saved.days) saved.days = {};
+    if (saved.tomorrowIsOffice === undefined) saved.tomorrowIsOffice = false;
+    const today = getDateKey();
+    if (!saved.days[today]) {
+      saved.days[today] = {
+        isOffice: saved.tomorrowIsOffice || false,
+        completedTasks: {},
+        score: 0,
+        proteinChecks: {},
+        prepChecks: {},
+        workoutDay: getWorkoutDayIndex(today)
+      };
+    }
+    return saved;
+  } catch(e) {
+    return { days: {}, tomorrowIsOffice: false };
+  }
+}
+
+let state = loadState();
+
+function saveState() {
+  try { localStorage.setItem('disciplineOS', JSON.stringify(state)); } catch(e) {}
+}
+
+function getTodayData() {
+  const today = getDateKey();
+  if (!state.days[today]) {
+    state.days[today] = {
+      isOffice: state.tomorrowIsOffice || false,
+      completedTasks: {},
+      score: 0,
+      proteinChecks: {},
+      prepChecks: {},
+      workoutDay: getWorkoutDayIndex(today)
+    };
+    saveState();
+  }
+  return state.days[today];
+}
+
 // ===================== DATA =====================
 const SCORE_ITEMS = [
   { key:'workout', label:'Workout done', icon:'🏋️' },
@@ -467,13 +425,13 @@ const SCORE_ITEMS = [
   { key:'protein_dinner', label:'Dinner protein', icon:'🍽️' },
   { key:'sleep', label:'Sleep before midnight', icon:'🌙' },
   { key:'water', label:'Water intake', icon:'💧' },
-  { key:'morning_stretch', label:'Morning stretch', icon:'🧘' },
+  { key:'stretch', label:'Morning stretch', icon:'🧘' },
   { key:'book', label:'Read a book', icon:'📖' },
   { key:'focus', label:'No distractions', icon:'🧠' },
-  { key:'learned', label:'Learnt something new', icon:'💡' },
+  { key:'learned', label:'Learnt something new', icon:'💡' }
 ];
 
-const MOTIVATIONAL_QUOTES = [
+const QUOTES = [
   "Every rep counts. Don't stop now.",
   "Pain is temporary. Strength is permanent.",
   "You're building the version of yourself people will notice.",
@@ -483,936 +441,823 @@ const MOTIVATIONAL_QUOTES = [
   "One more. Always one more.",
   "You showed up. Now finish.",
   "Grip tight. Stay locked in.",
-  "The discomfort is the point.",
+  "The discomfort is the point."
 ];
 
-// WORKOUT PLANS
+const REST_TIMES = { strength:45, compound:45, bodyweight:30, core:20, stretch:15 };
+const BILATERAL = ['One-Arm Dumbbell Row','Bird Dog','Hip Flexor Stretch','Reverse Lunges','Dead Hang','Glute Bridge Hold','Hip Thrusts','Cat-Cow'];
+const BASE_URL = 'https://udaai.github.io/discipline-os/images/';
+const IMAGE_MAP = {
+  'Dead Bug':           {move:['dead-bug-move.jpg'],     muscles:['dead-bug-muscles.jpg']},
+  'Decline Push-Ups':  {move:['decline-pushup-move.jpg'], muscles:['decline-pushup-muscles.jpg']},
+  'Dumbbell Shoulder Press':{move:['shoulder-press-move.jpg'],muscles:['shoulder-press-muscles.jpg']},
+  'Lateral Raises':    {move:['lateral-raise-move.jpg'], muscles:['lateral-raise-muscles.jpg']},
+  'Chair Dips':        {move:['chair-dips-move.jpg'],    muscles:['chair-dips-muscles.jpg']},
+  'Glute Bridge':      {move:['glute-bridge-move.jpg'],  muscles:['glute-bridge-muscles.jpg']},
+  'Glute Bridge Hold': {move:['glute-bridge-move.jpg'],  muscles:['glute-bridge-muscles.jpg']},
+  'Plank':             {move:['plank-move.jpg'],          muscles:['plank-muscles.jpg']},
+  'Hip Flexor Stretch':{move:['hip-flexor-move.jpg'],    muscles:['hip-flexor-muscles.jpg']},
+  'Dead Hang':         {move:['dead-hang-move.jpg'],      muscles:['dead-hang-muscles.jpg']},
+  'Negative Pull-Ups': {move:[],                          muscles:['negative-pullup-muscles-1.jpg','negative-pullup-muscles-2.jpg']},
+  'One-Arm Dumbbell Row':{move:['row-move.jpg'],         muscles:['row-muscles-1.jpg','row-muscles-2.jpg']},
+  'Bicep Curls':       {move:[],                          muscles:['bicep-curl-muscles.jpg']},
+  'Hammer Curls':      {move:['hammer-curl-move.jpg'],   muscles:['hammer-curl-muscles.jpg']},
+  'Band Pull-Aparts':  {move:['band-pull-move.jpg'],     muscles:['band-pull-muscles.jpg']},
+  'Bird Dog':          {move:['bird-dog-move.jpg'],       muscles:['bird-dog-muscles.jpg']},
+  'Wrist Curls':       {move:['wrist-curl-move.jpg'],    muscles:['wrist-curl-muscles.jpg']},
+  'Goblet Squat':      {move:['goblet-squat-move-1.jpg','goblet-squat-move-2.jpg'], muscles:[]},
+  'KB Swing':          {move:['kb-swing-move.jpg'],       muscles:['kb-swing-muscles-1.jpg','kb-swing-muscles-2.jpg']},
+  'Reverse Lunges':    {move:['reverse-lunge-move.jpg'], muscles:['reverse-lunge-muscles.jpg']},
+  'Hip Thrusts':       {move:['hip-thrust-move.jpg'],    muscles:['hip-thrust-muscles.jpg']},
+  'Wall Sit':          {move:['wall-sit-move.jpg'],       muscles:['wall-sit-muscles.jpg']},
+  'Leg Raises':        {move:['leg-raise-move.jpg'],      muscles:['leg-raise-muscles.jpg']},
+  'Dumbbell Thruster': {move:['thruster-move.jpg'],       muscles:['thruster-muscles.jpg']},
+  'Pull-Up / Negative':{move:[],                          muscles:['negative-pullup-muscles-1.jpg']},
+  'Farmer Carry':      {move:['farmer-carry-move.jpg'],  muscles:['farmer-carry-muscles.jpg']},
+  'Mountain Climbers': {move:['mountain-climbers-move.jpg'],muscles:['mountain-climbers-muscles.jpg']},
+  'Burpees':           {move:['burpees-move.jpg'],        muscles:['burpees-muscles.jpg']},
+  'Pike Push-Ups':     {move:['pike-pushup-move.jpg'],   muscles:['pike-pushup-muscles.jpg']},
+  'Cat-Cow':           {move:['cat-cow-move.jpg'],        muscles:['cat-cow-muscles.jpg']},
+  'Push-Ups':          {move:['decline-pushup-move.jpg'],muscles:['decline-pushup-muscles.jpg']},
+  'Push-Up Ladder':    {move:['decline-pushup-move.jpg'],muscles:['decline-pushup-muscles.jpg']},
+  'Full Body Stretch': {move:['hip-flexor-move.jpg'],    muscles:['hip-flexor-muscles.jpg']},
+};
+
+function getRestTime(ex) {
+  return REST_TIMES[ex.category] || 30;
+}
+
+function isBilateral(ex) {
+  return BILATERAL.includes(ex.name);
+}
+
+function buildImgTag(filename, label) {
+  return '<div class="ex-img-wrap"><img src="' + BASE_URL + filename + '" onerror="this.parentElement.style.display=\'none\'" loading="lazy"><div class="ex-img-label">' + label + '</div></div>';
+}
+
+function buildTimerImgTag(filename, label) {
+  return '<div class="timer-img-wrap"><img src="' + BASE_URL + filename + '" onerror="this.parentElement.style.display=\'none\'" loading="lazy"><div class="timer-img-label">' + label + '</div></div>';
+}
+
+const TASK_LABELS = {
+  wake:'Wake up', morning_workout:'Morning mobility', breakfast:'Breakfast',
+  shuttle:'Shuttle to office', lunch:'Lunch', snack_bus:'Bus snack',
+  home:'Home from office', dinner:'Dinner', presleep:'Pre-sleep',
+  pre_workout:'Pre-workout snack', workout:'Workout',
+  water:'Water intake', book:'Read a book', focus:'No distractions',
+  learned:'Learnt something new', sleep:'Slept before midnight', stretch:'Morning stretch'
+};
+
 const WORKOUT_PLANS = {
   home: [
-    {
-      day: 'PUSH + CORE',
-      focus: 'Chest · Shoulders · Triceps · Core activation',
-      tags: ['Push','Core','APT Fix'],
-      exercises: [
-        { name:'Dead Bug', type:'time', duration:40, sets:3, target:'Core / APT correction', muscle:'Core' },
-        { name:'Decline Push-Ups', type:'reps', reps:12, sets:4, target:'Chest + Shoulders', muscle:'Chest' },
-        { name:'Dumbbell Shoulder Press', type:'reps', reps:12, sets:4, target:'5kg each hand', muscle:'Shoulders' },
-        { name:'Lateral Raises', type:'reps', reps:15, sets:3, target:'5kg each hand', muscle:'Shoulders' },
-        { name:'Chair Dips', type:'reps', reps:12, sets:3, target:'Bodyweight', muscle:'Triceps' },
-        { name:'Glute Bridge', type:'reps', reps:15, sets:3, target:'Pause 2s at top — APT fix', muscle:'Glutes' },
-        { name:'Plank', type:'time', duration:60, sets:3, target:'Keep hips neutral', muscle:'Core' },
-        { name:'Hip Flexor Stretch', type:'time', duration:30, sets:2, target:'Each side — APT fix', muscle:'Hip Flexors' },
-      ]
-    },
-    {
-      day: 'PULL + GRIP',
-      focus: 'Back · Biceps · Grip · Finger strength',
-      tags: ['Pull','Biceps','Grip'],
-      exercises: [
-        { name:'Dead Hang / Pull-Up Hold', type:'time', duration:30, sets:3, target:'Pull-up bar — grip builder', muscle:'Grip' },
-        { name:'Negative Pull-Ups', type:'reps', reps:5, sets:4, target:'Slow 5s descent — pull-up bar', muscle:'Back' },
-        { name:'One-Arm Dumbbell Row', type:'reps', reps:12, sets:4, target:'5kg — each side', muscle:'Back' },
-        { name:'Bicep Curls', type:'reps', reps:12, sets:4, target:'5kg each', muscle:'Biceps' },
-        { name:'Hammer Curls', type:'reps', reps:12, sets:3, target:'5kg each', muscle:'Biceps' },
-        { name:'Band Pull-Aparts', type:'reps', reps:20, sets:3, target:'Maroon band — posture fix', muscle:'Rear Delts' },
-        { name:'Towel Grip Curls', type:'reps', reps:10, sets:3, target:'Wrap towel on dumbbell — finger strength', muscle:'Grip' },
-        { name:'Wrist Curls', type:'reps', reps:15, sets:3, target:'5kg — forearm strength', muscle:'Forearms' },
-        { name:'Bird Dog', type:'reps', reps:12, sets:3, target:'Each side — APT + core', muscle:'Core' },
-      ]
-    },
-    {
-      day: 'LEGS + GLUTES',
-      focus: 'Quads · Glutes · Hamstrings · APT correction',
-      tags: ['Legs','Glutes','APT Fix','Kettlebell'],
-      exercises: [
-        { name:'Glute Bridge', type:'reps', reps:20, sets:3, target:'Pause at top — bodyweight warmup', muscle:'Glutes' },
-        { name:'Goblet Squat', type:'reps', reps:15, sets:4, target:'16kg kettlebell', muscle:'Quads' },
-        { name:'KB Swing', type:'reps', reps:15, sets:4, target:'16kg kettlebell — APT fixer', muscle:'Glutes' },
-        { name:'Reverse Lunges', type:'reps', reps:12, sets:3, target:'Each leg — bodyweight', muscle:'Quads' },
-        { name:'Hip Thrusts', type:'reps', reps:12, sets:4, target:'Use couch/bed edge', muscle:'Glutes' },
-        { name:'Wall Sit', type:'time', duration:60, sets:3, target:'Quad endurance', muscle:'Quads' },
-        { name:'Leg Raises', type:'reps', reps:15, sets:3, target:'Core + hip flexor control', muscle:'Core' },
-        { name:'Hip Flexor Stretch', type:'time', duration:40, sets:3, target:'Each side — key APT fix', muscle:'Hip Flexors' },
-      ]
-    },
-    {
-      day: 'FULL BODY + STRENGTH',
-      focus: 'Compound movements · Power · Athleticism',
-      tags: ['Full Body','Power','Compound'],
-      exercises: [
-        { name:'KB Swing', type:'reps', reps:20, sets:4, target:'16kg — explosiveness', muscle:'Full Body' },
-        { name:'Push-Up Ladder', type:'reps', reps:20, sets:3, target:'Max reps — progress weekly', muscle:'Chest' },
-        { name:'Dumbbell Thruster', type:'reps', reps:12, sets:4, target:'5kg each — squat to press', muscle:'Full Body' },
-        { name:'Pull-Up (or Negative)', type:'reps', reps:5, sets:4, target:'Pull-up bar', muscle:'Back' },
-        { name:'Farmer Carry', type:'time', duration:40, sets:3, target:'5kg each hand — grip + posture', muscle:'Grip' },
-        { name:'Mountain Climbers', type:'time', duration:40, sets:3, target:'Core + cardio', muscle:'Core' },
-        { name:'Burpees', type:'reps', reps:10, sets:3, target:'Explosive', muscle:'Full Body' },
-        { name:'Dead Bug', type:'time', duration:40, sets:3, target:'Core — APT fix', muscle:'Core' },
-      ]
-    },
-    {
-      day: 'CORE + POSTURE',
-      focus: 'Deep core · APT correction · Posture · Grip',
-      tags: ['Core','Posture','APT Fix','Grip'],
-      exercises: [
-        { name:'Dead Bug', type:'time', duration:45, sets:4, target:'Slow controlled — spine neutral', muscle:'Core' },
-        { name:'Bird Dog', type:'reps', reps:15, sets:3, target:'Each side', muscle:'Core' },
-        { name:'Plank', type:'time', duration:75, sets:3, target:'Posterior pelvic tuck', muscle:'Core' },
-        { name:'Leg Raises', type:'reps', reps:15, sets:4, target:'No arch in lower back', muscle:'Core' },
-        { name:'Glute Bridge Hold', type:'time', duration:45, sets:3, target:'Sustained contraction — APT', muscle:'Glutes' },
-        { name:'Dead Hang', type:'time', duration:30, sets:4, target:'Pull-up bar — grip + spine decompression', muscle:'Grip' },
-        { name:'Band Pull-Aparts', type:'reps', reps:25, sets:3, target:'Maroon band', muscle:'Rear Delts' },
-        { name:'Hip Flexor Stretch', type:'time', duration:45, sets:3, target:'Each side — the most important stretch you do', muscle:'Hip Flexors' },
-      ]
-    },
-    {
-      day: 'PUSH + ARMS',
-      focus: 'Chest · Arms · Shoulders · Grip',
-      tags: ['Push','Arms','Biceps','Grip'],
-      exercises: [
-        { name:'Decline Push-Ups', type:'reps', reps:15, sets:4, target:'Slow 3s down', muscle:'Chest' },
-        { name:'Pike Push-Ups', type:'reps', reps:12, sets:3, target:'Shoulder focus', muscle:'Shoulders' },
-        { name:'Dumbbell Shoulder Press', type:'reps', reps:12, sets:4, target:'5kg each', muscle:'Shoulders' },
-        { name:'Bicep Curls', type:'reps', reps:15, sets:4, target:'5kg — full range', muscle:'Biceps' },
-        { name:'Hammer Curls', type:'reps', reps:12, sets:3, target:'5kg', muscle:'Biceps' },
-        { name:'Chair Dips', type:'reps', reps:15, sets:4, target:'Tricep focus', muscle:'Triceps' },
-        { name:'Wrist Curls', type:'reps', reps:20, sets:3, target:'5kg — forearm pump', muscle:'Forearms' },
-        { name:'Dead Hang', type:'time', duration:25, sets:3, target:'Grip endurance', muscle:'Grip' },
-      ]
-    },
-    {
-      day: 'ACTIVE RECOVERY',
-      focus: 'Mobility · Flexibility · Light movement',
-      tags: ['Recovery','Mobility','Stretch'],
-      exercises: [
-        { name:'Full Body Stretch', type:'time', duration:60, sets:2, target:'Hamstrings, hip flexors, chest', muscle:'Full Body' },
-        { name:'Hip Flexor Stretch', type:'time', duration:60, sets:3, target:'Each side — hold and breathe', muscle:'Hip Flexors' },
-        { name:'Cat-Cow', type:'reps', reps:15, sets:2, target:'Spinal mobility', muscle:'Spine' },
-        { name:'Dead Hang', type:'time', duration:20, sets:3, target:'Light grip work', muscle:'Grip' },
-        { name:'Light Walk', type:'time', duration:600, sets:1, target:'10 min easy walk', muscle:'Full Body' },
-      ]
-    },
+    { day:'PUSH + CORE', focus:'Chest · Shoulders · Triceps · Core activation', tags:['Push','Core','APT Fix'],
+      exercises:[
+        {name:'Dead Bug',type:'time',duration:40,sets:3,target:'Core / APT correction',muscle:'Core',category:'core'},
+        {name:'Decline Push-Ups',type:'reps',reps:12,sets:4,target:'Chest + Shoulders',muscle:'Chest',category:'bodyweight'},
+        {name:'Dumbbell Shoulder Press',type:'reps',reps:12,sets:4,target:'5kg each hand',muscle:'Shoulders',category:'strength'},
+        {name:'Lateral Raises',type:'reps',reps:15,sets:3,target:'5kg each hand',muscle:'Shoulders',category:'strength'},
+        {name:'Chair Dips',type:'reps',reps:12,sets:3,target:'Bodyweight',muscle:'Triceps',category:'bodyweight'},
+        {name:'Glute Bridge',type:'reps',reps:15,sets:3,target:'Pause 2s at top — APT fix',muscle:'Glutes',category:'bodyweight'},
+        {name:'Plank',type:'time',duration:60,sets:3,target:'Keep hips neutral',muscle:'Core',category:'core'},
+        {name:'Hip Flexor Stretch',type:'time',duration:30,sets:2,target:'Each side — APT fix',muscle:'Hip Flexors',category:'stretch'}
+      ]},
+    { day:'PULL + GRIP', focus:'Back · Biceps · Grip · Finger strength', tags:['Pull','Biceps','Grip'],
+      exercises:[
+        {name:'Dead Hang',type:'time',duration:30,sets:3,target:'Pull-up bar — grip builder',muscle:'Grip',category:'stretch'},
+        {name:'Negative Pull-Ups',type:'reps',reps:5,sets:4,target:'Slow 5s descent',muscle:'Back',category:'strength'},
+        {name:'One-Arm Dumbbell Row',type:'reps',reps:12,sets:4,target:'5kg — each side',muscle:'Back',category:'strength'},
+        {name:'Bicep Curls',type:'reps',reps:12,sets:4,target:'5kg each',muscle:'Biceps',category:'strength'},
+        {name:'Hammer Curls',type:'reps',reps:12,sets:3,target:'5kg each',muscle:'Biceps',category:'strength'},
+        {name:'Band Pull-Aparts',type:'reps',reps:20,sets:3,target:'Maroon band — posture fix',muscle:'Rear Delts',category:'bodyweight'},
+        {name:'Towel Grip Curls',type:'reps',reps:10,sets:3,target:'Wrap towel on dumbbell',muscle:'Grip',category:'strength'},
+        {name:'Wrist Curls',type:'reps',reps:15,sets:3,target:'5kg — forearm strength',muscle:'Forearms',category:'strength'},
+        {name:'Bird Dog',type:'reps',reps:12,sets:3,target:'Each side — APT + core',muscle:'Core',category:'core'}
+      ]},
+    { day:'LEGS + GLUTES', focus:'Quads · Glutes · Hamstrings · APT correction', tags:['Legs','Glutes','APT Fix','Kettlebell'],
+      exercises:[
+        {name:'Glute Bridge',type:'reps',reps:20,sets:3,target:'Pause at top — warmup',muscle:'Glutes',category:'bodyweight'},
+        {name:'Goblet Squat',type:'reps',reps:15,sets:4,target:'16kg kettlebell',muscle:'Quads',category:'compound'},
+        {name:'KB Swing',type:'reps',reps:15,sets:4,target:'16kg kettlebell — APT fixer',muscle:'Glutes',category:'compound'},
+        {name:'Reverse Lunges',type:'reps',reps:12,sets:3,target:'Each leg',muscle:'Quads',category:'bodyweight'},
+        {name:'Hip Thrusts',type:'reps',reps:12,sets:4,target:'Use couch/bed edge',muscle:'Glutes',category:'bodyweight'},
+        {name:'Wall Sit',type:'time',duration:60,sets:3,target:'Quad endurance',muscle:'Quads',category:'core'},
+        {name:'Leg Raises',type:'reps',reps:15,sets:3,target:'Core + hip flexor control',muscle:'Core',category:'core'},
+        {name:'Hip Flexor Stretch',type:'time',duration:40,sets:3,target:'Each side — key APT fix',muscle:'Hip Flexors',category:'stretch'}
+      ]},
+    { day:'FULL BODY + STRENGTH', focus:'Compound movements · Power · Athleticism', tags:['Full Body','Power','Compound'],
+      exercises:[
+        {name:'KB Swing',type:'reps',reps:20,sets:4,target:'16kg — explosiveness',muscle:'Full Body',category:'compound'},
+        {name:'Push-Up Ladder',type:'reps',reps:20,sets:3,target:'Max reps',muscle:'Chest',category:'bodyweight'},
+        {name:'Dumbbell Thruster',type:'reps',reps:12,sets:4,target:'5kg each — squat to press',muscle:'Full Body',category:'compound'},
+        {name:'Pull-Up / Negative',type:'reps',reps:5,sets:4,target:'Pull-up bar',muscle:'Back',category:'strength'},
+        {name:'Farmer Carry',type:'time',duration:40,sets:3,target:'5kg each hand — grip + posture',muscle:'Grip',category:'core'},
+        {name:'Mountain Climbers',type:'time',duration:40,sets:3,target:'Core + cardio',muscle:'Core',category:'core'},
+        {name:'Burpees',type:'reps',reps:10,sets:3,target:'Explosive',muscle:'Full Body',category:'compound'},
+        {name:'Dead Bug',type:'time',duration:40,sets:3,target:'Core — APT fix',muscle:'Core',category:'core'}
+      ]},
+    { day:'CORE + POSTURE', focus:'Deep core · APT correction · Posture · Grip', tags:['Core','Posture','APT Fix','Grip'],
+      exercises:[
+        {name:'Dead Bug',type:'time',duration:45,sets:4,target:'Slow controlled — spine neutral',muscle:'Core',category:'core'},
+        {name:'Bird Dog',type:'reps',reps:15,sets:3,target:'Each side',muscle:'Core',category:'core'},
+        {name:'Plank',type:'time',duration:75,sets:3,target:'Posterior pelvic tuck',muscle:'Core',category:'core'},
+        {name:'Leg Raises',type:'reps',reps:15,sets:4,target:'No arch in lower back',muscle:'Core',category:'core'},
+        {name:'Glute Bridge Hold',type:'time',duration:45,sets:3,target:'Sustained contraction — APT',muscle:'Glutes',category:'core'},
+        {name:'Dead Hang',type:'time',duration:30,sets:4,target:'Pull-up bar — grip + decompression',muscle:'Grip',category:'stretch'},
+        {name:'Band Pull-Aparts',type:'reps',reps:25,sets:3,target:'Maroon band',muscle:'Rear Delts',category:'bodyweight'},
+        {name:'Hip Flexor Stretch',type:'time',duration:45,sets:3,target:'Each side — most important stretch',muscle:'Hip Flexors',category:'stretch'}
+      ]},
+    { day:'PUSH + ARMS', focus:'Chest · Arms · Shoulders · Grip', tags:['Push','Arms','Biceps','Grip'],
+      exercises:[
+        {name:'Decline Push-Ups',type:'reps',reps:15,sets:4,target:'Slow 3s down',muscle:'Chest',category:'bodyweight'},
+        {name:'Pike Push-Ups',type:'reps',reps:12,sets:3,target:'Shoulder focus',muscle:'Shoulders',category:'bodyweight'},
+        {name:'Dumbbell Shoulder Press',type:'reps',reps:12,sets:4,target:'5kg each',muscle:'Shoulders',category:'strength'},
+        {name:'Bicep Curls',type:'reps',reps:15,sets:4,target:'5kg — full range',muscle:'Biceps',category:'strength'},
+        {name:'Hammer Curls',type:'reps',reps:12,sets:3,target:'5kg',muscle:'Biceps',category:'strength'},
+        {name:'Chair Dips',type:'reps',reps:15,sets:4,target:'Tricep focus',muscle:'Triceps',category:'bodyweight'},
+        {name:'Wrist Curls',type:'reps',reps:20,sets:3,target:'5kg — forearm pump',muscle:'Forearms',category:'strength'},
+        {name:'Dead Hang',type:'time',duration:25,sets:3,target:'Grip endurance',muscle:'Grip',category:'stretch'}
+      ]},
+    { day:'ACTIVE RECOVERY', focus:'Mobility · Flexibility · Light movement', tags:['Recovery','Mobility','Stretch'],
+      exercises:[
+        {name:'Full Body Stretch',type:'time',duration:60,sets:2,target:'Hamstrings, hip flexors, chest',muscle:'Full Body',category:'stretch'},
+        {name:'Hip Flexor Stretch',type:'time',duration:60,sets:3,target:'Each side — hold and breathe',muscle:'Hip Flexors',category:'stretch'},
+        {name:'Cat-Cow',type:'reps',reps:15,sets:2,target:'Spinal mobility',muscle:'Spine',category:'stretch'},
+        {name:'Dead Hang',type:'time',duration:20,sets:3,target:'Light grip work',muscle:'Grip',category:'stretch'},
+        {name:'Light Walk',type:'time',duration:600,sets:1,target:'10 min easy walk',muscle:'Full Body',category:'stretch'}
+      ]}
   ],
   office_morning: {
-    day: 'OFFICE MORNING',
-    focus: 'Mobility · APT · Light activation · 20 min',
-    tags: ['Morning','Light','Mobility','APT'],
-    exercises: [
-      { name:'Hip Flexor Stretch', type:'time', duration:40, sets:2, target:'Each side — wake up your hips', muscle:'Hip Flexors' },
-      { name:'Cat-Cow', type:'reps', reps:10, sets:2, target:'Spinal wake-up', muscle:'Spine' },
-      { name:'Bird Dog', type:'reps', reps:10, sets:2, target:'Each side', muscle:'Core' },
-      { name:'Glute Bridge', type:'reps', reps:15, sets:2, target:'Activate glutes before sitting all day', muscle:'Glutes' },
-      { name:'Push-Ups', type:'reps', reps:15, sets:2, target:'Bodyweight — wake up chest and shoulders', muscle:'Chest' },
-      { name:'Leg Raises', type:'reps', reps:12, sets:2, target:'Core activation', muscle:'Core' },
-      { name:'Dead Hang', type:'time', duration:20, sets:2, target:'If bar is up — spinal decompression', muscle:'Grip' },
+    day:'OFFICE MORNING', focus:'Mobility · APT · Light activation · 20 min', tags:['Morning','Light','Mobility','APT'],
+    exercises:[
+      {name:'Hip Flexor Stretch',type:'time',duration:40,sets:2,target:'Each side — wake up your hips',muscle:'Hip Flexors',category:'stretch'},
+      {name:'Cat-Cow',type:'reps',reps:10,sets:2,target:'Spinal wake-up',muscle:'Spine',category:'stretch'},
+      {name:'Bird Dog',type:'reps',reps:10,sets:2,target:'Each side',muscle:'Core',category:'core'},
+      {name:'Glute Bridge',type:'reps',reps:15,sets:2,target:'Activate glutes before sitting all day',muscle:'Glutes',category:'bodyweight'},
+      {name:'Push-Ups',type:'reps',reps:15,sets:2,target:'Bodyweight — wake up chest and shoulders',muscle:'Chest',category:'bodyweight'},
+      {name:'Leg Raises',type:'reps',reps:12,sets:2,target:'Core activation',muscle:'Core',category:'core'},
+      {name:'Dead Hang',type:'time',duration:20,sets:2,target:'Spinal decompression',muscle:'Grip',category:'stretch'}
     ]
   }
 };
 
-// TASKS BY DAY TYPE
 function getTasksForDay(isOffice) {
-  const tasks = [];
   if (isOffice) {
-    tasks.push({ key:'wake', time:'07:00', label:'Wake up + water', icon:'🌅', completable:false });
-    tasks.push({ key:'morning_workout', time:'07:10', label:'Morning mobility session', icon:'🧘', completable:true });
-    tasks.push({ key:'breakfast', time:'07:30', label:'Breakfast — Ragi porridge', icon:'🥣', completable:true });
-    tasks.push({ key:'shuttle', time:'08:30', label:'Leave for shuttle', icon:'🚌', completable:false });
-    tasks.push({ key:'lunch', time:'14:00', label:'Lunch — Rice · Dal · Sabzi · Curd', icon:'🍛', completable:true });
-    tasks.push({ key:'snack_bus', time:'18:45', label:'Bus snack — mixed nuts', icon:'🌰', completable:true });
-    tasks.push({ key:'home', time:'21:00', label:'Home from office', icon:'🏠', completable:false });
-    tasks.push({ key:'dinner', time:'21:30', label:'Dinner — Roti + Sabzi + Protein', icon:'🍽️', completable:true });
-    tasks.push({ key:'presleep', time:'23:30', label:'Pre-sleep — Milk / Curd', icon:'🥛', completable:true });
-    tasks.push({ key:'sleep', time:'00:00', label:'Sleep', icon:'😴', completable:false });
+    return [
+      {key:'wake',time:'07:00',label:'Wake up + water',icon:'🌅',completable:false},
+      {key:'morning_workout',time:'07:10',label:'Morning mobility session',icon:'🧘',completable:true},
+      {key:'breakfast',time:'07:30',label:'Breakfast — Ragi porridge',icon:'🥣',completable:true},
+      {key:'shuttle',time:'08:30',label:'Leave for shuttle',icon:'🚌',completable:false},
+      {key:'lunch',time:'14:00',label:'Lunch — Rice · Dal · Sabzi · Curd',icon:'🍛',completable:true},
+      {key:'snack_bus',time:'18:45',label:'Bus snack — mixed nuts',icon:'🌰',completable:true},
+      {key:'home',time:'21:00',label:'Home from office',icon:'🏠',completable:false},
+      {key:'dinner',time:'21:30',label:'Dinner — Roti + Sabzi + Protein',icon:'🍽️',completable:true},
+      {key:'presleep',time:'23:30',label:'Pre-sleep — Milk / Curd',icon:'🥛',completable:true},
+      {key:'sleep',time:'00:00',label:'Sleep',icon:'😴',completable:false}
+    ];
   } else {
-    tasks.push({ key:'wake', time:'07:00', label:'Wake up + water', icon:'🌅', completable:false });
-    tasks.push({ key:'breakfast', time:'07:30', label:'Breakfast — Eggs / Ragi / Smoothie', icon:'🍳', completable:true });
-    tasks.push({ key:'lunch', time:'14:00', label:'Lunch — Rice · Dal · Sabzi · Curd', icon:'🍛', completable:true });
-    tasks.push({ key:'pre_workout', time:'18:45', label:'Pre-workout — Banana (optional)', icon:'🍌', completable:true });
-    tasks.push({ key:'workout', time:'19:30', label:'Workout session', icon:'🏋️', completable:true });
-    tasks.push({ key:'dinner', time:'20:30', label:'Dinner — Roti + Sabzi + Protein', icon:'🍽️', completable:true });
-    tasks.push({ key:'presleep', time:'23:30', label:'Pre-sleep — Milk / Curd', icon:'🥛', completable:true });
-    tasks.push({ key:'sleep', time:'00:00', label:'Sleep', icon:'😴', completable:false });
+    return [
+      {key:'wake',time:'07:00',label:'Wake up + water',icon:'🌅',completable:false},
+      {key:'breakfast',time:'07:30',label:'Breakfast — Eggs / Ragi / Smoothie',icon:'🍳',completable:true},
+      {key:'lunch',time:'14:00',label:'Lunch — Rice · Dal · Sabzi · Curd',icon:'🍛',completable:true},
+      {key:'pre_workout',time:'18:45',label:'Pre-workout — Banana (optional)',icon:'🍌',completable:true},
+      {key:'workout',time:'19:30',label:'Workout session',icon:'🏋️',completable:true},
+      {key:'dinner',time:'20:30',label:'Dinner — Roti + Sabzi + Protein',icon:'🍽️',completable:true},
+      {key:'presleep',time:'23:30',label:'Pre-sleep — Milk / Curd',icon:'🥛',completable:true},
+      {key:'sleep',time:'00:00',label:'Sleep',icon:'😴',completable:false}
+    ];
   }
-  return tasks;
 }
 
-// ===================== STATE =====================
-let state = loadState();
-
-function loadState() {
-  const today = getDateKey();
-  const saved = JSON.parse(localStorage.getItem('disciplineOS') || '{}');
-  if (!saved.days) saved.days = {};
-  if (!saved.days[today]) {
-    saved.days[today] = {
-      isOffice: saved.tomorrowIsOffice || false,
-      completedTasks: {},
-      score: 0,
-      proteinChecks: {},
-      prepChecks: {},
-      workoutDay: getWorkoutDayIndex(today),
-    };
-  }
-  if (saved.tomorrowIsOffice === undefined) saved.tomorrowIsOffice = false;
-  return saved;
-}
-
-function saveState() {
-  localStorage.setItem('disciplineOS', JSON.stringify(state));
-}
-
-function getDateKey(d) {
-  const date = d || new Date();
-  return date.toISOString().split('T')[0];
-}
-
-function getTodayData() {
-  return state.days[getDateKey()];
-}
-
-function getWorkoutDayIndex(dateKey) {
-  // Cycle through 7 workout days
-  const start = new Date('2025-01-06'); // Monday reference
-  const current = new Date(dateKey);
-  const diff = Math.floor((current - start) / (1000*60*60*24));
-  return ((diff % 7) + 7) % 7;
-}
-
-// ===================== TIME UTILS =====================
-function getTimeMinutes() {
-  const now = new Date();
-  return now.getHours() * 60 + now.getMinutes();
-}
-
-function parseTime(timeStr) {
-  const [h, m] = timeStr.split(':').map(Number);
-  // 00:00 used as "midnight/end of day" — treat as 24:00 = 1440 mins
-  if (h === 0 && m === 0) return 24 * 60;
-  return h * 60 + m;
-}
-
-function formatTime(mins) {
-  const h = Math.floor(mins / 60) % 24;
-  const m = mins % 60;
-  const ampm = h >= 12 ? 'PM' : 'AM';
-  const hh = h % 12 || 12;
-  return `${hh}:${m.toString().padStart(2,'0')} ${ampm}`;
-}
-
-function formatCountdown(diffMins) {
-  if (diffMins <= 0) return 'Now';
-  const h = Math.floor(diffMins / 60);
-  const m = diffMins % 60;
-  if (h > 0) return `${h}h ${m}m`;
-  return `${m}m`;
-}
-
-// ===================== TOPBAR CLOCK =====================
+// ===================== CLOCK =====================
 function updateClock() {
-  const now = new Date();
-  const h = now.getHours().toString().padStart(2,'0');
-  const m = now.getMinutes().toString().padStart(2,'0');
-  document.getElementById('topbar-time').textContent = `${h}:${m}`;
+  try {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    $('topbar-time').textContent = h + ':' + m;
+  } catch(e) {}
 }
 setInterval(updateClock, 1000);
 updateClock();
 
-// ===================== DAY TYPE BADGE =====================
-function renderDayBadge() {
-  const td = getTodayData();
-  const badge = document.getElementById('day-type-badge');
-  badge.innerHTML = `<span class="type-pill ${td.isOffice ? 'office' : 'home'}">${td.isOffice ? '🏢 Office' : '🏠 Home'}</span>`;
-}
-
 // ===================== HERO =====================
 function renderHero() {
-  const td = getTodayData();
-  const tasks = getTasksForDay(td.isOffice);
-  const now = getTimeMinutes();
-
-  // Find missed tasks (past, completable, not done)
-  const missed = tasks.filter(t => {
-    if (!t.completable) return false;
-    const taskTime = parseTime(t.time);
-    const isDone = td.completedTasks[t.key];
-    return taskTime < now - 30 && !isDone;
-  });
-
-  // Find current/next task
-  let currentTask = null;
-  let nextTask = null;
-  for (let i = 0; i < tasks.length; i++) {
-    const t = tasks[i];
-    const taskTime = parseTime(t.time);
-    const nextTime = i < tasks.length - 1 ? parseTime(tasks[i+1].time) : taskTime + 120;
-    if (now >= taskTime && now < nextTime) {
-      currentTask = t;
-      nextTask = tasks[i+1] || null;
+  try {
+    const td = getTodayData();
+    const tasks = getTasksForDay(td.isOffice);
+    const now = getTimeMinutes();
+    const missed = tasks.filter(t => t.completable && parseTime(t.time) < now - 30 && !td.completedTasks[t.key]);
+    let current = null, next = null;
+    for (let i = 0; i < tasks.length; i++) {
+      const tTime = parseTime(tasks[i].time);
+      const nTime = i < tasks.length-1 ? parseTime(tasks[i+1].time) : tTime+120;
+      if (now >= tTime && now < nTime) { current = tasks[i]; next = tasks[i+1]||null; break; }
     }
-  }
-  if (!currentTask) {
-    // Find next upcoming task
-    for (const t of tasks) {
-      const taskTime = parseTime(t.time);
-      if (taskTime > now) { nextTask = t; break; }
+    if (!current) { for (const t of tasks) { if (parseTime(t.time) > now) { next = t; break; } } }
+
+    // Missed
+    const ms = $('missed-section');
+    if (missed.length > 0) {
+      let mh = '<div class="missed-box"><div class="missed-label">⚠️ Missed Tasks</div>';
+      missed.forEach(t => { mh += '<div class="missed-item">✕ ' + t.icon + ' ' + t.label + '</div>'; });
+      ms.innerHTML = mh + '</div>';
+    } else { ms.innerHTML = ''; }
+
+    // Hero
+    const hero = $('hero');
+    let h = '';
+    if (current) {
+      const done = td.completedTasks[current.key];
+      h += '<div class="hero-status ' + (done?'':'pulse') + '">● ' + (done?'DONE':'HAPPENING NOW') + '</div>';
+      h += '<div class="hero-task">' + current.icon + ' ' + current.label + '</div>';
+      if (next) {
+        h += '<div class="hero-sub">Next: ' + next.icon + ' ' + next.label + '</div>';
+        h += '<div class="hero-countdown">' + formatCountdown(parseTime(next.time)-now) + '</div>';
+      }
+    } else if (next) {
+      h += '<div class="hero-status">UPCOMING</div>';
+      h += '<div class="hero-task">' + next.icon + ' ' + next.label + '</div>';
+      h += '<div class="hero-sub">Starts in</div>';
+      h += '<div class="hero-countdown">' + formatCountdown(parseTime(next.time)-now) + '</div>';
+    } else {
+      h += '<div class="hero-status">✓ ALL DONE</div>';
+      h += '<div class="hero-task">Day Complete</div>';
+      h += '<div class="hero-sub">Rest up. Tomorrow we go again.</div>';
     }
-  }
+    hero.innerHTML = h;
 
-  const hero = document.getElementById('hero');
-  let html = '';
+    // Day badge
+    $('day-badge').innerHTML = '<span class="type-pill ' + (td.isOffice?'office':'home') + '">' + (td.isOffice?'🏢 Office':'🏠 Home') + '</span>';
 
-  // Missed section
-  const missedSection = document.getElementById('missed-section');
-  if (missed.length > 0) {
-    let mhtml = '<div id="hero-missed"><div class="missed-label">⚠️ Missed Tasks</div>';
-    missed.forEach(t => {
-      mhtml += `<div class="missed-item" style="color:var(--danger);">✕ ${t.icon} ${t.label} <span style="color:var(--text3);font-size:11px;">${t.time}</span></div>`;
-    });
-    mhtml += '</div>';
-    missedSection.innerHTML = mhtml;
-  } else {
-    missedSection.innerHTML = '';
-  }
-
-  if (currentTask) {
-    const isDone = td.completedTasks[currentTask.key];
-    html += `<div id="hero-status" class="${isDone ? '' : 'pulse'}">● ${isDone ? 'DONE' : 'HAPPENING NOW'}</div>`;
-    html += `<div id="hero-task">${currentTask.icon} ${currentTask.label}</div>`;
-    if (nextTask) {
-      const diff = parseTime(nextTask.time) - now;
-      html += `<div id="hero-sub">Next: ${nextTask.icon} ${nextTask.label}</div>`;
-      html += `<div id="hero-countdown">${formatCountdown(diff)} → ${nextTask.label.split(' ')[0]}</div>`;
-    }
-  } else if (nextTask) {
-    const diff = parseTime(nextTask.time) - now;
-    html += `<div id="hero-status">UPCOMING</div>`;
-    html += `<div id="hero-task">${nextTask.icon} ${nextTask.label}</div>`;
-    html += `<div id="hero-sub">Starts in</div>`;
-    html += `<div id="hero-countdown">${formatCountdown(diff)}</div>`;
-  } else {
-    html += `<div id="hero-status">✓ ALL DONE</div>`;
-    html += `<div id="hero-task">Day Complete</div>`;
-    html += `<div id="hero-sub">Rest up. Tomorrow we go again.</div>`;
-  }
-  hero.innerHTML = html;
-
-  // Snack banner for office days near evening
-  const snackBanner = document.getElementById('snack-banner');
-  if (td.isOffice && now >= 14*60 && now < 18*60) {
-    snackBanner.style.display = 'block';
-  } else {
-    snackBanner.style.display = 'none';
-  }
+    // Snack banner
+    const sb = $('snack-banner');
+    sb.style.display = (td.isOffice && now >= 14*60 && now < 19*60) ? 'block' : 'none';
+  } catch(e) { console.error('renderHero',e); }
 }
 
 // ===================== CHECKLIST =====================
 function renderChecklist() {
-  const td = getTodayData();
-  const tasks = getTasksForDay(td.isOffice).filter(t => t.completable);
-  const now = getTimeMinutes();
-  let html = '';
-  tasks.forEach(t => {
-    const taskTime = parseTime(t.time);
-    const isDone = td.completedTasks[t.key];
-    const isPast = taskTime < now - 30;
-    const isMissed = isPast && !isDone;
-    let cls = isDone ? 'done' : isMissed ? 'missed' : '';
-    html += `<div class="check-item" onclick="toggleTask('${t.key}')">
-      <div class="check-box ${cls}" id="cb-${t.key}"></div>
-      <div class="check-text ${isDone ? 'done' : ''}">${t.icon} ${t.label}</div>
-      <div class="check-time">${formatTime(taskTime)}</div>
-    </div>`;
-  });
-  document.getElementById('checklist').innerHTML = html;
+  try {
+    const td = getTodayData();
+    const now = getTimeMinutes();
+    const tasks = getTasksForDay(td.isOffice).filter(t => t.completable);
+    let h = '';
+    tasks.forEach(t => {
+      const tTime = parseTime(t.time);
+      const done = td.completedTasks[t.key];
+      const missed = tTime < now-30 && !done;
+      const cls = done?'done':missed?'missed':'';
+      h += '<div class="check-item" onclick="toggleTask(\'' + t.key + '\')">';
+      h += '<div class="check-box ' + cls + '"></div>';
+      h += '<div class="check-text ' + (done?'done':'') + '">' + t.icon + ' ' + t.label + '</div>';
+      h += '<div class="check-time">' + formatTime(tTime) + '</div></div>';
+    });
+    // Lifestyle extras
+    const extras = [
+      {key:'water',label:'💧 Water intake'},
+      {key:'book',label:'📖 Read a book'},
+      {key:'focus',label:'🧠 No distractions block'},
+      {key:'learned',label:'💡 Learnt something new'},
+      {key:'sleep',label:'🌙 Slept before midnight'},
+      {key:'stretch',label:'🧘 Morning stretch'}
+    ];
+    h += '<div class="section-divider">Lifestyle</div>';
+    extras.forEach(e => {
+      const done = td.completedTasks[e.key];
+      h += '<div class="check-item" onclick="toggleTask(\'' + e.key + '\')">';
+      h += '<div class="check-box ' + (done?'done':'') + '"></div>';
+      h += '<div class="check-text ' + (done?'done':'') + '">' + e.label + '</div>';
+      h += '<div class="check-time">Any time</div></div>';
+    });
+    $('checklist').innerHTML = h;
+  } catch(e) { console.error('renderChecklist',e); }
 }
 
 function toggleTask(key) {
-  const td = getTodayData();
-  td.completedTasks[key] = !td.completedTasks[key];
-  saveState();
-  renderHome();
-  updateScore();
+  try {
+    const td = getTodayData();
+    td.completedTasks[key] = !td.completedTasks[key];
+    saveState();
+    renderHome();
+    updateScore();
+  } catch(e) {}
 }
 
 // ===================== SCORE =====================
 function updateScore() {
-  const td = getTodayData();
-  const now = getTimeMinutes();
-  let score = 0;
-  const breakdown = [];
-
-  SCORE_ITEMS.forEach(item => {
-    let done = false;
-    if (item.key === 'workout') done = !!(td.completedTasks['workout'] || td.completedTasks['morning_workout']);
-    else if (item.key === 'protein_breakfast') done = !!(td.proteinChecks && td.proteinChecks['breakfast']);
-    else if (item.key === 'protein_lunch') done = !!(td.proteinChecks && td.proteinChecks['lunch']);
-    else if (item.key === 'protein_dinner') done = !!(td.proteinChecks && td.proteinChecks['dinner']);
-    else if (item.key === 'sleep') done = !!(td.completedTasks['sleep_before_midnight']);
-    else if (item.key === 'water') done = !!(td.completedTasks['water']);
-    else if (item.key === 'morning_stretch') done = !!(td.completedTasks['morning_workout'] || td.completedTasks['stretch']);
-    else if (item.key === 'book') done = !!(td.completedTasks['book']);
-    else if (item.key === 'focus') done = !!(td.completedTasks['focus']);
-    else if (item.key === 'learned') done = !!(td.completedTasks['learned']);
-
-    if (done) score++;
-    const isPast = false; // simplified
-    breakdown.push({ ...item, done, pending: !done });
-  });
-
-  td.score = score;
-  saveState();
-
-  // Ring
-  const circumference = 239;
-  const offset = circumference - (score / 10) * circumference;
-  document.getElementById('score-circle').style.strokeDashoffset = offset;
-  document.getElementById('score-display').textContent = score;
-
-  // Breakdown - show all 10 items in 2 columns
-  let bhtml = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;">';
-  breakdown.forEach(item => {
-    const cls = item.done ? 'done' : 'pending';
-    bhtml += `<div class="score-item"><div class="score-dot ${cls}"></div><span style="font-size:11px;">${item.icon} ${item.label}</span></div>`;
-  });
-  bhtml += '</div>';
-  document.getElementById('score-breakdown').innerHTML = bhtml;
-}
-
-// ===================== EXTRA SCORE TASKS =====================
-// Water, book, focus, learned — tap in checklist
-function renderExtraChecks() {
-  const td = getTodayData();
-  const extras = [
-    { key:'water', label:'💧 Water intake', icon:'💧' },
-    { key:'book', label:'📖 Read a book', icon:'📖' },
-    { key:'focus', label:'🧠 No distractions block', icon:'🧠' },
-    { key:'learned', label:'💡 Learnt something new', icon:'💡' },
-    { key:'sleep_before_midnight', label:'🌙 Slept before midnight', icon:'🌙' },
-    { key:'stretch', label:'🧘 Morning stretch (home days)', icon:'🧘' },
-  ];
-  let html = document.getElementById('checklist').innerHTML;
-  html += '<div class="label" style="margin:14px 0 6px;">LIFESTYLE</div>';
-  extras.forEach(e => {
-    const done = td.completedTasks[e.key];
-    html += `<div class="check-item" onclick="toggleTask('${e.key}')">
-      <div class="check-box ${done ? 'done' : ''}" id="cb-${e.key}"></div>
-      <div class="check-text ${done ? 'done' : ''}">${e.icon} ${e.label}</div>
-      <div class="check-time">Any time</div>
-    </div>`;
-  });
-  document.getElementById('checklist').innerHTML = html;
+  try {
+    const td = getTodayData();
+    let score = 0;
+    const breakdown = [];
+    SCORE_ITEMS.forEach(item => {
+      let done = false;
+      if (item.key==='workout') done = !!(td.completedTasks['workout']||td.completedTasks['morning_workout']);
+      else if (item.key==='protein_breakfast') done = !!(td.proteinChecks&&td.proteinChecks['breakfast']);
+      else if (item.key==='protein_lunch') done = !!(td.proteinChecks&&td.proteinChecks['lunch']);
+      else if (item.key==='protein_dinner') done = !!(td.proteinChecks&&td.proteinChecks['dinner']);
+      else done = !!(td.completedTasks[item.key]);
+      if (done) score++;
+      breakdown.push({...item, done});
+    });
+    td.score = score;
+    saveState();
+    const circ = 239;
+    $('score-circle').style.strokeDashoffset = circ - (score/10)*circ;
+    $('score-num').textContent = score;
+    let bh = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 12px">';
+    breakdown.forEach(item => {
+      bh += '<div class="score-item"><div class="score-dot ' + (item.done?'done':'') + '"></div>' + item.icon + ' ' + item.label + '</div>';
+    });
+    $('score-breakdown').innerHTML = bh + '</div>';
+  } catch(e) { console.error('updateScore',e); }
 }
 
 // ===================== NIGHT PREP =====================
 function renderNightPrep() {
-  const now = getTimeMinutes();
-  const prepCard = document.getElementById('night-prep-card');
-  if (now < 20*60) { prepCard.style.display = 'none'; return; }
-  prepCard.style.display = 'block';
-
-  const td = getTodayData();
-  const officeAnswered = state.lastOfficePromptDate === getDateKey();
-  // null = not yet answered tonight, true/false = answered
-  const tomorrow = officeAnswered ? state.tomorrowIsOffice : null;
-
-  let prepItems;
-  if (tomorrow === true) {
-    prepItems = [
-      { key:'prep_ragi', label:'Ragi ready to cook quickly' },
-      { key:'prep_nuts', label:'Pack mixed nuts for bus 🌰' },
-      { key:'prep_clothes', label:'Workout clothes laid out (morning session)' },
-      { key:'prep_whey', label:'Whey + shaker ready' },
-    ];
-  } else if (tomorrow === false) {
-    prepItems = [
-      { key:'prep_eggs', label:'Eggs boiled / in fridge' },
-      { key:'prep_whey', label:'Whey + shaker ready' },
-      { key:'prep_almonds', label:'Almonds soaked' },
-      { key:'prep_clothes', label:'Workout clothes laid out' },
-    ];
-  } else {
-    // Office question not yet answered tonight (before 10:30pm) — show generic
-    prepItems = [
-      { key:'prep_whey', label:'Whey + shaker ready' },
-      { key:'prep_clothes', label:'Workout clothes laid out' },
-      { key:'prep_water', label:'Water bottle filled' },
-    ];
-  }
-
-  let html = '';
-  prepItems.forEach(p => {
-    const done = td.prepChecks && td.prepChecks[p.key];
-    html += `<div class="prep-item" onclick="togglePrep('${p.key}')">
-      <div class="prep-check ${done ? 'done' : ''}"></div>
-      <div class="prep-text">${p.label}</div>
-    </div>`;
-  });
-  document.getElementById('night-prep-list').innerHTML = html;
+  try {
+    const now = getTimeMinutes();
+    const card = $('night-prep-card');
+    if (now < 20*60) { card.style.display='none'; return; }
+    card.style.display='block';
+    const td = getTodayData();
+    const answered = state.lastOfficePromptDate === getDateKey();
+    const tomorrow = answered ? state.tomorrowIsOffice : null;
+    let items;
+    if (tomorrow===true) {
+      items=[{key:'prep_ragi',label:'Ragi ready to cook'},{key:'prep_nuts',label:'Pack mixed nuts for bus 🌰'},{key:'prep_clothes',label:'Workout clothes laid out'},{key:'prep_whey',label:'Whey + shaker ready'}];
+    } else if (tomorrow===false) {
+      items=[{key:'prep_eggs',label:'Eggs boiled / in fridge'},{key:'prep_whey',label:'Whey + shaker ready'},{key:'prep_almonds',label:'Almonds soaked'},{key:'prep_clothes',label:'Workout clothes laid out'}];
+    } else {
+      items=[{key:'prep_whey',label:'Whey + shaker ready'},{key:'prep_clothes',label:'Workout clothes laid out'},{key:'prep_water',label:'Water bottle filled'}];
+    }
+    let h = '';
+    items.forEach(p => {
+      const done = td.prepChecks&&td.prepChecks[p.key];
+      h += '<div class="prep-item" onclick="togglePrep(\'' + p.key + '\')">';
+      h += '<div class="prep-check ' + (done?'done':'') + '"></div>';
+      h += '<div class="prep-text">' + p.label + '</div></div>';
+    });
+    $('night-prep-list').innerHTML = h;
+  } catch(e) {}
 }
 
 function togglePrep(key) {
-  const td = getTodayData();
-  if (!td.prepChecks) td.prepChecks = {};
-  td.prepChecks[key] = !td.prepChecks[key];
-  saveState();
-  renderNightPrep();
+  try {
+    const td = getTodayData();
+    if (!td.prepChecks) td.prepChecks={};
+    td.prepChecks[key] = !td.prepChecks[key];
+    saveState();
+    renderNightPrep();
+  } catch(e) {}
 }
 
-// ===================== PROTEIN =====================
+// ===================== FOOD =====================
 function toggleProtein(meal) {
-  const td = getTodayData();
-  if (!td.proteinChecks) td.proteinChecks = {};
-  td.proteinChecks[meal] = !td.proteinChecks[meal];
-  saveState();
-  renderFood();
-  updateScore();
+  try {
+    const td = getTodayData();
+    if (!td.proteinChecks) td.proteinChecks={};
+    td.proteinChecks[meal] = !td.proteinChecks[meal];
+    saveState();
+    renderFood();
+    updateScore();
+  } catch(e) {}
 }
 
 function renderFood() {
-  const td = getTodayData();
-  const checks = td.proteinChecks || {};
-  const proteins = { breakfast:25, lunch:35, snack:5, dinner:35, presleep:8 };
-  let total = 0;
-  Object.keys(proteins).forEach(k => { if (checks[k]) total += proteins[k]; });
-
-  document.getElementById('protein-display').textContent = total;
-  document.getElementById('protein-fill').style.width = Math.min(100, (total/100)*100) + '%';
-
-  ['breakfast','lunch','snack','dinner','presleep'].forEach(k => {
-    const el = document.getElementById('pcheck-' + k);
-    if (el) {
-      el.className = 'check-box' + (checks[k] ? ' done' : '');
-    }
-  });
-
-  // Show bus snack on office days
-  const busMeal = document.getElementById('bus-snack-meal');
-  if (busMeal) busMeal.style.display = td.isOffice ? 'block' : 'none';
-
-  // Dinner time
-  const dinnerLabel = document.getElementById('dinner-time-label');
-  if (dinnerLabel) dinnerLabel.textContent = td.isOffice ? '9:30 PM' : '8:30 PM';
+  try {
+    const td = getTodayData();
+    const checks = td.proteinChecks||{};
+    const proteins = {breakfast:25,lunch:35,snack:5,dinner:35,presleep:8};
+    let total = 0;
+    Object.keys(proteins).forEach(k => { if(checks[k]) total+=proteins[k]; });
+    $('protein-num').textContent = total;
+    $('protein-fill').style.width = Math.min(100,(total/100)*100)+'%';
+    ['breakfast','lunch','snack','dinner','presleep'].forEach(k => {
+      const el = $('pc-'+k);
+      if (el) el.className = 'check-box' + (checks[k]?' done':'');
+    });
+    const bss = $('bus-snack-section');
+    if (bss) bss.style.display = td.isOffice?'block':'none';
+    const dt = $('dinner-time');
+    if (dt) dt.textContent = td.isOffice?'9:30 PM':'8:30 PM';
+  } catch(e) {}
 }
 
 // ===================== WORKOUT =====================
-let currentWorkoutDay = null;
-let currentExerciseIndex = 0;
+let currentPlan = null;
 let completedExercises = [];
+let timerInterval = null;
+let autoAdvTimer = null;
+let timerState = {};
 
 function renderWorkout() {
-  const td = getTodayData();
-  const plan = td.isOffice ? WORKOUT_PLANS.office_morning : WORKOUT_PLANS.home[td.workoutDay % 7];
-  currentWorkoutDay = plan;
-
-  document.getElementById('wd-day').textContent = plan.day;
-  document.getElementById('wd-focus').textContent = plan.focus;
-
-  let tagsHtml = '';
-  plan.tags.forEach(t => tagsHtml += `<span class="wd-tag">${t}</span>`);
-  document.getElementById('wd-tags').innerHTML = tagsHtml;
-
-  let html = '';
-  plan.exercises.forEach((ex, i) => {
-    const isDone = completedExercises.includes(i);
-    const detail = ex.type === 'reps'
-      ? `${ex.sets} sets × ${ex.reps} reps`
-      : `${ex.sets} sets × ${ex.duration}s`;
-    const badge = ex.type === 'reps' ? 'reps' : 'time';
-    html += `<div class="exercise-card ${isDone ? 'completed' : ''}" id="ex-card-${i}">
-      <div class="ex-header">
-        <div class="ex-name">${ex.name}</div>
-        <div class="ex-badge ${badge}">${ex.type === 'reps' ? 'REPS' : 'TIME'}</div>
-      </div>
-      <div class="ex-detail">${detail} · ${ex.target}</div>
-      <div style="font-size:11px;color:var(--text3);margin-top:3px;">${ex.muscle}</div>
-      <div class="ex-sets" id="ex-sets-${i}">
-        ${Array(ex.sets).fill(0).map((_,s) => `<div class="ex-set-dot" id="dot-${i}-${s}"></div>`).join('')}
-      </div>
-    </div>`;
-  });
-  document.getElementById('exercise-list').innerHTML = html;
+  try {
+    const td = getTodayData();
+    const plan = td.isOffice ? WORKOUT_PLANS.office_morning : WORKOUT_PLANS.home[td.workoutDay%7];
+    currentPlan = plan;
+    if (!td.progressionOverrides) td.progressionOverrides = {};
+    $('wd-day').textContent = plan.day;
+    $('wd-focus').textContent = plan.focus;
+    $('wd-tags').innerHTML = plan.tags.map(t => '<span class="wd-tag">'+t+'</span>').join('');
+    let h = '';
+    plan.exercises.forEach((ex,i) => {
+      const done = completedExercises.includes(i);
+      const ov = td.progressionOverrides[ex.name] || {};
+      const reps = (ov.reps || ex.reps);
+      const dur = (ov.duration || ex.duration);
+      const detail = ex.type==='reps' ? ex.sets+' sets × '+reps+' reps' : ex.sets+' sets × '+dur+'s';
+      const imgs = IMAGE_MAP[ex.name];
+      let imgHtml = '';
+      if (imgs) {
+        const allImgs = [...(imgs.move||[]).map(f=>({f,l:'Form'})), ...(imgs.muscles||[]).map(f=>({f,l:'Muscles'}))];
+        if (allImgs.length) {
+          imgHtml = '<div class="ex-images">' + allImgs.map(({f,l})=>buildImgTag(f,l)).join('') + '</div>';
+        }
+      }
+      h += '<div class="exercise-card ' + (done?'completed':'') + '" id="ex-'+i+'">';
+      h += '<div class="ex-header"><div class="ex-name">'+ex.name+'</div>';
+      h += '<div class="ex-badge '+(ex.type==='reps'?'reps':'time')+'">'+(ex.type==='reps'?'REPS':'TIME')+'</div></div>';
+      h += '<div class="ex-detail">'+detail+' · '+ex.target+'</div>';
+      h += '<div class="ex-muscle">'+ex.muscle+'</div>';
+      h += imgHtml;
+      h += '<div class="ex-sets">' + Array(ex.sets).fill(0).map((_,s)=>'<div class="ex-set-dot" id="dot-'+i+'-'+s+'"></div>').join('') + '</div>';
+      h += '<button class="harder-btn" onclick="makeHarder('+i+',event)">+ Make it harder</button>';
+      h += '</div>';
+    });
+    $('exercise-list').innerHTML = h;
+  } catch(e) { console.error('renderWorkout',e); }
 }
-
-// ===================== TIMER =====================
-let timerInterval = null;
-let autoAdvanceTimer = null;
-let timerState = { phase:'work', remaining:0, set:1, totalSets:0, exercise:null, exerciseIndex:0, paused:false };
 
 function startWorkoutSession() {
   completedExercises = [];
-  currentExerciseIndex = 0;
+  startScreenAwake();
   startExercise(0);
 }
 
 function startExercise(idx) {
-  const ex = currentWorkoutDay.exercises[idx];
-  if (!ex) { endWorkout(); return; }
-  currentExerciseIndex = idx;
-  timerState = {
-    phase: 'prep',
-    remaining: 5,
-    set: 1,
-    totalSets: ex.sets,
-    exercise: ex,
-    exerciseIndex: idx,
-    paused: false,
-    repCount: 0,
-  };
-  showTimerModal(ex);
-  speak(`Next up: ${ex.name}. ${ex.type === 'reps' ? ex.reps + ' reps' : ex.duration + ' seconds'}. Get ready.`);
-  runTimer();
+  try {
+    if (!currentPlan||idx>=currentPlan.exercises.length) { endWorkout(); return; }
+    const td = getTodayData();
+    if (!td.progressionOverrides) td.progressionOverrides = {};
+    const ex = currentPlan.exercises[idx];
+    const ov = td.progressionOverrides[ex.name] || {};
+    const reps = ov.reps || ex.reps;
+    const duration = ov.duration || ex.duration;
+    const restTime = getRestTime(ex);
+    timerState = {phase:'prep',remaining:10,set:1,totalSets:ex.sets,exercise:ex,exIdx:idx,paused:false,reps,duration,restTime,bilateral:isBilateral(ex)};
+    $('timer-exercise-name').textContent = ex.name;
+    $('timer-detail').textContent = (ex.type==='reps'?ex.sets+' sets × '+reps+' reps':ex.sets+' sets × '+duration+'s') + ' · '+ex.target;
+    $('timer-quote').textContent = '';
+    // Timer images
+    const imgs = IMAGE_MAP[ex.name];
+    let timgHtml = '';
+    if (imgs) {
+      const allImgs = [...(imgs.move||[]).map(f=>({f,l:'Form'})), ...(imgs.muscles||[]).map(f=>({f,l:'Muscles'}))];
+      if (allImgs.length) timgHtml = allImgs.map(({f,l})=>buildTimerImgTag(f,l)).join('');
+    }
+    $('timer-images').innerHTML = timgHtml;
+    $('skip-rest-btn').style.display = 'none';
+    $('timer-modal').classList.add('show');
+    speak('Next up: '+ex.name+'. '+(ex.type==='reps'?reps+' reps.':duration+' seconds.')+' Get ready.');
+    clearInterval(timerInterval);
+    timerInterval = setInterval(timerTick, 1000);
+    updateTimerDisplay();
+  } catch(e) { console.error('startExercise',e); }
 }
 
-function showTimerModal(ex) {
-  document.getElementById('timer-modal').classList.add('show');
-  document.getElementById('timer-exercise-name').textContent = ex.name;
-  const detail = ex.type === 'reps'
-    ? `${ex.sets} sets × ${ex.reps} reps · ${ex.target}`
-    : `${ex.sets} sets × ${ex.duration}s · ${ex.target}`;
-  document.getElementById('timer-detail').textContent = detail;
-  document.getElementById('timer-quote').textContent = '';
-  updateTimerDisplay();
-}
-
-function runTimer() {
-  clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
+function timerTick() {
+  try {
     if (timerState.paused) return;
     timerState.remaining--;
-
-    // Countdown voice cues
     const ex = timerState.exercise;
-    if (timerState.phase === 'work' && ex.type === 'time') {
-      const total = ex.duration;
+    const dur = timerState.duration;
+    const reps = timerState.reps;
+    if (timerState.phase==='work') {
       const r = timerState.remaining;
-      if (r === Math.floor(total / 2)) speak('Halfway. Keep going.');
-      if (r === 5) speak('5... 4... 3...');
-      if (r === 0) speak('Rest.');
+      if (ex.type==='time') {
+        const half = Math.floor(dur/2);
+        if (r===half) {
+          if (timerState.bilateral) speak('Switch sides.');
+          else speak('Halfway. Keep going.');
+        }
+        if (r===5) speak('5... 4... 3...');
+        if (r===0) speak('Rest.');
+      } else {
+        const total=45, elapsed=total-r;
+        const repDur=Math.floor(total/reps);
+        const curRep=Math.floor(elapsed/repDur)+1;
+        if (elapsed===(curRep-1)*repDur && curRep<=reps) speak(String(curRep));
+        const halfRep = Math.floor(reps/2);
+        if (curRep===halfRep+1 && elapsed===(halfRep)*repDur && timerState.bilateral) speak('Switch sides.');
+        if (r===5) speak('Last few. Squeeze.');
+      }
     }
-    // Rep counting for reps exercises — count down from reps to 1 using tempo
-    if (timerState.phase === 'work' && ex.type === 'reps') {
-      const total = 45; // 45s window
-      const r = timerState.remaining;
-      const elapsed = total - r;
-      const repDuration = Math.floor(total / ex.reps);
-      const currentRep = Math.floor(elapsed / repDuration) + 1;
-      const repStart = (currentRep - 1) * repDuration;
-      if (elapsed === repStart && currentRep <= ex.reps) speak(String(currentRep));
-      if (r === 5) speak('Last few. Squeeze.');
+    if (timerState.phase==='rest') {
+      if (timerState.remaining===3) speak('Get ready. Next set.');
     }
-    if (timerState.phase === 'rest' && timerState.remaining === 3) speak('Get ready. Next set.');
-    if (timerState.phase === 'prep' && timerState.remaining === 0) speak('Go!');
+    if (timerState.phase==='prep'&&timerState.remaining===0) speak('Go!');
+    if (timerState.remaining<=0) advanceTimer();
+    else updateTimerDisplay();
+  } catch(e) {}
+}
 
-    if (timerState.remaining <= 0) {
-      advanceTimer();
-    }
-    updateTimerDisplay();
-  }, 1000);
+function skipRest() {
+  try {
+    if (timerState.phase!=='rest') return;
+    timerState.remaining=0;
+    $('skip-rest-btn').style.display='none';
+    advanceTimer();
+  } catch(e) {}
 }
 
 function advanceTimer() {
-  const ex = timerState.exercise;
-  if (timerState.phase === 'prep') {
-    timerState.phase = 'work';
-    timerState.remaining = ex.type === 'reps' ? 45 : ex.duration;
-    if (ex.type === 'reps') speak(`Set ${timerState.set}. ${ex.reps} reps. Start!`);
-    else speak(`Set ${timerState.set}. Go!`);
-  } else if (timerState.phase === 'work') {
-    // Mark set dot
-    const dot = document.getElementById(`dot-${timerState.exerciseIndex}-${timerState.set - 1}`);
-    if (dot) dot.classList.add('done');
-
-    if (timerState.set >= timerState.totalSets) {
-      // Exercise done
-      completedExercises.push(timerState.exerciseIndex);
-      const card = document.getElementById(`ex-card-${timerState.exerciseIndex}`);
-      if (card) card.classList.add('completed');
-      clearInterval(timerInterval);
-      timerState.phase = 'done';
-      speak('Exercise complete! Great work.');
-      document.getElementById('timer-quote').textContent = MOTIVATIONAL_QUOTES[Math.floor(Math.random()*MOTIVATIONAL_QUOTES.length)];
-      // Auto next after 4 seconds
-      autoAdvanceTimer = setTimeout(() => {
-        const next = timerState.exerciseIndex + 1;
-        if (next < currentWorkoutDay.exercises.length) {
-          startExercise(next);
-        } else {
-          endWorkout();
-        }
-      }, 4000);
-    } else {
-      timerState.phase = 'rest';
-      timerState.remaining = 60;
-      timerState.set++;
-      const quote = MOTIVATIONAL_QUOTES[Math.floor(Math.random()*MOTIVATIONAL_QUOTES.length)];
-      document.getElementById('timer-quote').textContent = quote;
-      speak('Rest. ' + quote);
+  try {
+    const ex = timerState.exercise;
+    const dur = timerState.duration;
+    const reps = timerState.reps;
+    const restTime = timerState.restTime;
+    $('skip-rest-btn').style.display='none';
+    if (timerState.phase==='prep') {
+      timerState.phase='work';
+      timerState.remaining=ex.type==='reps'?45:dur;
+      speak('Set '+timerState.set+'. '+(ex.type==='reps'?reps+' reps. ':'')+' Go!');
+    } else if (timerState.phase==='work') {
+      const dot=$('dot-'+timerState.exIdx+'-'+(timerState.set-1));
+      if(dot) dot.classList.add('done');
+      if (timerState.set>=timerState.totalSets) {
+        completedExercises.push(timerState.exIdx);
+        const card=$('ex-'+timerState.exIdx);
+        if(card) card.classList.add('completed');
+        clearInterval(timerInterval);
+        timerState.phase='done';
+        speak('Exercise complete! Great work.');
+        $('timer-quote').textContent = QUOTES[Math.floor(Math.random()*QUOTES.length)];
+        autoAdvTimer = setTimeout(()=>{ startExercise(timerState.exIdx+1); }, restTime*1000);
+      } else {
+        timerState.phase='rest'; timerState.remaining=restTime; timerState.set++;
+        const q=QUOTES[Math.floor(Math.random()*QUOTES.length)];
+        $('timer-quote').textContent=q;
+        $('skip-rest-btn').style.display='block';
+        speak('Rest. '+q);
+      }
+    } else if (timerState.phase==='rest') {
+      timerState.phase='work';
+      timerState.remaining=ex.type==='reps'?45:dur;
+      $('timer-quote').textContent='';
+      $('skip-rest-btn').style.display='none';
+      speak('Set '+timerState.set+'. Go!');
     }
-  } else if (timerState.phase === 'rest') {
-    timerState.phase = 'work';
-    timerState.remaining = ex.type === 'reps' ? 45 : ex.duration;
-    speak(`Set ${timerState.set}. Go!`);
-    document.getElementById('timer-quote').textContent = '';
-  }
-  updateTimerDisplay();
+    updateTimerDisplay();
+  } catch(e) {}
 }
 
 function updateTimerDisplay() {
-  const ex = timerState.exercise;
-  const phase = timerState.phase;
-  const num = document.getElementById('timer-num');
-  const phaseEl = document.getElementById('timer-phase');
-  const circle = document.getElementById('timer-circle');
-  const setInfo = document.getElementById('timer-set-info');
-
-  if (phase === 'prep') {
-    num.textContent = timerState.remaining;
-    num.style.color = 'var(--warning)';
-    circle.style.stroke = 'var(--warning)';
-    phaseEl.textContent = 'GET READY';
-    setInfo.textContent = '';
-  } else if (phase === 'work') {
-    num.textContent = timerState.remaining;
-    num.style.color = 'var(--accent)';
-    circle.style.stroke = 'var(--accent)';
-    phaseEl.textContent = ex.type === 'reps' ? `SET ${timerState.set} — ${ex.reps} REPS` : 'WORKING';
-    setInfo.textContent = `Set ${timerState.set} of ${timerState.totalSets}`;
-
-    // Ring animation
-    const total = ex.type === 'reps' ? 45 : ex.duration;
-    const progress = timerState.remaining / total;
-    const circumference = 553;
-    circle.style.strokeDashoffset = circumference * (1 - progress);
-  } else if (phase === 'rest') {
-    num.textContent = timerState.remaining;
-    num.style.color = 'var(--accent2)';
-    circle.style.stroke = 'var(--accent2)';
-    phaseEl.textContent = 'REST';
-    setInfo.textContent = `Next: Set ${timerState.set} of ${timerState.totalSets}`;
-    const progress = timerState.remaining / 60;
-    const circumference = 553;
-    circle.style.strokeDashoffset = circumference * (1 - progress);
-  } else if (phase === 'done') {
-    num.textContent = '✓';
-    num.style.color = 'var(--success)';
-    phaseEl.textContent = 'DONE';
-    setInfo.textContent = '';
-  }
+  try {
+    const phase=timerState.phase, ex=timerState.exercise;
+    const dur=timerState.duration, restTime=timerState.restTime||30;
+    const num=$('timer-num'), ph=$('timer-phase'), circ=$('timer-circle'), si=$('timer-set-info');
+    const circumference=553;
+    if (phase==='prep') {
+      num.textContent=timerState.remaining; num.style.color='var(--warning)';
+      circ.style.stroke='var(--warning)'; ph.textContent='GET READY'; si.textContent='';
+      circ.style.strokeDashoffset=circumference*(1-timerState.remaining/10);
+    } else if (phase==='work') {
+      num.textContent=timerState.remaining; num.style.color='var(--accent)';
+      circ.style.stroke='var(--accent)';
+      ph.textContent=ex.type==='reps'?'SET '+timerState.set+' — '+timerState.reps+' REPS':'WORKING';
+      si.textContent='Set '+timerState.set+' of '+timerState.totalSets;
+      const total=ex.type==='reps'?45:dur;
+      circ.style.strokeDashoffset=circumference*(timerState.remaining/total);
+    } else if (phase==='rest') {
+      num.textContent=timerState.remaining; num.style.color='var(--accent2)';
+      circ.style.stroke='var(--accent2)'; ph.textContent='REST';
+      si.textContent='Next: Set '+timerState.set+' of '+timerState.totalSets;
+      circ.style.strokeDashoffset=circumference*(timerState.remaining/restTime);
+    } else if (phase==='done') {
+      num.textContent='✓'; num.style.color='var(--success)';
+      ph.textContent='DONE'; si.textContent='';
+    }
+  } catch(e) {}
 }
 
 function pauseTimer() {
-  timerState.paused = !timerState.paused;
-  document.querySelector('.timer-btn.secondary').textContent = timerState.paused ? '▶ Resume' : '⏸ Pause';
+  timerState.paused=!timerState.paused;
+  $('pause-btn').textContent=timerState.paused?'▶ Resume':'⏸ Pause';
 }
 
 function stopTimer() {
   clearInterval(timerInterval);
-  clearTimeout(autoAdvanceTimer);
-  document.getElementById('timer-modal').classList.remove('show');
-  // Mark workout done if at least halfway
-  if (completedExercises.length >= Math.floor(currentWorkoutDay.exercises.length / 2)) {
-    const td = getTodayData();
-    td.completedTasks['workout'] = true;
-    td.completedTasks['morning_workout'] = true;
-    saveState();
-    updateScore();
-    renderChecklist();
+  clearTimeout(autoAdvTimer);
+  stopScreenAwake();
+  $('timer-modal').classList.remove('show');
+  $('skip-rest-btn').style.display='none';
+  if (completedExercises.length>=Math.floor((currentPlan?.exercises?.length||2)/2)) {
+    const td=getTodayData();
+    td.completedTasks['workout']=true;
+    td.completedTasks['morning_workout']=true;
+    saveState(); updateScore(); renderChecklist();
   }
-  completedExercises = [];
+  completedExercises=[];
   renderWorkout();
 }
 
 function endWorkout() {
   clearInterval(timerInterval);
-  document.getElementById('timer-modal').classList.remove('show');
-  const td = getTodayData();
-  td.completedTasks['workout'] = true;
-  td.completedTasks['morning_workout'] = true;
+  stopScreenAwake();
+  $('timer-modal').classList.remove('show');
+  const td=getTodayData();
+  td.completedTasks['workout']=true;
+  td.completedTasks['morning_workout']=true;
   saveState();
   speak('Workout complete. Excellent session. Go eat your protein.');
-  updateScore();
-  renderChecklist();
-  renderWorkout();
+  updateScore(); renderChecklist(); renderWorkout();
 }
 
-// ===================== SPEECH =====================
+// ===================== SPEECH — better voice =====================
+let selectedVoice = null;
+function initVoice() {
+  try {
+    const set = () => {
+      const voices = window.speechSynthesis.getVoices();
+      const preferred = ['Samantha','Karen','Victoria','Moira','Tessa','Fiona'];
+      for (const name of preferred) {
+        const v = voices.find(v => v.name.includes(name));
+        if (v) { selectedVoice = v; break; }
+      }
+      if (!selectedVoice) selectedVoice = voices.find(v => v.lang.startsWith('en-') && !v.name.toLowerCase().includes('male')) || voices.find(v => v.lang.startsWith('en')) || null;
+    };
+    if (window.speechSynthesis.getVoices().length) set();
+    window.speechSynthesis.onvoiceschanged = set;
+  } catch(e) {}
+}
+initVoice();
+
 function speak(text) {
-  if (!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  const utt = new SpeechSynthesisUtterance(text);
-  utt.rate = 0.95;
-  utt.pitch = 1.0;
-  utt.volume = 1.0;
-  window.speechSynthesis.speak(utt);
+  try {
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    if (selectedVoice) u.voice = selectedVoice;
+    u.rate = 0.92; u.pitch = 1.05; u.volume = 1.0;
+    window.speechSynthesis.speak(u);
+  } catch(e) {}
 }
 
-// ===================== HISTORY =====================
+// ===================== SCREEN AWAKE =====================
+let wakeLockAudio = null;
+function startScreenAwake() {
+  try {
+    if (wakeLockAudio) return;
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const buf = ctx.createBuffer(1, ctx.sampleRate * 3, ctx.sampleRate);
+    const src = ctx.createBufferSource();
+    src.buffer = buf; src.loop = true;
+    src.connect(ctx.destination); src.start(0);
+    wakeLockAudio = { ctx, src };
+  } catch(e) {}
+}
+function stopScreenAwake() {
+  try {
+    if (!wakeLockAudio) return;
+    wakeLockAudio.src.stop();
+    wakeLockAudio.ctx.close();
+    wakeLockAudio = null;
+  } catch(e) {}
+}
+
+function makeHarder(idx, e) {
+  try {
+    e.stopPropagation();
+    const td = getTodayData();
+    if (!td.progressionOverrides) td.progressionOverrides = {};
+    const ex = currentPlan.exercises[idx];
+    const ov = td.progressionOverrides[ex.name] || {};
+    if (ex.type==='reps') {
+      ov.reps = (ov.reps || ex.reps) + 2;
+      td.progressionOverrides[ex.name] = ov;
+      saveState();
+      speak('Updated to ' + ov.reps + ' reps. Good.');
+    } else {
+      ov.duration = (ov.duration || ex.duration) + 10;
+      td.progressionOverrides[ex.name] = ov;
+      saveState();
+      speak('Updated to ' + ov.duration + ' seconds. Let\'s go.');
+    }
+    renderWorkout();
+  } catch(e2) {}
+}
 function renderHistory() {
-  const now = new Date();
-  const today = getDateKey();
-
-  // Streak
-  let streak = 0;
-  for (let i = 0; i < 365; i++) {
-    const d = new Date(now);
-    d.setDate(d.getDate() - i);
-    const key = getDateKey(d);
-    const dayData = state.days[key];
-    if (dayData && dayData.score >= 5) streak++;
-    else if (i > 0) break;
-  }
-  document.getElementById('streak-display').innerHTML =
-    `<div class="streak-badge">🔥 ${streak} day${streak !== 1 ? 's' : ''} streak</div>`;
-
-  // Week bars
-  const days = ['Mo','Tu','We','Th','Fr','Sa','Su'];
-  let weekHtml = '';
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(now);
-    d.setDate(d.getDate() - i);
-    const key = getDateKey(d);
-    const dayData = state.days[key];
-    const score = dayData ? (dayData.score || 0) : 0;
-    const height = score > 0 ? (score / 10) * 100 : 0;
-    const filled = score > 0;
-    weekHtml += `<div class="week-bar-wrap">
-      <div class="week-bar-col"><div class="week-bar ${filled ? 'filled' : ''}" style="height:${height}%"></div></div>
-      <div class="week-day-label">${days[6-i]}</div>
-    </div>`;
-  }
-  document.getElementById('week-bars').innerHTML = weekHtml;
-
-  // Month calendar
-  const year = now.getFullYear();
-  const month = now.getMonth();
-  document.getElementById('month-label').textContent = now.toLocaleDateString('en-US', { month:'long', year:'numeric' });
-
-  const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month+1, 0).getDate();
-
-  const dayLabels = ['Su','Mo','Tu','We','Th','Fr','Sa'];
-  let calHtml = dayLabels.map(d => `<div class="cal-day-label">${d}</div>`).join('');
-  document.getElementById('cal-header').innerHTML = calHtml;
-
-  let gridHtml = '';
-  for (let i = 0; i < firstDay; i++) gridHtml += '<div class="cal-day empty"></div>';
-  for (let d = 1; d <= daysInMonth; d++) {
-    const dateObj = new Date(year, month, d);
-    const key = getDateKey(dateObj);
-    const dayData = state.days[key];
-    const score = dayData ? (dayData.score || 0) : null;
-    const isToday = key === today;
-    const isFuture = dateObj > now;
-    let cls = 'cal-day';
-    if (isToday) cls += ' today';
-    if (isFuture) cls += ' future';
-    else if (score === null) cls += ' future';
-    else if (score >= 8) cls += ' score-high';
-    else if (score >= 5) cls += ' score-mid';
-    else cls += ' score-low';
-    gridHtml += `<div class="${cls}" onclick="showDayDetail('${key}')">${d}</div>`;
-  }
-  document.getElementById('cal-grid').innerHTML = gridHtml;
+  try {
+    const now=new Date(), today=getDateKey();
+    let streak=0;
+    for (let i=0;i<365;i++) {
+      const d=new Date(now); d.setDate(d.getDate()-i);
+      const k=getDateKey(d), dd=state.days[k];
+      if (dd&&dd.score>=5) streak++;
+      else if (i>0) break;
+    }
+    $('streak-display').innerHTML='<span class="streak-badge">🔥 '+streak+' day'+(streak!==1?'s':'')+' streak</span>';
+    const dayNames=['Mo','Tu','We','Th','Fr','Sa','Su'];
+    let wh='';
+    for (let i=6;i>=0;i--) {
+      const d=new Date(now); d.setDate(d.getDate()-i);
+      const k=getDateKey(d), dd=state.days[k];
+      const score=dd?(dd.score||0):0;
+      const h=score>0?(score/10)*100:0;
+      wh+='<div class="week-bar-wrap"><div class="week-bar-col"><div class="week-bar '+(score>0?'filled':'')+'" style="height:'+h+'%"></div></div><div class="week-day-label">'+dayNames[6-i]+'</div></div>';
+    }
+    $('week-bars').innerHTML=wh;
+    const yr=now.getFullYear(), mo=now.getMonth();
+    $('month-label').textContent=now.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+    const firstDay=new Date(yr,mo,1).getDay(), daysInMo=new Date(yr,mo+1,0).getDate();
+    $('cal-header').innerHTML=['Su','Mo','Tu','We','Th','Fr','Sa'].map(d=>'<div class="cal-day-label">'+d+'</div>').join('');
+    let gh='';
+    for (let i=0;i<firstDay;i++) gh+='<div class="cal-day empty"></div>';
+    for (let d=1;d<=daysInMo;d++) {
+      const dateObj=new Date(yr,mo,d), k=getDateKey(dateObj), dd=state.days[k];
+      const score=dd?(dd.score||0):null;
+      const isToday=k===today, isFuture=dateObj>now;
+      let cls='cal-day';
+      if (isToday) cls+=' today';
+      if (isFuture||score===null) cls+=' future';
+      else if (score>=8) cls+=' score-high';
+      else if (score>=5) cls+=' score-mid';
+      else cls+=' score-low';
+      gh+='<div class="'+cls+'" onclick="showDayDetail(\''+k+'\')">'+d+'</div>';
+    }
+    $('cal-grid').innerHTML=gh;
+  } catch(e) { console.error('renderHistory',e); }
 }
-
-const TASK_LABELS = {
-  wake: 'Wake up', morning_workout: 'Morning mobility', breakfast: 'Breakfast',
-  shuttle: 'Shuttle to office', lunch: 'Lunch', snack_bus: 'Bus snack',
-  home: 'Home from office', dinner: 'Dinner', presleep: 'Pre-sleep',
-  sleep: 'Sleep', pre_workout: 'Pre-workout snack', workout: 'Workout',
-  water: 'Water intake', book: 'Read a book', focus: 'No distractions',
-  learned: 'Learnt something new', sleep_before_midnight: 'Slept before midnight',
-  stretch: 'Morning stretch',
-};
 
 function showDayDetail(key) {
-  const dayData = state.days[key];
-  if (!dayData) return;
-  const card = document.getElementById('history-detail-card');
-  const dateEl = document.getElementById('history-detail-date');
-  const contentEl = document.getElementById('history-detail-content');
-  card.style.display = 'block';
-  dateEl.textContent = key;
-  let html = `<div style="margin-bottom:10px;"><span class="streak-badge" style="font-size:13px;">Score: ${dayData.score || 0}/10</span></div>`;
-  const tasks = dayData.completedTasks || {};
-  Object.keys(tasks).forEach(k => {
-    if (tasks[k]) html += `<div class="score-item"><div class="score-dot done"></div>${TASK_LABELS[k] || k}</div>`;
-  });
-  contentEl.innerHTML = html;
-  card.scrollIntoView({ behavior:'smooth' });
+  try {
+    const dd=state.days[key]; if(!dd) return;
+    $('day-detail-card').style.display='block';
+    $('day-detail-date').textContent=key;
+    let h='<div style="margin-bottom:10px"><span class="streak-badge" style="font-size:13px">Score: '+(dd.score||0)+'/10</span></div>';
+    const tasks=dd.completedTasks||{};
+    Object.keys(tasks).forEach(k=>{ if(tasks[k]) h+='<div class="score-item"><div class="score-dot done"></div>'+(TASK_LABELS[k]||k)+'</div>'; });
+    $('day-detail-content').innerHTML=h;
+    $('day-detail-card').scrollIntoView({behavior:'smooth'});
+  } catch(e) {}
 }
 
 // ===================== OFFICE MODAL =====================
 function checkOfficePrompt() {
-  const now = getTimeMinutes();
-  const lastAsked = state.lastOfficePromptDate;
-  const today = getDateKey();
-  if (now >= 22*60 + 30 && lastAsked !== today) {
-    showOfficeModal();
-  }
-}
-
-function showOfficeModal() {
-  document.getElementById('office-modal').classList.add('show');
+  try {
+    const now=getTimeMinutes(), today=getDateKey();
+    if (now>=22*60+30&&state.lastOfficePromptDate!==today) $('office-modal').classList.add('show');
+  } catch(e) {}
 }
 
 function setTomorrow(isOffice) {
-  state.tomorrowIsOffice = isOffice;
-  state.lastOfficePromptDate = getDateKey();
-  saveState();
-  document.getElementById('office-modal').classList.remove('show');
-  speak(isOffice ? 'Got it. Office day tomorrow. Setting your morning workout.' : 'Home day tomorrow. Full evening session planned.');
+  try {
+    state.tomorrowIsOffice=isOffice;
+    state.lastOfficePromptDate=getDateKey();
+    saveState();
+    $('office-modal').classList.remove('show');
+    speak(isOffice?'Got it. Office day tomorrow.':'Home day tomorrow. Full evening session planned.');
+    renderNightPrep();
+  } catch(e) {}
 }
 
 // ===================== NAV =====================
 function switchTab(tab) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('#nav button').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
-  document.querySelector(`#nav button[onclick="switchTab('${tab}')"]`).classList.add('active');
-
-  if (tab === 'workout') renderWorkout();
-  if (tab === 'food') renderFood();
-  if (tab === 'history') renderHistory();
+  try {
+    document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));
+    $('tab-'+tab).classList.add('active');
+    document.querySelector('#nav button[onclick="switchTab(\''+tab+'\')"]').classList.add('active');
+    if (tab==='home') { renderHome(); updateScore(); }
+    else if (tab==='food') renderFood();
+    else if (tab==='history') renderHistory();
+  } catch(e) {}
 }
 
 // ===================== HOME =====================
 function renderHome() {
   renderHero();
   renderChecklist();
-  renderExtraChecks();
   renderNightPrep();
-  renderDayBadge();
-}
-
-// ===================== DAILY RESET =====================
-function checkDailyReset() {
-  const today = getDateKey();
-  if (!state.days[today]) {
-    state.days[today] = {
-      isOffice: state.tomorrowIsOffice || false,
-      completedTasks: {},
-      score: 0,
-      proteinChecks: {},
-      prepChecks: {},
-      workoutDay: getWorkoutDayIndex(today),
-    };
-    saveState();
-  }
 }
 
 // ===================== INIT =====================
 function init() {
-  checkDailyReset();
-  renderHome();
-  updateScore();
-  setInterval(() => {
-    renderHero();
+  try {
+    const today=getDateKey();
+    if (!state.days[today]) {
+      state.days[today]={
+        isOffice:state.tomorrowIsOffice||false,
+        completedTasks:{},score:0,proteinChecks:{},prepChecks:{},
+        workoutDay:getWorkoutDayIndex(today)
+      };
+      saveState();
+    }
+    renderHome();
+    updateScore();
+    setInterval(()=>{ renderHero(); checkOfficePrompt(); }, 30000);
     checkOfficePrompt();
-  }, 60000);
-
-  // Show office modal at 10:30 PM
-  setInterval(checkOfficePrompt, 60000);
+  } catch(e) { console.error('init',e); }
 }
 
 init();
