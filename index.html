@@ -7,6 +7,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Discipline OS">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="version" content="1.5">
 <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAApreviously">
 <title>Discipline OS</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -213,7 +217,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 <body>
 <div id="app">
   <div id="topbar">
-    <div id="topbar-title">DISCIPLINE OS</div>
+    <div id="topbar-title">DISCIPLINE OS <span style="font-size:11px;color:var(--text3);font-weight:400;letter-spacing:.05em">v1.5</span></div>
     <div id="topbar-right">
       <div id="day-badge"></div>
       <div id="topbar-time"></div>
@@ -269,6 +273,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
         <div class="label">Today's Session</div>
         <div id="wd-day"></div>
         <div id="wd-focus"></div>
+        <div id="wd-duration" style="font-family:'DM Mono',monospace;font-size:13px;color:var(--accent2);margin-top:6px"></div>
         <div id="wd-tags"></div>
       </div>
       <div style="display:flex;gap:10px;margin-bottom:14px">
@@ -411,14 +416,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 function getDateKey(d) {
   try {
     const date = d || new Date();
-    const y = date.getFullYear();
-    const m = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-
-    return `${y}-${m}-${day}`; // LOCAL date
-  } catch (e) {
-    return '2026-01-01';
-  }
+    return date.toISOString().split('T')[0];
+  } catch(e) { return '2026-01-01'; }
 }
 
 function getWorkoutDayIndex(dateKey) {
@@ -1055,7 +1054,7 @@ function advanceTimer() {
       if(dot) dot.classList.add('done');
       if (timerState.set>=timerState.totalSets) {
         completedExercises.push(timerState.exIdx);
-        const card=$('ex-'+timerState.exIdx);
+        const card=$('excard-'+timerState.exIdx);
         if(card) card.classList.add('completed');
         clearInterval(timerInterval);
         timerState.phase='done';
@@ -1339,6 +1338,22 @@ function renderWorkout() {
     if (!td.progressionOverrides) td.progressionOverrides={};
     $('wd-day').textContent=plan.day; $('wd-focus').textContent=plan.focus;
     $('wd-tags').innerHTML=plan.tags.map(t=>'<span class="wd-tag">'+t+'</span>').join('');
+
+    // Calculate estimated duration
+    let totalSecs = 0;
+    exercises.forEach((ex, i) => {
+      const ov = td.progressionOverrides[ex.name]||{};
+      const dur = ov.duration||ex.duration||45;
+      const workPerSet = ex.type==='reps' ? 45 : dur;
+      const restTime = REST_TIMES[ex.category]||30;
+      totalSecs += 10; // prep/transition
+      totalSecs += workPerSet * ex.sets;
+      totalSecs += restTime * (ex.sets - 1);
+      if (i < exercises.length - 1) totalSecs += restTime; // between exercises
+    });
+    const estMins = Math.round(totalSecs / 60);
+    const durEl = document.getElementById('wd-duration');
+    if (durEl) durEl.textContent = '⏱ Est. ' + estMins + ' min';
     const exercises = getTodayExercises();
     currentPlan = {...plan, exercises};
     let h='';
