@@ -156,6 +156,58 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 /* Make it harder */
 .harder-btn{background:transparent;border:1px solid var(--border);border-radius:50px;color:var(--text3);font-size:11px;font-weight:600;padding:4px 12px;cursor:pointer;margin-top:8px;transition:all .2s;font-family:'DM Sans',sans-serif}
 .harder-btn:active{border-color:var(--accent);color:var(--accent)}
+/* Drag handle */
+.drag-handle{color:var(--text3);font-size:18px;padding:0 8px 0 0;cursor:grab;user-select:none;flex-shrink:0}
+.drag-handle:active{cursor:grabbing}
+.exercise-card.dragging{opacity:.4;border:1px dashed var(--accent)}
+.exercise-card.drag-over{border-color:var(--accent);transform:scale(1.01)}
+/* Delete exercise button */
+.ex-delete-btn{background:rgba(255,71,71,.15);border:1px solid rgba(255,71,71,.3);border-radius:50px;color:var(--danger);font-size:11px;font-weight:600;padding:4px 12px;cursor:pointer;margin-top:8px;margin-left:6px;font-family:'DM Sans',sans-serif;transition:all .2s}
+/* Exercise pool modal */
+#pool-modal{display:none;position:fixed;inset:0;background:rgba(10,10,15,.97);z-index:200;flex-direction:column;padding:0}
+#pool-modal.show{display:flex}
+#pool-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 12px;flex-shrink:0}
+#pool-title{font-family:'Bebas Neue',sans-serif;font-size:28px}
+#pool-close{background:var(--surface2);border:1px solid var(--border);border-radius:50px;color:var(--text);font-size:14px;font-weight:600;padding:8px 18px;cursor:pointer;font-family:'DM Sans',sans-serif}
+#pool-search-wrap{padding:0 24px 12px;flex-shrink:0}
+#pool-search{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:12px 16px;outline:none}
+#pool-search::placeholder{color:var(--text3)}
+#pool-list{flex:1;overflow-y:auto;padding:0 24px 40px}
+#pool-list::-webkit-scrollbar{display:none}
+.pool-group-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin:16px 0 8px}
+.pool-exercise-item{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:8px;cursor:pointer;transition:border-color .2s}
+.pool-exercise-item:active{border-color:var(--accent)}
+.pool-ex-name{font-family:'Bebas Neue',sans-serif;font-size:18px}
+.pool-ex-detail{font-size:11px;color:var(--text3);margin-top:2px}
+.pool-add-btn{background:var(--accent);color:#0a0a0f;border:none;border-radius:50px;font-size:13px;font-weight:700;padding:6px 14px;cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0}
+/* Food edit */
+.meal-edit-btn{background:transparent;border:1px solid var(--border);border-radius:50px;color:var(--text3);font-size:11px;font-weight:600;padding:4px 12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.meal-edit-btn.active{border-color:var(--accent);color:var(--accent)}
+.food-tag-wrap{position:relative;display:inline-flex;align-items:center}
+.food-tag-del{position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--danger);border-radius:50%;border:none;color:#fff;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700}
+/* Food add panel */
+.food-add-panel{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-top:10px;display:none}
+.food-add-panel.show{display:block}
+.food-suggestions{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.food-suggestion-btn{background:var(--surface);border:1px solid var(--border);border-radius:50px;color:var(--text2);font-size:12px;padding:6px 14px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.food-suggestion-btn:active{border-color:var(--accent);color:var(--accent)}
+.food-add-row{display:flex;gap:8px;margin-top:8px}
+.food-add-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 12px;outline:none}
+.food-add-input::placeholder{color:var(--text3)}
+.food-add-confirm{background:var(--accent);color:#0a0a0f;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;padding:10px 16px;cursor:pointer}
+/* Protein picker */
+.protein-picker{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.protein-opt{background:var(--surface);border:1px solid var(--border);border-radius:50px;color:var(--text2);font-size:12px;padding:5px 12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.protein-opt.selected{background:var(--accent);border-color:var(--accent);color:#0a0a0f;font-weight:700}
+.protein-custom-input{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'DM Mono',monospace;font-size:13px;padding:6px 10px;outline:none;width:70px;margin-left:4px}
+/* Export/Import */
+.data-btn{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);width:100%;text-align:left;transition:all .2s;margin-bottom:10px}
+.data-btn:active{border-color:var(--accent)}
+.data-btn-icon{font-size:20px}
+.data-btn-label{font-weight:600}
+.data-btn-sub{font-size:11px;color:var(--text3);margin-top:2px}
+/* Backup reminder banner */
+#backup-banner{background:linear-gradient(135deg,rgba(232,255,71,.1),rgba(71,184,255,.08));border:1px solid rgba(232,255,71,.2);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;display:none}
 </style>
 </head>
 <body>
@@ -176,6 +228,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
   <div id="content">
     <!-- HOME -->
     <div id="tab-home" class="tab-content active">
+      <div id="backup-banner">
+        <div style="font-size:11px;color:var(--accent);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">📦 Weekly Backup Due</div>
+        <div style="font-size:13px">Export your data now to avoid losing progress. <span style="color:var(--accent);cursor:pointer;font-weight:600" onclick="switchTab('history')">Go to History →</span></div>
+      </div>
       <div id="snack-banner">
         <div class="snack-label">🎒 Pack for bus</div>
         <div class="snack-text">Mixed nuts — cashews, almonds, raisins</div>
@@ -215,7 +271,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
         <div id="wd-focus"></div>
         <div id="wd-tags"></div>
       </div>
-      <button id="start-workout-btn" onclick="startWorkoutSession()">▶ START SESSION</button>
+      <div style="display:flex;gap:10px;margin-bottom:14px">
+        <button id="start-workout-btn" style="flex:1;margin-bottom:0" onclick="startWorkoutSession()">▶ START SESSION</button>
+        <button onclick="openPool()" style="padding:18px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--accent);font-family:'DM Sans',sans-serif;font-size:15px;cursor:pointer;font-weight:700">＋</button>
+      </div>
       <div id="exercise-list"></div>
     </div>
     <!-- FOOD -->
@@ -229,17 +288,19 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
         <div class="protein-bar"><div class="protein-fill" id="protein-fill" style="width:0%"></div></div>
       </div>
       <div class="meal-section">
-        <div class="meal-header"><div class="meal-title">BREAKFAST</div><div class="meal-time">7:30 AM</div></div>
+        <div class="meal-header"><div class="meal-title">BREAKFAST</div><div style="display:flex;align-items:center;gap:8px"><div class="meal-time">7:30 AM</div><button class="meal-edit-btn" onclick="toggleFoodEdit('breakfast',this)">Edit</button></div></div>
         <div class="card card-sm">
-          <div style="margin-bottom:10px"><span class="food-tag">3 Eggs + Toast</span><span class="food-tag">Ragi + Whey</span><span class="food-tag">Smoothie</span></div>
-          <div class="check-item" onclick="toggleProtein('breakfast')"><div class="check-box" id="pc-breakfast"></div><div class="check-text">Protein done (+25g)</div></div>
+          <div id="food-tags-breakfast" style="margin-bottom:10px"><span class="food-tag">3 Eggs + Toast</span><span class="food-tag">Ragi + Whey</span><span class="food-tag">Smoothie</span></div>
+          <div class="check-item" onclick="toggleProtein('breakfast')"><div class="check-box" id="pc-breakfast"></div><div class="check-text" id="protein-label-breakfast">Protein done (+25g)</div></div>
+          <div class="food-add-panel" id="food-panel-breakfast"></div>
         </div>
       </div>
       <div class="meal-section">
-        <div class="meal-header"><div class="meal-title">LUNCH</div><div class="meal-time">2:00 PM</div></div>
+        <div class="meal-header"><div class="meal-title">LUNCH</div><div style="display:flex;align-items:center;gap:8px"><div class="meal-time">2:00 PM</div><button class="meal-edit-btn" onclick="toggleFoodEdit('lunch',this)">Edit</button></div></div>
         <div class="card card-sm">
-          <div style="margin-bottom:10px"><span class="food-tag">1.5 katori rice</span><span class="food-tag">1.5 katori dal</span><span class="food-tag">Sabzi</span><span class="food-tag">Curd</span><span class="food-tag">Paneer 50g</span></div>
-          <div class="check-item" onclick="toggleProtein('lunch')"><div class="check-box" id="pc-lunch"></div><div class="check-text">Protein done (+35g)</div></div>
+          <div id="food-tags-lunch" style="margin-bottom:10px"><span class="food-tag">1.5 katori rice</span><span class="food-tag">1.5 katori dal</span><span class="food-tag">Sabzi</span><span class="food-tag">Curd</span><span class="food-tag">Paneer 50g</span></div>
+          <div class="check-item" onclick="toggleProtein('lunch')"><div class="check-box" id="pc-lunch"></div><div class="check-text" id="protein-label-lunch">Protein done (+35g)</div></div>
+          <div class="food-add-panel" id="food-panel-lunch"></div>
         </div>
       </div>
       <div class="meal-section" id="bus-snack-section" style="display:none">
@@ -250,10 +311,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
         </div>
       </div>
       <div class="meal-section">
-        <div class="meal-header"><div class="meal-title">DINNER</div><div class="meal-time" id="dinner-time">8:30 PM</div></div>
+        <div class="meal-header"><div class="meal-title">DINNER</div><div style="display:flex;align-items:center;gap:8px"><div class="meal-time" id="dinner-time">8:30 PM</div><button class="meal-edit-btn" onclick="toggleFoodEdit('dinner',this)">Edit</button></div></div>
         <div class="card card-sm">
-          <div style="margin-bottom:10px"><span class="food-tag">2–3 Rotis</span><span class="food-tag">Sabzi</span><span class="food-tag">Paneer bhurji</span><span class="food-tag">Egg bhurji</span></div>
-          <div class="check-item" onclick="toggleProtein('dinner')"><div class="check-box" id="pc-dinner"></div><div class="check-text">Protein done (+35g)</div></div>
+          <div id="food-tags-dinner" style="margin-bottom:10px"><span class="food-tag">2–3 Rotis</span><span class="food-tag">Sabzi</span><span class="food-tag">Paneer bhurji</span><span class="food-tag">Egg bhurji</span></div>
+          <div class="check-item" onclick="toggleProtein('dinner')"><div class="check-box" id="pc-dinner"></div><div class="check-text" id="protein-label-dinner">Protein done (+35g)</div></div>
+          <div class="food-add-panel" id="food-panel-dinner"></div>
         </div>
       </div>
       <div class="meal-section">
@@ -266,6 +328,18 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
     </div>
     <!-- HISTORY -->
     <div id="tab-history" class="tab-content">
+      <div class="card">
+        <div class="label">Data Backup</div>
+        <button class="data-btn" onclick="exportData()">
+          <span class="data-btn-icon">📤</span>
+          <div><div class="data-btn-label">Export My Data</div><div class="data-btn-sub">Downloads a backup file to your Files app</div></div>
+        </button>
+        <button class="data-btn" onclick="document.getElementById('import-input').click()">
+          <span class="data-btn-icon">📥</span>
+          <div><div class="data-btn-label">Import Data</div><div class="data-btn-sub">Restore from a previous backup file</div></div>
+        </button>
+        <input type="file" id="import-input" accept=".json" style="display:none" onchange="importData(event)">
+      </div>
       <div class="card"><div class="label">Current Streak</div><div id="streak-display" style="margin-top:6px"></div></div>
       <div class="card"><div class="label">This Week</div><div class="week-bars" id="week-bars"></div></div>
       <div class="card">
@@ -304,6 +378,19 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
     <button class="timer-btn secondary" id="pause-btn" onclick="pauseTimer()">⏸ Pause</button>
     <button class="timer-btn danger" onclick="stopTimer()">✕ End</button>
   </div>
+</div>
+
+<!-- EXERCISE POOL MODAL -->
+
+<div id="pool-modal">
+  <div id="pool-header">
+    <div id="pool-title">ADD EXERCISE</div>
+    <button id="pool-close" onclick="closePool()">✕ Done</button>
+  </div>
+  <div id="pool-search-wrap">
+    <input id="pool-search" type="text" placeholder="Search exercises..." oninput="renderPool()" autocomplete="off" autocorrect="off" spellcheck="false">
+  </div>
+  <div id="pool-list"></div>
 </div>
 
 <!-- OFFICE MODAL -->
@@ -827,9 +914,23 @@ function renderFood() {
   try {
     const td = getTodayData();
     const checks = td.proteinChecks||{};
-    const proteins = {breakfast:25,lunch:35,snack:5,dinner:35,presleep:8};
+    // Sync food tags from state
+    ['breakfast','lunch','dinner'].forEach(meal => {
+      const items = getFoodItems(meal, td);
+      const tagsEl = $('food-tags-'+meal);
+      if (tagsEl) tagsEl.innerHTML = items.map(f=>'<span class="food-tag">'+f.name+'</span>').join('');
+      updateMealProteinLabel(meal, td);
+    });
+    // Calculate protein total from meal items
     let total = 0;
-    Object.keys(proteins).forEach(k => { if(checks[k]) total+=proteins[k]; });
+    ['breakfast','lunch','dinner'].forEach(meal => {
+      if (checks[meal]) {
+        const items = getFoodItems(meal, td);
+        total += items.reduce((a,f)=>a+(f.protein||0),0);
+      }
+    });
+    if (checks['snack']) total += 5;
+    if (checks['presleep']) total += 8;
     $('protein-num').textContent = total;
     $('protein-fill').style.width = Math.min(100,(total/100)*100)+'%';
     ['breakfast','lunch','snack','dinner','presleep'].forEach(k => {
@@ -840,7 +941,7 @@ function renderFood() {
     if (bss) bss.style.display = td.isOffice?'block':'none';
     const dt = $('dinner-time');
     if (dt) dt.textContent = td.isOffice?'9:30 PM':'8:30 PM';
-  } catch(e) {}
+  } catch(e) { console.error('renderFood',e); }
 }
 
 // ===================== WORKOUT =====================
@@ -849,44 +950,6 @@ let completedExercises = [];
 let timerInterval = null;
 let autoAdvTimer = null;
 let timerState = {};
-
-function renderWorkout() {
-  try {
-    const td = getTodayData();
-    const plan = td.isOffice ? WORKOUT_PLANS.office_morning : WORKOUT_PLANS.home[td.workoutDay%7];
-    currentPlan = plan;
-    if (!td.progressionOverrides) td.progressionOverrides = {};
-    $('wd-day').textContent = plan.day;
-    $('wd-focus').textContent = plan.focus;
-    $('wd-tags').innerHTML = plan.tags.map(t => '<span class="wd-tag">'+t+'</span>').join('');
-    let h = '';
-    plan.exercises.forEach((ex,i) => {
-      const done = completedExercises.includes(i);
-      const ov = td.progressionOverrides[ex.name] || {};
-      const reps = (ov.reps || ex.reps);
-      const dur = (ov.duration || ex.duration);
-      const detail = ex.type==='reps' ? ex.sets+' sets × '+reps+' reps' : ex.sets+' sets × '+dur+'s';
-      const imgs = IMAGE_MAP[ex.name];
-      let imgHtml = '';
-      if (imgs) {
-        const allImgs = [...(imgs.move||[]).map(f=>({f,l:'Form'})), ...(imgs.muscles||[]).map(f=>({f,l:'Muscles'}))];
-        if (allImgs.length) {
-          imgHtml = '<div class="ex-images">' + allImgs.map(({f,l})=>buildImgTag(f,l)).join('') + '</div>';
-        }
-      }
-      h += '<div class="exercise-card ' + (done?'completed':'') + '" id="ex-'+i+'">';
-      h += '<div class="ex-header"><div class="ex-name">'+ex.name+'</div>';
-      h += '<div class="ex-badge '+(ex.type==='reps'?'reps':'time')+'">'+(ex.type==='reps'?'REPS':'TIME')+'</div></div>';
-      h += '<div class="ex-detail">'+detail+' · '+ex.target+'</div>';
-      h += '<div class="ex-muscle">'+ex.muscle+'</div>';
-      h += imgHtml;
-      h += '<div class="ex-sets">' + Array(ex.sets).fill(0).map((_,s)=>'<div class="ex-set-dot" id="dot-'+i+'-'+s+'"></div>').join('') + '</div>';
-      h += '<button class="harder-btn" onclick="makeHarder('+i+',event)">+ Make it harder</button>';
-      h += '</div>';
-    });
-    $('exercise-list').innerHTML = h;
-  } catch(e) { console.error('renderWorkout',e); }
-}
 
 function startWorkoutSession() {
   completedExercises = [];
@@ -1146,6 +1209,287 @@ function makeHarder(idx, e) {
     renderWorkout();
   } catch(e2) {}
 }
+
+// ===================== FULL EXERCISE LIBRARY =====================
+const EXERCISE_LIBRARY = [
+  {name:'Decline Push-Ups',type:'reps',reps:12,sets:4,target:'Chest + Shoulders',muscle:'Chest',category:'bodyweight',group:'Push'},
+  {name:'Push-Ups',type:'reps',reps:15,sets:3,target:'Bodyweight',muscle:'Chest',category:'bodyweight',group:'Push'},
+  {name:'Push-Up Ladder',type:'reps',reps:20,sets:3,target:'Max reps',muscle:'Chest',category:'bodyweight',group:'Push'},
+  {name:'Pike Push-Ups',type:'reps',reps:12,sets:3,target:'Shoulder focus',muscle:'Shoulders',category:'bodyweight',group:'Push'},
+  {name:'Dumbbell Shoulder Press',type:'reps',reps:12,sets:4,target:'5kg each hand',muscle:'Shoulders',category:'strength',group:'Push'},
+  {name:'Lateral Raises',type:'reps',reps:15,sets:3,target:'5kg each hand',muscle:'Shoulders',category:'strength',group:'Push'},
+  {name:'Chair Dips',type:'reps',reps:12,sets:3,target:'Bodyweight',muscle:'Triceps',category:'bodyweight',group:'Push'},
+  {name:'Dumbbell Thruster',type:'reps',reps:12,sets:4,target:'5kg each — squat to press',muscle:'Full Body',category:'compound',group:'Push'},
+  {name:'Dead Hang',type:'time',duration:30,sets:3,target:'Pull-up bar — grip builder',muscle:'Grip',category:'stretch',group:'Pull'},
+  {name:'Negative Pull-Ups',type:'reps',reps:5,sets:4,target:'Slow 5s descent',muscle:'Back',category:'strength',group:'Pull'},
+  {name:'Pull-Up / Negative',type:'reps',reps:5,sets:4,target:'Pull-up bar',muscle:'Back',category:'strength',group:'Pull'},
+  {name:'One-Arm Dumbbell Row',type:'reps',reps:12,sets:4,target:'5kg — each side',muscle:'Back',category:'strength',group:'Pull'},
+  {name:'Bicep Curls',type:'reps',reps:12,sets:4,target:'5kg each',muscle:'Biceps',category:'strength',group:'Pull'},
+  {name:'Hammer Curls',type:'reps',reps:12,sets:3,target:'5kg each',muscle:'Biceps',category:'strength',group:'Pull'},
+  {name:'Band Pull-Aparts',type:'reps',reps:20,sets:3,target:'Maroon band — posture fix',muscle:'Rear Delts',category:'bodyweight',group:'Pull'},
+  {name:'Towel Grip Curls',type:'reps',reps:10,sets:3,target:'Wrap towel on dumbbell',muscle:'Grip',category:'strength',group:'Pull'},
+  {name:'Wrist Curls',type:'reps',reps:15,sets:3,target:'5kg — forearm strength',muscle:'Forearms',category:'strength',group:'Pull'},
+  {name:'Goblet Squat',type:'reps',reps:15,sets:4,target:'16kg kettlebell',muscle:'Quads',category:'compound',group:'Legs & Glutes'},
+  {name:'KB Swing',type:'reps',reps:15,sets:4,target:'16kg kettlebell — APT fixer',muscle:'Glutes',category:'compound',group:'Legs & Glutes'},
+  {name:'Reverse Lunges',type:'reps',reps:12,sets:3,target:'Each leg',muscle:'Quads',category:'bodyweight',group:'Legs & Glutes'},
+  {name:'Hip Thrusts',type:'reps',reps:12,sets:4,target:'Use couch/bed edge',muscle:'Glutes',category:'bodyweight',group:'Legs & Glutes'},
+  {name:'Glute Bridge',type:'reps',reps:15,sets:3,target:'Pause 2s at top — APT fix',muscle:'Glutes',category:'bodyweight',group:'Legs & Glutes'},
+  {name:'Wall Sit',type:'time',duration:60,sets:3,target:'Quad endurance',muscle:'Quads',category:'core',group:'Legs & Glutes'},
+  {name:'Dead Bug',type:'time',duration:40,sets:3,target:'Core / APT correction',muscle:'Core',category:'core',group:'Core & Posture'},
+  {name:'Bird Dog',type:'reps',reps:12,sets:3,target:'Each side — APT + core',muscle:'Core',category:'core',group:'Core & Posture'},
+  {name:'Plank',type:'time',duration:60,sets:3,target:'Keep hips neutral',muscle:'Core',category:'core',group:'Core & Posture'},
+  {name:'Leg Raises',type:'reps',reps:15,sets:3,target:'Core + hip flexor control',muscle:'Core',category:'core',group:'Core & Posture'},
+  {name:'Glute Bridge Hold',type:'time',duration:45,sets:3,target:'Sustained contraction — APT',muscle:'Glutes',category:'core',group:'Core & Posture'},
+  {name:'Mountain Climbers',type:'time',duration:40,sets:3,target:'Core + cardio',muscle:'Core',category:'core',group:'Core & Posture'},
+  {name:'Burpees',type:'reps',reps:10,sets:3,target:'Explosive',muscle:'Full Body',category:'compound',group:'Core & Posture'},
+  {name:'Farmer Carry',type:'time',duration:40,sets:3,target:'5kg each hand — grip + posture',muscle:'Grip',category:'core',group:'Core & Posture'},
+  {name:'Hip Flexor Stretch',type:'time',duration:40,sets:3,target:'Each side — APT fix',muscle:'Hip Flexors',category:'stretch',group:'Stretch & Mobility'},
+  {name:'Cat-Cow',type:'reps',reps:15,sets:2,target:'Spinal mobility',muscle:'Spine',category:'stretch',group:'Stretch & Mobility'},
+  {name:'Full Body Stretch',type:'time',duration:60,sets:2,target:'Full mobility',muscle:'Full Body',category:'stretch',group:'Stretch & Mobility'},
+];
+const POOL_GROUPS = ['Push','Pull','Legs & Glutes','Core & Posture','Stretch & Mobility'];
+
+// ===================== TODAY'S CUSTOM EXERCISES =====================
+function getTodayExercises() {
+  const td = getTodayData();
+  if (!td.customExercises) {
+    const plan = td.isOffice ? WORKOUT_PLANS.office_morning : WORKOUT_PLANS.home[td.workoutDay%7];
+    td.customExercises = plan.exercises.map((ex,i) => ({...ex, uid:'ex-'+Date.now()+'-'+i}));
+    saveState();
+  }
+  return td.customExercises;
+}
+
+// ===================== EXERCISE POOL =====================
+function openPool() {
+  try { $('pool-search').value=''; renderPool(); $('pool-modal').classList.add('show'); } catch(e) {}
+}
+function closePool() {
+  try { $('pool-modal').classList.remove('show'); renderPool(); } catch(e) {}
+}
+function renderPool() {
+  try {
+    const query = ($('pool-search').value||'').toLowerCase().trim();
+    let html = '';
+    POOL_GROUPS.forEach(group => {
+      const exs = EXERCISE_LIBRARY.filter(ex => ex.group===group && (!query||ex.name.toLowerCase().includes(query)||ex.muscle.toLowerCase().includes(query)));
+      if (!exs.length) return;
+      html += '<div class="pool-group-label">'+group+'</div>';
+      exs.forEach(ex => {
+        const detail = ex.type==='reps'?ex.sets+'×'+ex.reps+' reps':ex.sets+'×'+ex.duration+'s';
+        html += '<div class="pool-exercise-item"><div><div class="pool-ex-name">'+ex.name+'</div><div class="pool-ex-detail">'+detail+' · '+ex.muscle+'</div></div>';
+        html += '<button class="pool-add-btn" onclick="addExFromPool(\''+ex.name+'\',this)">+ Add</button></div>';
+      });
+    });
+    if (!html) html='<div style="color:var(--text3);padding:20px;text-align:center">No exercises found</div>';
+    $('pool-list').innerHTML = html;
+  } catch(e) {}
+}
+function addExFromPool(name, btn) {
+  try {
+    const ex = EXERCISE_LIBRARY.find(e=>e.name===name);
+    if (!ex) return;
+    const td = getTodayData();
+    const exercises = getTodayExercises();
+    exercises.push({...ex, uid:'ex-'+Date.now()});
+    td.customExercises = exercises;
+    saveState();
+    if (btn) { btn.textContent='✓'; btn.style.background='var(--success)'; setTimeout(()=>{btn.textContent='+ Add';btn.style.background='';},1200); }
+  } catch(e) {}
+}
+
+// ===================== DELETE EXERCISE =====================
+function deleteExercise(idx, e) {
+  try {
+    e.stopPropagation();
+    const td = getTodayData();
+    const exercises = getTodayExercises();
+    exercises.splice(idx,1);
+    td.customExercises = exercises;
+    saveState();
+    renderWorkout();
+  } catch(e2) {}
+}
+
+// ===================== DRAG TO REORDER =====================
+let dragSrcIdx = null;
+function dragStart(e,idx){ dragSrcIdx=idx; e.dataTransfer.effectAllowed='move'; setTimeout(()=>{const el=$('excard-'+idx);if(el)el.classList.add('dragging');},0); }
+function dragOver(e,idx){ e.preventDefault(); const el=$('excard-'+idx); if(el&&idx!==dragSrcIdx)el.classList.add('drag-over'); }
+function dragLeave(e,idx){ const el=$('excard-'+idx); if(el)el.classList.remove('drag-over'); }
+function dragDrop(e,idx){
+  e.preventDefault();
+  if(dragSrcIdx===null||dragSrcIdx===idx)return;
+  const td=getTodayData(); const exercises=getTodayExercises();
+  const moved=exercises.splice(dragSrcIdx,1)[0];
+  exercises.splice(idx,0,moved);
+  td.customExercises=exercises; saveState(); dragSrcIdx=null; renderWorkout();
+}
+
+// ===================== UPDATED RENDWORKOUT =====================
+function renderWorkout() {
+  try {
+    const td = getTodayData();
+    const plan = td.isOffice ? WORKOUT_PLANS.office_morning : WORKOUT_PLANS.home[td.workoutDay%7];
+    if (!td.progressionOverrides) td.progressionOverrides={};
+    $('wd-day').textContent=plan.day; $('wd-focus').textContent=plan.focus;
+    $('wd-tags').innerHTML=plan.tags.map(t=>'<span class="wd-tag">'+t+'</span>').join('');
+    const exercises = getTodayExercises();
+    currentPlan = {...plan, exercises};
+    let h='';
+    exercises.forEach((ex,i)=>{
+      const done=completedExercises.includes(i);
+      const ov=td.progressionOverrides[ex.name]||{};
+      const reps=ov.reps||ex.reps, dur=ov.duration||ex.duration;
+      const detail=ex.type==='reps'?ex.sets+' sets × '+reps+' reps':ex.sets+' sets × '+dur+'s';
+      const imgs=IMAGE_MAP[ex.name];
+      let imgHtml='';
+      if(imgs){const allImgs=[...(imgs.move||[]).map(f=>({f,l:'Form'})),...(imgs.muscles||[]).map(f=>({f,l:'Muscles'}))];if(allImgs.length)imgHtml='<div class="ex-images">'+allImgs.map(({f,l})=>buildImgTag(f,l)).join('')+'</div>';}
+      h+='<div class="exercise-card '+(done?'completed':'')+'" id="excard-'+i+'" draggable="true" ondragstart="dragStart(event,'+i+')" ondragover="dragOver(event,'+i+')" ondrop="dragDrop(event,'+i+')" ondragleave="dragLeave(event,'+i+')">';
+      h+='<div class="ex-header"><div style="display:flex;align-items:center;gap:4px"><span class="drag-handle">⠿</span><div class="ex-name">'+ex.name+'</div></div>';
+      h+='<div class="ex-badge '+(ex.type==='reps'?'reps':'time')+'">'+(ex.type==='reps'?'REPS':'TIME')+'</div></div>';
+      h+='<div class="ex-detail">'+detail+' · '+ex.target+'</div><div class="ex-muscle">'+ex.muscle+'</div>';
+      h+=imgHtml;
+      h+='<div class="ex-sets">'+Array(ex.sets).fill(0).map((_,s)=>'<div class="ex-set-dot" id="dot-'+i+'-'+s+'"></div>').join('')+'</div>';
+      h+='<div style="display:flex;gap:6px;margin-top:8px"><button class="harder-btn" onclick="makeHarder('+i+',event)">+ Make it harder</button><button class="ex-delete-btn" onclick="deleteExercise('+i+',event)">✕ Remove</button></div>';
+      h+='</div>';
+    });
+    $('exercise-list').innerHTML=h;
+  } catch(e){ console.error('renderWorkout',e); }
+}
+
+// ===================== FOOD EDIT =====================
+const FOOD_SUGGESTIONS = {
+  breakfast:[{name:'3 Eggs + Toast',protein:18},{name:'Ragi Porridge',protein:6},{name:'Whey Protein',protein:25},{name:'Smoothie (milk+banana+PB)',protein:15},{name:'Greek Yogurt',protein:17},{name:'Oats',protein:5},{name:'Paneer Bhurji',protein:20},{name:'Boiled Eggs (2)',protein:12},{name:'Almonds (10)',protein:3}],
+  lunch:[{name:'Rice (1.5 katori)',protein:4},{name:'Dal (1.5 katori)',protein:9},{name:'Sabzi',protein:3},{name:'Curd (1 bowl)',protein:7},{name:'Paneer (50g)',protein:9},{name:'Rajma (1 bowl)',protein:13},{name:'Chana (1 bowl)',protein:15},{name:'Moong Dal',protein:11},{name:'Tofu (100g)',protein:17},{name:'Soya Chunks (50g)',protein:26},{name:'Roti (2)',protein:6}],
+  dinner:[{name:'Roti (2)',protein:6},{name:'Roti (3)',protein:9},{name:'Sabzi',protein:3},{name:'Paneer Bhurji',protein:20},{name:'Egg Bhurji (3 eggs)',protein:18},{name:'Dal',protein:9},{name:'Tofu Stir Fry',protein:17},{name:'Soya Chunks',protein:26},{name:'Chicken (100g)',protein:31},{name:'Curd (1 bowl)',protein:7},{name:'Rice (1 katori)',protein:3}],
+};
+const PROTEIN_OPTIONS=[5,8,10,12,15,18,20,25,30,35];
+let foodEditState={};
+
+function getFoodItems(meal,td){
+  if(!td.foodItems)td.foodItems={};
+  if(!td.foodItems[meal]){
+    const defaults={breakfast:[{name:'3 Eggs + Toast',protein:18},{name:'Ragi + Whey',protein:31},{name:'Smoothie',protein:20}],lunch:[{name:'1.5 katori rice',protein:4},{name:'1.5 katori dal',protein:9},{name:'Sabzi',protein:3},{name:'Curd',protein:7},{name:'Paneer 50g',protein:9}],dinner:[{name:'2–3 Rotis',protein:8},{name:'Sabzi',protein:3},{name:'Paneer bhurji',protein:20},{name:'Egg bhurji',protein:18}]};
+    td.foodItems[meal]=defaults[meal]||[];saveState();
+  }
+  return td.foodItems[meal];
+}
+
+function toggleFoodEdit(meal,btn){
+  const panel=$('food-panel-'+meal);if(!panel)return;
+  const isOpen=panel.classList.contains('show');
+  if(isOpen){panel.classList.remove('show');btn.classList.remove('active');btn.textContent='Edit';renderFoodTags(meal,false);}
+  else{panel.classList.add('show');btn.classList.add('active');btn.textContent='Done';renderFoodTags(meal,true);renderFoodAddPanel(meal);}
+}
+
+function renderFoodTags(meal,editMode){
+  const td=getTodayData(),tagsEl=$('food-tags-'+meal);if(!tagsEl)return;
+  const items=getFoodItems(meal,td);
+  if(!editMode){tagsEl.innerHTML=items.map(f=>'<span class="food-tag">'+f.name+'</span>').join('');}
+  else{tagsEl.innerHTML=items.map((f,i)=>'<span class="food-tag-wrap"><span class="food-tag">'+f.name+'</span><button class="food-tag-del" onclick="deleteFoodItem(\''+meal+'\','+i+')">✕</button></span>').join('');}
+}
+
+function deleteFoodItem(meal,idx){
+  const td=getTodayData(),items=getFoodItems(meal,td);
+  items.splice(idx,1);
+  if(!td.mealProtein)td.mealProtein={};
+  td.mealProtein[meal]=items.reduce((a,f)=>a+(f.protein||0),0);
+  saveState();renderFoodTags(meal,true);updateMealProteinLabel(meal,td);
+}
+
+function renderFoodAddPanel(meal){
+  const panel=$('food-panel-'+meal);if(!panel)return;
+  const suggs=FOOD_SUGGESTIONS[meal]||[];
+  let html='<div style="font-size:11px;color:var(--text3);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Add Food Item</div>';
+  html+='<div class="food-suggestions">'+suggs.map(s=>'<button class="food-suggestion-btn" onclick="selectFoodSugg(\''+meal+'\',\''+s.name.replace(/'/g,"\\'")+'\',' +s.protein+')">'+s.name+'</button>').join('')+'</div>';
+  html+='<div class="food-add-row"><input class="food-add-input" id="food-name-'+meal+'" placeholder="Or type custom food..." autocorrect="off"></div>';
+  html+='<div style="font-size:11px;color:var(--text3);margin-top:10px;margin-bottom:6px;font-weight:600;letter-spacing:.1em;text-transform:uppercase">Protein (g)</div>';
+  html+='<div class="protein-picker" id="ppicker-'+meal+'">'+PROTEIN_OPTIONS.map(g=>'<button class="protein-opt" onclick="selectProtein(\''+meal+'\','+g+',this)">'+g+'g</button>').join('');
+  html+='<input class="protein-custom-input" id="protein-custom-'+meal+'" type="number" min="0" max="100" placeholder="?g" oninput="customProtein(\''+meal+'\',this)"></div>';
+  html+='<button onclick="confirmAddFood(\''+meal+'\')" style="margin-top:12px;width:100%;padding:12px;background:var(--accent);color:#0a0a0f;border:none;border-radius:var(--radius-sm);font-family:\'DM Sans\',sans-serif;font-size:14px;font-weight:700;cursor:pointer">Add to Meal</button>';
+  panel.innerHTML=html;
+}
+
+function selectFoodSugg(meal,name,protein){
+  const ni=$('food-name-'+meal);if(ni)ni.value=name;
+  const closest=PROTEIN_OPTIONS.reduce((a,b)=>Math.abs(b-protein)<Math.abs(a-protein)?b:a);
+  document.querySelectorAll('#ppicker-'+meal+' .protein-opt').forEach(b=>{b.classList.remove('selected');if(parseInt(b.textContent)===closest)b.classList.add('selected');});
+  const ci=$('protein-custom-'+meal);if(ci)ci.value='';
+  if(!foodEditState[meal])foodEditState[meal]={};foodEditState[meal].protein=closest;
+}
+
+function selectProtein(meal,grams,btn){
+  document.querySelectorAll('#ppicker-'+meal+' .protein-opt').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const ci=$('protein-custom-'+meal);if(ci)ci.value='';
+  if(!foodEditState[meal])foodEditState[meal]={};foodEditState[meal].protein=grams;
+}
+
+function customProtein(meal,input){
+  document.querySelectorAll('#ppicker-'+meal+' .protein-opt').forEach(b=>b.classList.remove('selected'));
+  if(!foodEditState[meal])foodEditState[meal]={};foodEditState[meal].protein=parseInt(input.value)||0;
+}
+
+function confirmAddFood(meal){
+  try{
+    const ni=$('food-name-'+meal),name=(ni&&ni.value.trim())||'';
+    if(!name){if(ni)ni.style.borderColor='var(--danger)';return;}
+    const protein=(foodEditState[meal]&&foodEditState[meal].protein)||0;
+    const td=getTodayData(),items=getFoodItems(meal,td);
+    items.push({name,protein});
+    if(!td.mealProtein)td.mealProtein={};
+    td.mealProtein[meal]=items.reduce((a,f)=>a+(f.protein||0),0);
+    saveState();renderFoodTags(meal,true);updateMealProteinLabel(meal,td);renderFoodAddPanel(meal);
+    foodEditState[meal]={};
+  }catch(e){console.error(e);}
+}
+
+function updateMealProteinLabel(meal,td){
+  const label=$('protein-label-'+meal);if(!label)return;
+  const items=getFoodItems(meal,td);
+  label.textContent='Protein done (+'+(items.reduce((a,f)=>a+(f.protein||0),0))+'g)';
+}
+
+// ===================== EXPORT / IMPORT =====================
+function exportData(){
+  try{
+    const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download='discipline-os-backup-'+getDateKey()+'.json';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+    speak('Data exported. Keep this file safe.');
+  }catch(e){}
+}
+
+function importData(event){
+  try{
+    const file=event.target.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=function(e){
+      try{
+        const imported=JSON.parse(e.target.result);
+        if(!imported.days){alert('Invalid backup file.');return;}
+        Object.keys(imported.days).forEach(k=>{state.days[k]=imported.days[k];});
+        if(imported.tomorrowIsOffice!==undefined)state.tomorrowIsOffice=imported.tomorrowIsOffice;
+        saveState();renderHome();updateScore();renderHistory();
+        speak('Data restored successfully.');
+      }catch(err){alert('Could not read backup file.');}
+    };
+    reader.readAsText(file);event.target.value='';
+  }catch(e){}
+}
+
+// ===================== BACKUP REMINDER =====================
+function checkBackupReminder(){
+  try{
+    const now=new Date(),today=getDateKey();
+    if(now.getDay()===0&&now.getHours()>=21&&state.lastBackupReminder!==today){
+      $('backup-banner').style.display='block';
+      state.lastBackupReminder=today;saveState();
+    }
+  }catch(e){}
+}
+
 function renderHistory() {
   try {
     const now=new Date(), today=getDateKey();
