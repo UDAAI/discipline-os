@@ -779,7 +779,7 @@ function renderHero() {
     hero.innerHTML = h;
 
     // Day badge
-    $('day-badge').innerHTML = '<span class="type-pill ' + (td.isOffice?'office':'home') + '">' + (td.isOffice?'🏢 Office':'🏠 Home') + '</span>';
+    renderDayBadge();
 
     // Snack banner
     const sb = $('snack-banner');
@@ -957,9 +957,20 @@ let autoAdvTimer = null;
 let timerState = {};
 
 function startWorkoutSession() {
-  completedExercises = [];
-  startScreenAwake();
-  startExercise(0);
+  try {
+    completedExercises = [];
+    // Always rebuild currentPlan from today's exercises so button works on first tap
+    const td = getTodayData();
+    const plan = td.isOffice ? WORKOUT_PLANS.office_morning : WORKOUT_PLANS.home[td.workoutDay%7];
+    const exercises = getTodayExercises();
+    currentPlan = {...plan, exercises};
+    if (!currentPlan.exercises || currentPlan.exercises.length === 0) {
+      speak('No exercises in your session. Add some first.');
+      return;
+    }
+    startScreenAwake();
+    startExercise(0);
+  } catch(e) { console.error('startWorkoutSession', e); }
 }
 
 function startExercise(idx) {
@@ -1339,6 +1350,10 @@ function renderWorkout() {
     $('wd-day').textContent=plan.day; $('wd-focus').textContent=plan.focus;
     $('wd-tags').innerHTML=plan.tags.map(t=>'<span class="wd-tag">'+t+'</span>').join('');
 
+    // MUST declare exercises BEFORE using it
+    const exercises = getTodayExercises();
+    currentPlan = {...plan, exercises};
+
     // Calculate estimated duration
     let totalSecs = 0;
     exercises.forEach((ex, i) => {
@@ -1346,16 +1361,15 @@ function renderWorkout() {
       const dur = ov.duration||ex.duration||45;
       const workPerSet = ex.type==='reps' ? 45 : dur;
       const restTime = REST_TIMES[ex.category]||30;
-      totalSecs += 10; // prep/transition
+      totalSecs += 10;
       totalSecs += workPerSet * ex.sets;
       totalSecs += restTime * (ex.sets - 1);
-      if (i < exercises.length - 1) totalSecs += restTime; // between exercises
+      if (i < exercises.length - 1) totalSecs += restTime;
     });
     const estMins = Math.round(totalSecs / 60);
     const durEl = document.getElementById('wd-duration');
     if (durEl) durEl.textContent = '⏱ Est. ' + estMins + ' min';
-    const exercises = getTodayExercises();
-    currentPlan = {...plan, exercises};
+
     let h='';
     exercises.forEach((ex,i)=>{
       const done=completedExercises.includes(i);
@@ -1511,6 +1525,28 @@ function checkBackupReminder(){
   }catch(e){}
 }
 
+function toggleDayType() {
+  try {
+    const td = getTodayData();
+    td.isOffice = !td.isOffice;
+    // Reset today's custom exercises so they reload from correct plan
+    td.customExercises = null;
+    state.tomorrowIsOffice = td.isOffice;
+    saveState();
+    renderDayBadge();
+    renderHome();
+    renderWorkout();
+    speak(td.isOffice ? 'Switched to office day.' : 'Switched to home day.');
+  } catch(e) { console.error('toggleDayType', e); }
+}
+
+function renderDayBadge() {
+  try {
+    const td = getTodayData();
+    $('day-badge').innerHTML = '<span class="type-pill '+(td.isOffice?'office':'home')+'" onclick="toggleDayType()" style="cursor:pointer" title="Tap to switch">'+(td.isOffice?'🏢 Office':'🏠 Home')+'</span>';
+  } catch(e) {}
+}
+
 function renderHistory() {
   try {
     const now=new Date(), today=getDateKey();
@@ -1592,11 +1628,15 @@ function switchTab(tab) {
     document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
     document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));
     $('tab-'+tab).classList.add('active');
-    document.querySelector('#nav button[onclick="switchTab(\''+tab+'\')"]').classList.add('active');
+    // Find active nav button safely without complex selectors
+    const navBtns = document.querySelectorAll('#nav button');
+    const tabIndex = ['home','workout','food','history'].indexOf(tab);
+    if (tabIndex >= 0 && navBtns[tabIndex]) navBtns[tabIndex].classList.add('active');
     if (tab==='home') { renderHome(); updateScore(); }
+    else if (tab==='workout') { renderWorkout(); }
     else if (tab==='food') renderFood();
     else if (tab==='history') renderHistory();
-  } catch(e) {}
+  } catch(e) { console.error('switchTab', e); }
 }
 
 // ===================== HOME =====================
@@ -1620,7 +1660,9 @@ function init() {
     }
     renderHome();
     updateScore();
-    setInterval(()=>{ renderHero(); checkOfficePrompt(); }, 30000);
+    renderWorkout(); // pre-render workout so it's ready immediately
+    checkBackupReminder();
+    setInterval(()=>{ renderHero(); checkOfficePrompt(); checkBackupReminder(); }, 30000);
     checkOfficePrompt();
   } catch(e) { console.error('init',e); }
 }
