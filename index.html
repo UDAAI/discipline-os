@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -104,11 +105,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 #timer-phase{font-size:13px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--text2);margin-top:4px}
 #timer-set-info{font-size:14px;color:var(--text2);margin-bottom:20px;font-family:'DM Mono',monospace}
 #timer-quote{font-size:15px;color:var(--text2);font-style:italic;max-width:300px;margin:0 auto 30px;min-height:44px}
-#timer-controls{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
-.timer-btn.mute{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
-.timer-btn.mute.active{background:rgba(255,71,71,.2);color:var(--danger);border-color:var(--danger)}
-.exercise-card.touch-dragging{opacity:.4;border:1px dashed var(--accent);transform:scale(.98)}
-.exercise-card.touch-drag-over{border-color:var(--accent);background:rgba(232,255,71,.05)}
+#timer-controls{display:flex;gap:16px}
 .timer-btn{padding:14px 28px;border-radius:50px;border:none;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
 .timer-btn.secondary{background:var(--surface2);color:var(--text)}
 .timer-btn.danger{background:rgba(255,71,71,.2);color:var(--danger);border:1px solid rgba(255,71,71,.3)}
@@ -364,6 +361,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 </div>
 
 <!-- TIMER -->
+
 <div id="timer-modal">
   <div id="timer-exercise-name"></div>
   <div id="timer-detail"></div>
@@ -383,12 +381,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
   <div id="timer-quote"></div>
   <div id="timer-controls">
     <button class="timer-btn secondary" id="pause-btn" onclick="pauseTimer()">⏸ Pause</button>
-    <button class="timer-btn mute" id="mute-btn" onclick="toggleMute()">🔊 Sound</button>
     <button class="timer-btn danger" onclick="stopTimer()">✕ End</button>
   </div>
 </div>
 
 <!-- EXERCISE POOL MODAL -->
+
 <div id="pool-modal">
   <div id="pool-header">
     <div id="pool-title">ADD EXERCISE</div>
@@ -401,6 +399,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 </div>
 
 <!-- OFFICE MODAL -->
+
 <div id="office-modal">
   <div class="office-modal-inner">
     <div class="office-q">Office Tomorrow?</div>
@@ -1037,8 +1036,8 @@ function timerTick() {
     }
     if (timerState.phase==='prep'&&timerState.remaining===0) speak('Go!');
     if (timerState.remaining<=0) advanceTimer();
-    updateTimerDisplay();
-  } catch(e) { console.error('timerTick',e); }
+    else updateTimerDisplay();
+  } catch(e) {}
 }
 
 function skipRest() {
@@ -1088,8 +1087,10 @@ function advanceTimer() {
       speak('Set '+timerState.set+'. Go!');
     }
     updateTimerDisplay();
-  } catch(e) { console.error('advanceTimer',e); }
-} {
+  } catch(e) {}
+}
+
+function updateTimerDisplay() {
   try {
     const phase=timerState.phase, ex=timerState.exercise;
     const dur=timerState.duration, restTime=timerState.restTime||30;
@@ -1127,7 +1128,6 @@ function stopTimer() {
   clearInterval(timerInterval);
   clearTimeout(autoAdvTimer);
   stopScreenAwake();
-  isMuted = false;
   $('timer-modal').classList.remove('show');
   $('skip-rest-btn').style.display='none';
   if (completedExercises.length>=Math.floor((currentPlan?.exercises?.length||2)/2)) {
@@ -1171,26 +1171,15 @@ function initVoice() {
 }
 initVoice();
 
-let isMuted = false;
-function toggleMute() {
-  isMuted = !isMuted;
-  const btn = document.getElementById('mute-btn');
-  if (btn) {
-    btn.textContent = isMuted ? '🔇 Muted' : '🔊 Sound';
-    btn.classList.toggle('active', isMuted);
-  }
-  if (isMuted) window.speechSynthesis.cancel();
-}
-
 function speak(text) {
   try {
-    if (!window.speechSynthesis || isMuted) return;
+    if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     if (selectedVoice) u.voice = selectedVoice;
     u.rate = 0.92; u.pitch = 1.05; u.volume = 1.0;
     window.speechSynthesis.speak(u);
-  } catch(e) { console.error('speak',e); }
+  } catch(e) {}
 }
 
 // ===================== SCREEN AWAKE =====================
@@ -1339,75 +1328,17 @@ function deleteExercise(idx, e) {
 }
 
 // ===================== DRAG TO REORDER =====================
-// ===================== TOUCH DRAG TO REORDER =====================
 let dragSrcIdx = null;
-let touchDragClone = null;
-let touchDragOffsetY = 0;
-
-function dragStart(e,idx){ /* HTML5 drag kept for desktop fallback */
-  dragSrcIdx=idx;
-  e.dataTransfer.effectAllowed='move';
-  setTimeout(()=>{ const el=$('excard-'+idx); if(el) el.classList.add('dragging'); },0);
-}
-function dragOver(e,idx){ e.preventDefault(); const el=$('excard-'+idx); if(el&&idx!==dragSrcIdx) el.classList.add('drag-over'); }
-function dragLeave(e,idx){ const el=$('excard-'+idx); if(el) el.classList.remove('drag-over'); }
+function dragStart(e,idx){ dragSrcIdx=idx; e.dataTransfer.effectAllowed='move'; setTimeout(()=>{const el=$('excard-'+idx);if(el)el.classList.add('dragging');},0); }
+function dragOver(e,idx){ e.preventDefault(); const el=$('excard-'+idx); if(el&&idx!==dragSrcIdx)el.classList.add('drag-over'); }
+function dragLeave(e,idx){ const el=$('excard-'+idx); if(el)el.classList.remove('drag-over'); }
 function dragDrop(e,idx){
   e.preventDefault();
-  if(dragSrcIdx===null||dragSrcIdx===idx) return;
-  reorderExercises(dragSrcIdx, idx);
-}
-
-function reorderExercises(fromIdx, toIdx) {
+  if(dragSrcIdx===null||dragSrcIdx===idx)return;
   const td=getTodayData(); const exercises=getTodayExercises();
-  const moved=exercises.splice(fromIdx,1)[0];
-  exercises.splice(toIdx,0,moved);
+  const moved=exercises.splice(dragSrcIdx,1)[0];
+  exercises.splice(idx,0,moved);
   td.customExercises=exercises; saveState(); dragSrcIdx=null; renderWorkout();
-}
-
-function onTouchStart(e, idx) {
-  dragSrcIdx = idx;
-  touchDragOffsetY = e.touches[0].clientY;
-  const el = $('excard-'+idx);
-  if (el) {
-    el.classList.add('touch-dragging');
-    // Create floating clone
-    touchDragClone = el.cloneNode(true);
-    touchDragClone.style.cssText = 'position:fixed;z-index:999;width:'+el.offsetWidth+'px;left:'+el.getBoundingClientRect().left+'px;top:'+el.getBoundingClientRect().top+'px;opacity:.85;pointer-events:none;box-shadow:0 8px 32px rgba(0,0,0,.5);border:1px solid var(--accent);border-radius:16px;background:#1c1c26;';
-    document.body.appendChild(touchDragClone);
-  }
-  e.preventDefault();
-}
-
-function onTouchMove(e) {
-  if (dragSrcIdx === null || !touchDragClone) return;
-  const touch = e.touches[0];
-  const deltaY = touch.clientY - touchDragOffsetY;
-  touchDragClone.style.top = (parseFloat(touchDragClone.style.top) + deltaY) + 'px';
-  touchDragOffsetY = touch.clientY;
-  // Find which card we're over
-  document.querySelectorAll('.exercise-card').forEach((card,i) => {
-    card.classList.remove('touch-drag-over');
-    const rect = card.getBoundingClientRect();
-    if (touch.clientY >= rect.top && touch.clientY <= rect.bottom && i !== dragSrcIdx) {
-      card.classList.add('touch-drag-over');
-    }
-  });
-  e.preventDefault();
-}
-
-function onTouchEnd(e) {
-  if (dragSrcIdx === null) return;
-  // Find drop target
-  let dropIdx = null;
-  document.querySelectorAll('.exercise-card').forEach((card,i) => {
-    if (card.classList.contains('touch-drag-over')) dropIdx = i;
-    card.classList.remove('touch-drag-over');
-  });
-  const src = $('excard-'+dragSrcIdx);
-  if (src) src.classList.remove('touch-dragging');
-  if (touchDragClone) { touchDragClone.remove(); touchDragClone = null; }
-  if (dropIdx !== null && dropIdx !== dragSrcIdx) reorderExercises(dragSrcIdx, dropIdx);
-  else { dragSrcIdx = null; }
 }
 
 // ===================== UPDATED RENDWORKOUT =====================
@@ -1448,7 +1379,7 @@ function renderWorkout() {
       const imgs=IMAGE_MAP[ex.name];
       let imgHtml='';
       if(imgs){const allImgs=[...(imgs.move||[]).map(f=>({f,l:'Form'})),...(imgs.muscles||[]).map(f=>({f,l:'Muscles'}))];if(allImgs.length)imgHtml='<div class="ex-images">'+allImgs.map(({f,l})=>buildImgTag(f,l)).join('')+'</div>';}
-      h+='<div class="exercise-card '+(done?'completed':'')+'" id="excard-'+i+'" draggable="true" ondragstart="dragStart(event,'+i+')" ondragover="dragOver(event,'+i+')" ondrop="dragDrop(event,'+i+')" ondragleave="dragLeave(event,'+i+')" ontouchstart="onTouchStart(event,'+i+')">';
+      h+='<div class="exercise-card '+(done?'completed':'')+'" id="excard-'+i+'" draggable="true" ondragstart="dragStart(event,'+i+')" ondragover="dragOver(event,'+i+')" ondrop="dragDrop(event,'+i+')" ondragleave="dragLeave(event,'+i+')">';
       h+='<div class="ex-header"><div style="display:flex;align-items:center;gap:4px"><span class="drag-handle">⠿</span><div class="ex-name">'+ex.name+'</div></div>';
       h+='<div class="ex-badge '+(ex.type==='reps'?'reps':'time')+'">'+(ex.type==='reps'?'REPS':'TIME')+'</div></div>';
       h+='<div class="ex-detail">'+detail+' · '+ex.target+'</div><div class="ex-muscle">'+ex.muscle+'</div>';
@@ -1729,11 +1660,8 @@ function init() {
     }
     renderHome();
     updateScore();
-    renderWorkout();
+    renderWorkout(); // pre-render workout so it's ready immediately
     checkBackupReminder();
-    // Global touch listeners for drag reorder
-    document.addEventListener('touchmove', onTouchMove, {passive:false});
-    document.addEventListener('touchend', onTouchEnd, {passive:false});
     setInterval(()=>{ renderHero(); checkOfficePrompt(); checkBackupReminder(); }, 30000);
     checkOfficePrompt();
   } catch(e) { console.error('init',e); }
@@ -1741,5 +1669,6 @@ function init() {
 
 init();
 </script>
+
 </body>
 </html>
