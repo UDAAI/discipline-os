@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -105,7 +104,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 #timer-phase{font-size:13px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--text2);margin-top:4px}
 #timer-set-info{font-size:14px;color:var(--text2);margin-bottom:20px;font-family:'DM Mono',monospace}
 #timer-quote{font-size:15px;color:var(--text2);font-style:italic;max-width:300px;margin:0 auto 30px;min-height:44px}
-#timer-controls{display:flex;gap:16px}
+#timer-controls{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.timer-btn.mute{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
+.timer-btn.mute.active{background:rgba(255,71,71,.2);color:var(--danger);border-color:var(--danger)}
+.exercise-card.touch-dragging{opacity:.4;border:1px dashed var(--accent);transform:scale(.98)}
+.exercise-card.touch-drag-over{border-color:var(--accent);background:rgba(232,255,71,.05)}
 .timer-btn{padding:14px 28px;border-radius:50px;border:none;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
 .timer-btn.secondary{background:var(--surface2);color:var(--text)}
 .timer-btn.danger{background:rgba(255,71,71,.2);color:var(--danger);border:1px solid rgba(255,71,71,.3)}
@@ -210,8 +213,15 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 .data-btn-icon{font-size:20px}
 .data-btn-label{font-weight:600}
 .data-btn-sub{font-size:11px;color:var(--text3);margin-top:2px}
-/* Backup reminder banner */
-#backup-banner{background:linear-gradient(135deg,rgba(232,255,71,.1),rgba(71,184,255,.08));border:1px solid rgba(232,255,71,.2);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;display:none}
+/* Reorder buttons */
+.reorder-btns{display:flex;gap:4px;margin-top:8px}
+.reorder-btn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text2);font-size:12px;font-weight:600;padding:5px 10px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;flex-shrink:0}
+.reorder-btn:active{border-color:var(--accent);color:var(--accent)}
+.reorder-btn.edge{color:var(--text3);font-size:11px}
+/* Mute button - prominent */
+#mute-btn{position:fixed;top:16px;right:80px;z-index:110;background:var(--surface2);border:2px solid var(--border);border-radius:50px;color:var(--text2);font-size:13px;font-weight:700;padding:8px 16px;cursor:pointer;font-family:'DM Sans',sans-serif;display:none;transition:all .2s}
+#mute-btn.visible{display:block}
+#mute-btn.muted{background:rgba(255,71,71,.2);border-color:var(--danger);color:var(--danger)}
 </style>
 </head>
 <body>
@@ -360,8 +370,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
   </div>
 </div>
 
-<!-- TIMER -->
+<!-- MUTE BUTTON - fixed, visible during workout -->
+<button id="mute-btn" onclick="toggleMute()">🔊 Sound ON</button>
 
+<!-- TIMER -->
 <div id="timer-modal">
   <div id="timer-exercise-name"></div>
   <div id="timer-detail"></div>
@@ -381,12 +393,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
   <div id="timer-quote"></div>
   <div id="timer-controls">
     <button class="timer-btn secondary" id="pause-btn" onclick="pauseTimer()">⏸ Pause</button>
+    <button class="timer-btn mute" id="mute-btn" onclick="toggleMute()">🔊 Sound</button>
     <button class="timer-btn danger" onclick="stopTimer()">✕ End</button>
   </div>
 </div>
 
 <!-- EXERCISE POOL MODAL -->
-
 <div id="pool-modal">
   <div id="pool-header">
     <div id="pool-title">ADD EXERCISE</div>
@@ -399,7 +411,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 </div>
 
 <!-- OFFICE MODAL -->
-
 <div id="office-modal">
   <div class="office-modal-inner">
     <div class="office-q">Office Tomorrow?</div>
@@ -969,6 +980,8 @@ function startWorkoutSession() {
       return;
     }
     startScreenAwake();
+    const muteBtn = document.getElementById('mute-btn');
+    if (muteBtn) muteBtn.classList.add('visible');
     startExercise(0);
   } catch(e) { console.error('startWorkoutSession', e); }
 }
@@ -1034,15 +1047,18 @@ function timerTick() {
     if (timerState.phase==='rest') {
       if (timerState.remaining===3) speak('Get ready. Next set.');
     }
+    if (timerState.phase==='transition') {
+      if (timerState.remaining===3) speak('3... 2... 1...');
+    }
     if (timerState.phase==='prep'&&timerState.remaining===0) speak('Go!');
     if (timerState.remaining<=0) advanceTimer();
-    else updateTimerDisplay();
-  } catch(e) {}
+    updateTimerDisplay();
+  } catch(e) { console.error('timerTick',e); }
 }
 
 function skipRest() {
   try {
-    if (timerState.phase!=='rest') return;
+    if (timerState.phase!=='rest' && timerState.phase!=='transition') return;
     timerState.remaining=0;
     $('skip-rest-btn').style.display='none';
     advanceTimer();
@@ -1064,15 +1080,32 @@ function advanceTimer() {
       const dot=$('dot-'+timerState.exIdx+'-'+(timerState.set-1));
       if(dot) dot.classList.add('done');
       if (timerState.set>=timerState.totalSets) {
+        // All sets done — move to transition phase
         completedExercises.push(timerState.exIdx);
         const card=$('excard-'+timerState.exIdx);
         if(card) card.classList.add('completed');
-        clearInterval(timerInterval);
-        timerState.phase='done';
-        speak('Exercise complete! Great work.');
-        $('timer-quote').textContent = QUOTES[Math.floor(Math.random()*QUOTES.length)];
-        autoAdvTimer = setTimeout(()=>{ startExercise(timerState.exIdx+1); }, restTime*1000);
+        const nextIdx = timerState.exIdx + 1;
+        const isLast = !currentPlan || nextIdx >= currentPlan.exercises.length;
+        if (isLast) {
+          // Last exercise — show done, end workout
+          clearInterval(timerInterval);
+          timerState.phase='done';
+          speak('Workout complete! Excellent session.');
+          $('timer-quote').textContent = QUOTES[Math.floor(Math.random()*QUOTES.length)];
+          autoAdvTimer = setTimeout(()=>{ endWorkout(); }, 3000);
+        } else {
+          // Show transition: next exercise name + countdown
+          const nextEx = currentPlan.exercises[nextIdx];
+          timerState.phase='transition';
+          timerState.remaining=restTime;
+          timerState.nextExIdx=nextIdx;
+          timerState.nextExName=nextEx.name;
+          $('timer-quote').textContent = QUOTES[Math.floor(Math.random()*QUOTES.length)];
+          $('skip-rest-btn').style.display='block';
+          speak('Good work. Next up: '+nextEx.name+'. Rest '+restTime+' seconds.');
+        }
       } else {
+        // More sets — rest between sets
         timerState.phase='rest'; timerState.remaining=restTime; timerState.set++;
         const q=QUOTES[Math.floor(Math.random()*QUOTES.length)];
         $('timer-quote').textContent=q;
@@ -1085,9 +1118,15 @@ function advanceTimer() {
       $('timer-quote').textContent='';
       $('skip-rest-btn').style.display='none';
       speak('Set '+timerState.set+'. Go!');
+    } else if (timerState.phase==='transition') {
+      // Transition countdown done — start next exercise
+      clearInterval(timerInterval);
+      $('skip-rest-btn').style.display='none';
+      startExercise(timerState.nextExIdx);
+      return; // startExercise restarts the interval
     }
     updateTimerDisplay();
-  } catch(e) {}
+  } catch(e) { console.error('advanceTimer',e); }
 }
 
 function updateTimerDisplay() {
@@ -1112,11 +1151,16 @@ function updateTimerDisplay() {
       circ.style.stroke='var(--accent2)'; ph.textContent='REST';
       si.textContent='Next: Set '+timerState.set+' of '+timerState.totalSets;
       circ.style.strokeDashoffset=circumference*(timerState.remaining/restTime);
+    } else if (phase==='transition') {
+      num.textContent=timerState.remaining; num.style.color='var(--warning)';
+      circ.style.stroke='var(--warning)'; ph.textContent='NEXT UP';
+      si.textContent=timerState.nextExName||'';
+      circ.style.strokeDashoffset=circumference*(timerState.remaining/restTime);
     } else if (phase==='done') {
       num.textContent='✓'; num.style.color='var(--success)';
       ph.textContent='DONE'; si.textContent='';
     }
-  } catch(e) {}
+  } catch(e) { console.error('updateTimerDisplay',e); }
 }
 
 function pauseTimer() {
@@ -1128,6 +1172,9 @@ function stopTimer() {
   clearInterval(timerInterval);
   clearTimeout(autoAdvTimer);
   stopScreenAwake();
+  isMuted = false;
+  const mb = document.getElementById('mute-btn');
+  if (mb) { mb.classList.remove('visible','muted'); mb.textContent='🔊 Sound ON'; }
   $('timer-modal').classList.remove('show');
   $('skip-rest-btn').style.display='none';
   if (completedExercises.length>=Math.floor((currentPlan?.exercises?.length||2)/2)) {
@@ -1143,6 +1190,9 @@ function stopTimer() {
 function endWorkout() {
   clearInterval(timerInterval);
   stopScreenAwake();
+  isMuted = false;
+  const mb = document.getElementById('mute-btn');
+  if (mb) { mb.classList.remove('visible','muted'); mb.textContent='🔊 Sound ON'; }
   $('timer-modal').classList.remove('show');
   const td=getTodayData();
   td.completedTasks['workout']=true;
@@ -1171,15 +1221,27 @@ function initVoice() {
 }
 initVoice();
 
+let isMuted = false;
+function toggleMute() {
+  isMuted = !isMuted;
+  const btn = document.getElementById('mute-btn');
+  if (btn) {
+    btn.textContent = isMuted ? '🔇 Muted' : '🔊 Sound ON';
+    if (isMuted) btn.classList.add('muted');
+    else btn.classList.remove('muted');
+  }
+  if (isMuted && window.speechSynthesis) window.speechSynthesis.cancel();
+}
+
 function speak(text) {
   try {
-    if (!window.speechSynthesis) return;
+    if (!window.speechSynthesis || isMuted) return;
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     if (selectedVoice) u.voice = selectedVoice;
     u.rate = 0.92; u.pitch = 1.05; u.volume = 1.0;
     window.speechSynthesis.speak(u);
-  } catch(e) {}
+  } catch(e) { console.error('speak',e); }
 }
 
 // ===================== SCREEN AWAKE =====================
@@ -1328,17 +1390,23 @@ function deleteExercise(idx, e) {
 }
 
 // ===================== DRAG TO REORDER =====================
-let dragSrcIdx = null;
-function dragStart(e,idx){ dragSrcIdx=idx; e.dataTransfer.effectAllowed='move'; setTimeout(()=>{const el=$('excard-'+idx);if(el)el.classList.add('dragging');},0); }
-function dragOver(e,idx){ e.preventDefault(); const el=$('excard-'+idx); if(el&&idx!==dragSrcIdx)el.classList.add('drag-over'); }
-function dragLeave(e,idx){ const el=$('excard-'+idx); if(el)el.classList.remove('drag-over'); }
-function dragDrop(e,idx){
-  e.preventDefault();
-  if(dragSrcIdx===null||dragSrcIdx===idx)return;
-  const td=getTodayData(); const exercises=getTodayExercises();
-  const moved=exercises.splice(dragSrcIdx,1)[0];
-  exercises.splice(idx,0,moved);
-  td.customExercises=exercises; saveState(); dragSrcIdx=null; renderWorkout();
+// ===================== TOUCH DRAG TO REORDER =====================
+// ===================== REORDER EXERCISES =====================
+function moveExercise(fromIdx, toIdx, e) {
+  try {
+    if (e) e.stopPropagation();
+    const td = getTodayData();
+    const exercises = getTodayExercises();
+    if (toIdx < 0 || toIdx >= exercises.length || fromIdx === toIdx) return;
+    const moved = exercises.splice(fromIdx, 1)[0];
+    exercises.splice(toIdx, 0, moved);
+    td.customExercises = exercises;
+    saveState();
+    renderWorkout();
+    // Scroll to moved card
+    const card = document.getElementById('excard-'+toIdx);
+    if (card) card.scrollIntoView({behavior:'smooth', block:'nearest'});
+  } catch(e2) { console.error('moveExercise',e2); }
 }
 
 // ===================== UPDATED RENDWORKOUT =====================
@@ -1379,13 +1447,20 @@ function renderWorkout() {
       const imgs=IMAGE_MAP[ex.name];
       let imgHtml='';
       if(imgs){const allImgs=[...(imgs.move||[]).map(f=>({f,l:'Form'})),...(imgs.muscles||[]).map(f=>({f,l:'Muscles'}))];if(allImgs.length)imgHtml='<div class="ex-images">'+allImgs.map(({f,l})=>buildImgTag(f,l)).join('')+'</div>';}
-      h+='<div class="exercise-card '+(done?'completed':'')+'" id="excard-'+i+'" draggable="true" ondragstart="dragStart(event,'+i+')" ondragover="dragOver(event,'+i+')" ondrop="dragDrop(event,'+i+')" ondragleave="dragLeave(event,'+i+')">';
-      h+='<div class="ex-header"><div style="display:flex;align-items:center;gap:4px"><span class="drag-handle">⠿</span><div class="ex-name">'+ex.name+'</div></div>';
+      h+='<div class="exercise-card '+(done?'completed':'')+'" id="excard-'+i+'">';
+      h+='<div class="ex-header"><div class="ex-name">'+ex.name+'</div>';
       h+='<div class="ex-badge '+(ex.type==='reps'?'reps':'time')+'">'+(ex.type==='reps'?'REPS':'TIME')+'</div></div>';
       h+='<div class="ex-detail">'+detail+' · '+ex.target+'</div><div class="ex-muscle">'+ex.muscle+'</div>';
       h+=imgHtml;
       h+='<div class="ex-sets">'+Array(ex.sets).fill(0).map((_,s)=>'<div class="ex-set-dot" id="dot-'+i+'-'+s+'"></div>').join('')+'</div>';
-      h+='<div style="display:flex;gap:6px;margin-top:8px"><button class="harder-btn" onclick="makeHarder('+i+',event)">+ Make it harder</button><button class="ex-delete-btn" onclick="deleteExercise('+i+',event)">✕ Remove</button></div>';
+      h+='<div class="reorder-btns">';
+      if(i>0) h+='<button class="reorder-btn edge" onclick="moveExercise('+i+',0,event)" title="To top">⤒ Top</button>';
+      if(i>0) h+='<button class="reorder-btn" onclick="moveExercise('+i+','+( i-1)+',event)" title="Move up">↑ Up</button>';
+      if(i<exercises.length-1) h+='<button class="reorder-btn" onclick="moveExercise('+i+','+(i+1)+',event)" title="Move down">↓ Down</button>';
+      if(i<exercises.length-1) h+='<button class="reorder-btn edge" onclick="moveExercise('+i+','+(exercises.length-1)+',event)" title="To bottom">⤓ Bottom</button>';
+      h+='<button class="harder-btn" onclick="makeHarder('+i+',event)">+ Harder</button>';
+      h+='<button class="ex-delete-btn" onclick="deleteExercise('+i+',event)">✕</button>';
+      h+='</div>';
       h+='</div>';
     });
     $('exercise-list').innerHTML=h;
@@ -1660,7 +1735,7 @@ function init() {
     }
     renderHome();
     updateScore();
-    renderWorkout(); // pre-render workout so it's ready immediately
+    renderWorkout();
     checkBackupReminder();
     setInterval(()=>{ renderHero(); checkOfficePrompt(); checkBackupReminder(); }, 30000);
     checkOfficePrompt();
@@ -1669,6 +1744,5 @@ function init() {
 
 init();
 </script>
-
 </body>
 </html>
